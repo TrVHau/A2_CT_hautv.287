@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dự đoán Hành vi Khách hàng & Khuyến nghị Sản phẩm | E-Commerce AI</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --primary-light: #eef2ff;
+            --success: #10b981;
+            --success-bg: #ecfdf5;
+            --danger: #ef4444;
+            --danger-bg: #fef2f2;
+            --warning: #f59e0b;
+            --dark: #0f172a;
+            --gray-700: #334155;
+            --gray-500: #64748b;
+            --gray-300: #cbd5e1;
+            --gray-100: #f1f5f9;
+            --card-bg: #ffffff;
+            --border-radius: 16px;
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+            --shadow-lg: 0 20px 30px -10px rgba(99, 102, 241, 0.15);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 50%, #fdf2f8 100%);
+            color: var(--dark);
+            min-height: 100vh;
+            padding: 30px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            overflow: hidden;
+            backdrop-filter: blur(8px);
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: white;
+            padding: 35px 40px;
+            position: relative;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .brand-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .system-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            background: rgba(16, 185, 129, 0.2);
+            color: #a7f3d0;
+            padding: 4px 10px;
+            border-radius: 9999px;
+            font-weight: 500;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #10b981;
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 8px #10b981;
+        }
+
+        .header h1 {
+            font-size: 26px;
+            font-weight: 800;
+            line-height: 1.25;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            font-size: 14px;
+            color: #c7d2fe;
+            line-height: 1.5;
+        }
+
+        /* Content Body */
+        .content {
+            padding: 35px 40px;
+        }
+
+        /* Sample Selector */
+        .sample-bar {
+            margin-bottom: 25px;
+            padding: 16px;
+            background: var(--gray-100);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .sample-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--gray-700);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .sample-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .sample-btn {
+            background: white;
+            border: 1px solid var(--gray-300);
+            color: var(--gray-700);
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 12.5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .sample-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: var(--primary-light);
+            transform: translateY(-1px);
+        }
+
+        /* Form Grid */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        label {
+            font-size: 13.5px;
+            font-weight: 600;
+            color: var(--gray-700);
+            margin-bottom: 6px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        label span.req {
+            color: var(--danger);
+        }
+
+        label span.hint {
+            font-weight: 400;
+            font-size: 12px;
+            color: var(--gray-500);
+        }
+
+        input, select, textarea {
+            font-family: inherit;
+            font-size: 14px;
+            padding: 10px 14px;
+            border: 1.5px solid var(--gray-300);
+            border-radius: 10px;
+            background: white;
+            color: var(--dark);
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3.5px rgba(99, 102, 241, 0.15);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+            line-height: 1.5;
+        }
+
+        /* Star Rating Control */
+        .rating-stars {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: white;
+            padding: 8px 12px;
+            border: 1.5px solid var(--gray-300);
+            border-radius: 10px;
+            height: 42px;
+        }
+
+        .star-item {
+            font-size: 20px;
+            color: #cbd5e1;
+            cursor: pointer;
+            transition: color 0.15s ease, transform 0.15s ease;
+        }
+
+        .star-item.active {
+            color: #f59e0b;
+        }
+
+        .star-item:hover {
+            transform: scale(1.15);
+        }
+
+        .rating-label {
+            margin-left: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--gray-700);
+        }
+
+        /* Character & Word counter */
+        .text-meta {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            font-size: 11.5px;
+            color: var(--gray-500);
+            margin-top: 4px;
+        }
+
+        .error-message {
+            font-size: 12px;
+            color: var(--danger);
+            margin-top: 4px;
+            display: none;
+        }
+
+        /* Submit Button Area */
+        .actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 13px 24px;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            flex: 2;
+            background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(79, 70, 229, 0.4);
+        }
+
+        .btn-secondary {
+            flex: 1;
+            background: var(--gray-100);
+            color: var(--gray-700);
+        }
+
+        .btn-secondary:hover {
+            background: #e2e8f0;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* Result Section */
+        .result-box {
+            margin-top: 30px;
+            border-radius: var(--border-radius);
+            padding: 24px;
+            display: none;
+            animation: fadeIn 0.35s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-box.recommended {
+            background: var(--success-bg);
+            border: 2px solid #a7f3d0;
+        }
+
+        .result-box.not-recommended {
+            background: var(--danger-bg);
+            border: 2px solid #fecaca;
+        }
+
+        .result-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .result-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 19px;
+            font-weight: 800;
+        }
+
+        .result-box.recommended .result-title {
+            color: #065f46;
+        }
+
+        .result-box.not-recommended .result-title {
+            color: #991b1b;
+        }
+
+        .confidence-badge {
+            padding: 6px 14px;
+            border-radius: 9999px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .result-box.recommended .confidence-badge {
+            background: #d1fae5;
+            color: #047857;
+        }
+
+        .result-box.not-recommended .confidence-badge {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        /* Probability Bars */
+        .prob-container {
+            background: white;
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+        }
+
+        .prob-row {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+
+        .prob-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .prob-label-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: var(--gray-700);
+        }
+
+        .prob-bar-track {
+            height: 10px;
+            background: #e2e8f0;
+            border-radius: 9999px;
+            overflow: hidden;
+        }
+
+        .prob-bar-fill {
+            height: 100%;
+            border-radius: 9999px;
+            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .prob-bar-fill.rec {
+            background: linear-gradient(90deg, #10b981, #059669);
+        }
+
+        .prob-bar-fill.not-rec {
+            background: linear-gradient(90deg, #f87171, #dc2626);
+        }
+
+        /* Metrics summary pills */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .metric-card {
+            background: white;
+            padding: 12px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+        }
+
+        .metric-val {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--dark);
+        }
+
+        .metric-desc {
+            font-size: 11.5px;
+            color: var(--gray-500);
+            margin-top: 2px;
+        }
+
+        /* Loading Spinner */
+        .loading-state {
+            display: none;
+            text-align: center;
+            padding: 24px;
+        }
+
+        .spinner {
+            width: 32px;
+            height: 32px;
+            border: 3.5px solid #e0e7ff;
+            border-top: 3.5px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Footer */
+        .footer {
+            padding: 20px 40px;
+            background: #f8fafc;
+            border-top: 1px solid var(--gray-100);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: var(--gray-500);
+        }
+
+        @media (max-width: 640px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            .form-group.full-width {
+                grid-column: span 1;
+            }
+            .content, .header, .footer {
+                padding: 24px 20px;
+            }
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-top">
+                <span class="brand-badge">🛍️ E-Commerce Analytics</span>
+                <span class="system-status" id="systemStatus">
+                    <span class="status-dot"></span> Model Ready
+                </span>
+            </div>
+            <h1>Customer Behavior & Review Recommendation</h1>
+            <p>Hệ thống AI Multimodal dự đoán mức độ hài lòng và quyết định sẵn sàng khuyến nghị (Recommendation) sản phẩm thời trang nữ dựa trên đánh giá văn bản và thông tin khách hàng.</p>
+        </header>
+
+        <!-- Main Body -->
+        <div class="content">
+            <!-- Sample Presets -->
+            <div class="sample-bar">
+                <div class="sample-title">
+                    <span>⚡ Thử nhanh dữ liệu mẫu:</span>
+                </div>
+                <div class="sample-buttons">
+                    <button type="button" class="sample-btn" onclick="loadSample('sample_pos')">🌟 Đánh giá Tích cực (5 Sao)</button>
+                    <button type="button" class="sample-btn" onclick="loadSample('sample_neg')">⚠️ Đánh giá Tiêu cực (1 Sao)</button>
+                    <button type="button" class="sample-btn" onclick="loadSample('sample_mixed')">⚖️ Đánh giá Trung bình (3 Sao)</button>
+                </div>
+            </div>
+
+            <!-- Prediction Form -->
+            <form id="predictionForm" novalidate>
+                <div class="form-grid">
+                    <!-- Age -->
+                    <div class="form-group">
+                        <label for="age">Độ tuổi khách hàng (Age) <span class="req">*</span> <span class="hint">(18 - 100)</span></label>
+                        <input type="number" id="age" name="age" min="18" max="100" value="32" required placeholder="Ví dụ: 32">
+                        <div class="error-message" id="ageError"></div>
+                    </div>
+
+                    <!-- Rating with Star Selector -->
+                    <div class="form-group">
+                        <label>Đánh giá xếp hạng (Rating) <span class="req">*</span></label>
+                        <div class="rating-stars" id="ratingStars">
+                            <span class="star-item active" data-val="1">★</span>
+                            <span class="star-item active" data-val="2">★</span>
+                            <span class="star-item active" data-val="3">★</span>
+                            <span class="star-item active" data-val="4">★</span>
+                            <span class="star-item active" data-val="5">★</span>
+                            <span class="rating-label" id="ratingLabel">5 Sao</span>
+                            <input type="hidden" id="rating" name="rating" value="5">
+                        </div>
+                        <div class="error-message" id="ratingError"></div>
+                    </div>
+
+                    <!-- Positive Feedback Count -->
+                    <div class="form-group">
+                        <label for="positiveFeedback">Số lượt thích nhận xét (Feedback Count) <span class="hint">(≥ 0)</span></label>
+                        <input type="number" id="positiveFeedback" name="positiveFeedback" min="0" max="1000" value="12" placeholder="Ví dụ: 12">
+                        <div class="error-message" id="feedbackError"></div>
+                    </div>
+
+                    <!-- Division Name -->
+                    <div class="form-group">
+                        <label for="divisionName">Phân nhóm (Division Name) <span class="req">*</span></label>
+                        <select id="divisionName" name="divisionName" required>
+                            <option value="General" selected>General</option>
+                            <option value="General Petite">General Petite</option>
+                            <option value="Initmates">Initmates</option>
+                        </select>
+                        <div class="error-message" id="divisionError"></div>
+                    </div>
+
+                    <!-- Department Name -->
+                    <div class="form-group">
+                        <label for="departmentName">Ngành hàng (Department Name) <span class="req">*</span></label>
+                        <select id="departmentName" name="departmentName" required>
+                            <option value="Dresses" selected>Dresses</option>
+                            <option value="Tops">Tops</option>
+                            <option value="Bottoms">Bottoms</option>
+                            <option value="Intimate">Intimate</option>
+                            <option value="Jackets">Jackets</option>
+                            <option value="Trend">Trend</option>
+                        </select>
+                        <div class="error-message" id="departmentError"></div>
+                    </div>
+
+                    <!-- Class Name -->
+                    <div class="form-group">
+                        <label for="className">Danh mục chi tiết (Class Name) <span class="req">*</span></label>
+                        <select id="className" name="className" required>
+                            <option value="Dresses" selected>Dresses</option>
+                            <option value="Blouses">Blouses</option>
+                            <option value="Knits">Knits</option>
+                            <option value="Pants">Pants</option>
+                            <option value="Sweaters">Sweaters</option>
+                            <option value="Jeans">Jeans</option>
+                            <option value="Outerwear">Outerwear</option>
+                            <option value="Skirts">Skirts</option>
+                            <option value="Jackets">Jackets</option>
+                            <option value="Lounge">Lounge</option>
+                            <option value="Swim">Swim</option>
+                            <option value="Fine gauge">Fine gauge</option>
+                            <option value="Sleep">Sleep</option>
+                            <option value="Shorts">Shorts</option>
+                            <option value="Legwear">Legwear</option>
+                            <option value="Trend">Trend</option>
+                            <option value="Intimates">Intimates</option>
+                            <option value="Layering">Layering</option>
+                            <option value="Casual bottoms">Casual bottoms</option>
+                            <option value="Chemises">Chemises</option>
+                        </select>
+                        <div class="error-message" id="classError"></div>
+                    </div>
+
+                    <!-- Review Title -->
+                    <div class="form-group full-width">
+                        <label for="reviewTitle">Tiêu đề đánh giá (Review Title) <span class="hint">(Tùy chọn)</span></label>
+                        <input type="text" id="reviewTitle" name="reviewTitle" value="Absolutely stunning dress!" placeholder="Nhập tiêu đề nhận xét ngắn gọn...">
+                    </div>
+
+                    <!-- Review Text -->
+                    <div class="form-group full-width">
+                        <label for="reviewText">Nội dung nhận xét chi tiết (Review Text) <span class="req">*</span></label>
+                        <textarea id="reviewText" name="reviewText" required placeholder="Nhập cảm nhận của khách hàng về chất lượng vải, phom dáng, trải nghiệm mua sắm...">The fabric is high quality, fit is perfection and I received endless compliments throughout the evening.</textarea>
+                        <div class="text-meta">
+                            <span id="charCount">Độ dài: 104 ký tự</span>
+                            <span id="wordCount">Số từ: 16 từ</span>
+                        </div>
+                        <div class="error-message" id="reviewTextError"></div>
+                    </div>
+                </div>
+
+                <!-- Form Action Buttons -->
+                <div class="actions">
+                    <button type="submit" class="btn btn-primary" id="submitBtn">
+                        <span>🚀 Phân tích & Dự đoán Khuyến nghị</span>
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="resetForm()">
+                        <span>Làm mới</span>
+                    </button>
+                </div>
+            </form>
+
+            <!-- Loading indicator -->
+            <div class="loading-state" id="loadingState">
+                <div class="spinner"></div>
+                <p style="font-size: 14px; color: var(--gray-500); font-weight: 500;">Đang xử lý văn bản qua TF-IDF & thực hiện suy luận mô hình...</p>
+            </div>
+
+            <!-- Prediction Result Card -->
+            <div class="result-box" id="resultCard">
+                <div class="result-header">
+                    <div class="result-title" id="resultTitle">
+                        <span id="resultIcon">✅</span>
+                        <span id="resultText">SẴN SÀNG KHUYẾN NGHỊ</span>
+                    </div>
+                    <div class="confidence-badge" id="confidenceBadge">Độ tin cậy: 99.7%</div>
+                </div>
+
+                <!-- Probability Bar Breakdown -->
+                <div class="prob-container">
+                    <div class="prob-row">
+                        <div class="prob-label-row">
+                            <span>Khuyến nghị (P = 1)</span>
+                            <span id="probRecVal">99.7%</span>
+                        </div>
+                        <div class="prob-bar-track">
+                            <div class="prob-bar-fill rec" id="probRecBar" style="width: 99.7%;"></div>
+                        </div>
+                    </div>
+                    <div class="prob-row">
+                        <div class="prob-label-row">
+                            <span>Không khuyến nghị (P = 0)</span>
+                            <span id="probNotRecVal">0.3%</span>
+                        </div>
+                        <div class="prob-bar-track">
+                            <div class="prob-bar-fill not-rec" id="probNotRecBar" style="width: 0.3%;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Derived Features Summary -->
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-val" id="metricLength">132</div>
+                        <div class="metric-desc">Độ dài văn bản (chars)</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-val" id="metricWords">21</div>
+                        <div class="metric-desc">Tổng số từ (words)</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-val" id="metricTitleStatus">Có</div>
+                        <div class="metric-desc">Có tiêu đề (has_title)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <span>Assignment 2 • Customer Behavior Prediction • Multimodal Pipeline (TF-IDF + Tabular + Balanced Logistic Regression)</span>
+            <span>FastAPI Server</span>
+        </footer>
+    </div>
+
+    <!-- JavaScript Logic -->
+    <script>
+        const samplesData = {
+            sample_pos: {
+                age: 32,
+                rating: 5,
+                positive_feedback_count: 12,
+                division_name: "General",
+                department_name: "Dresses",
+                class_name: "Dresses",
+                title: "Absolutely stunning dress!",
+                review_text: "The fabric is high quality, fit is perfection and I received endless compliments throughout the evening."
+            },
+            sample_neg: {
+                age: 45,
+                rating: 1,
+                positive_feedback_count: 8,
+                division_name: "General",
+                department_name: "Tops",
+                class_name: "Blouses",
+                title: "Terrible quality and huge sizing",
+                review_text: "Terrible quality and very cheap material. Sizing is completely off and huge. Extremely disappointed and returning immediately."
+            },
+            sample_mixed: {
+                age: 28,
+                rating: 3,
+                positive_feedback_count: 2,
+                division_name: "General Petite",
+                department_name: "Bottoms",
+                class_name: "Pants",
+                title: "Nice color but awkward fit",
+                review_text: "The color matches the photos, but the waistband is much tighter than expected and fabric wrinkles easily."
+            }
+        };
+
+        // Star rating interactivity
+        const stars = document.querySelectorAll('.star-item');
+        const ratingInput = document.getElementById('rating');
+        const ratingLabel = document.getElementById('ratingLabel');
+
+        function setRating(val) {
+            ratingInput.value = val;
+            ratingLabel.textContent = `${val} Sao`;
+            stars.forEach(star => {
+                const sVal = parseInt(star.dataset.val);
+                if (sVal <= val) {
+                    star.classList.add('active');
+                } else {
+                    star.classList.remove('active');
+                }
+            });
+        }
+
+        stars.forEach(star => {
+            star.addEventListener('click', () => {
+                const val = parseInt(star.dataset.val);
+                setRating(val);
+            });
+        });
+
+        // Text character and word counters
+        const reviewTextArea = document.getElementById('reviewText');
+        const reviewTitleInput = document.getElementById('reviewTitle');
+        const charCountEl = document.getElementById('charCount');
+        const wordCountEl = document.getElementById('wordCount');
+
+        function updateCounters() {
+            const title = reviewTitleInput.value.trim();
+            const text = reviewTextArea.value.trim();
+            const combined = `${title} ${text}`.trim();
+            
+            charCountEl.textContent = `Độ dài: ${combined.length} ký tự`;
+            const words = combined ? combined.split(/\s+/).length : 0;
+            wordCountEl.textContent = `Số từ: ${words} từ`;
+        }
+
+        reviewTextArea.addEventListener('input', updateCounters);
+        reviewTitleInput.addEventListener('input', updateCounters);
+        updateCounters();
+
+        // Load Preset Sample
+        function loadSample(sampleId) {
+            const sample = samplesData[sampleId];
+            if (!sample) return;
+
+            document.getElementById('age').value = sample.age;
+            setRating(sample.rating);
+            document.getElementById('positiveFeedback').value = sample.positive_feedback_count;
+            document.getElementById('divisionName').value = sample.division_name;
+            document.getElementById('departmentName').value = sample.department_name;
+            document.getElementById('className').value = sample.class_name;
+            document.getElementById('reviewTitle').value = sample.title;
+            document.getElementById('reviewText').value = sample.review_text;
+
+            updateCounters();
+            clearErrors();
+            hideResult();
+
+            // Automatically trigger prediction for seamless demo
+            submitForm();
+        }
+
+        // Reset form
+        function resetForm() {
+            document.getElementById('predictionForm').reset();
+            setRating(5);
+            updateCounters();
+            clearErrors();
+            hideResult();
+        }
+
+        // Form Submission
+        document.getElementById('predictionForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            submitForm();
+        });
+
+        async function submitForm() {
+            clearErrors();
+            hideResult();
+
+            const ageVal = parseInt(document.getElementById('age').value);
+            const ratingVal = parseInt(document.getElementById('rating').value);
+            const feedbackVal = parseInt(document.getElementById('positiveFeedback').value || 0);
+            const divisionVal = document.getElementById('divisionName').value;
+            const departmentVal = document.getElementById('departmentName').value;
+            const classVal = document.getElementById('className').value;
+            const titleVal = document.getElementById('reviewTitle').value;
+            const reviewTextVal = document.getElementById('reviewText').value.trim();
+
+            let hasError = false;
+
+            if (isNaN(ageVal) || ageVal < 18 || ageVal > 100) {
+                showError('ageError', 'Vui lòng nhập độ tuổi hợp lệ (18 - 100).');
+                hasError = true;
+            }
+
+            if (!reviewTextVal) {
+                showError('reviewTextError', 'Vui lòng nhập nội dung đánh giá của khách hàng.');
+                hasError = true;
+            }
+
+            if (hasError) return;
+
+            showLoading();
+
+            const payload = {
+                age: ageVal,
+                rating: ratingVal,
+                positive_feedback_count: feedbackVal,
+                division_name: divisionVal,
+                department_name: departmentVal,
+                class_name: classVal,
+                title: titleVal,
+                review_text: reviewTextVal
+            };
+
+            try {
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await response.json();
+                hideLoading();
+
+                if (data.prediction === -1) {
+                    alert('Lỗi dự đoán: ' + data.label);
+                } else {
+                    renderResult(data);
+                }
+            } catch (err) {
+                hideLoading();
+                console.error(err);
+                alert('Không thể kết nối đến máy chủ. Vui lòng thử lại.');
+            }
+        }
+
+        function renderResult(data) {
+            const card = document.getElementById('resultCard');
+            const titleEl = document.getElementById('resultTitle');
+            const iconEl = document.getElementById('resultIcon');
+            const textEl = document.getElementById('resultText');
+            const badgeEl = document.getElementById('confidenceBadge');
+
+            const pRec = data.probability ? data.probability.recommended : (data.prediction === 1 ? 1 : 0);
+            const pNotRec = data.probability ? data.probability.not_recommended : (data.prediction === 0 ? 1 : 0);
+
+            const recPct = (pRec * 100).toFixed(1);
+            const notRecPct = (pNotRec * 100).toFixed(1);
+
+            document.getElementById('probRecVal').textContent = `${recPct}%`;
+            document.getElementById('probNotRecVal').textContent = `${notRecPct}%`;
+            document.getElementById('probRecBar').style.width = `${recPct}%`;
+            document.getElementById('probNotRecBar').style.width = `${notRecPct}%`;
+
+            if (data.metrics) {
+                document.getElementById('metricLength').textContent = data.metrics.review_length;
+                document.getElementById('metricWords').textContent = data.metrics.word_count;
+                document.getElementById('metricTitleStatus').textContent = data.metrics.has_title ? 'Có' : 'Không';
+            }
+
+            if (data.prediction === 1) {
+                card.className = 'result-box recommended';
+                iconEl.textContent = '🎉';
+                textEl.textContent = 'SẴN SÀNG KHUYẾN NGHỊ (RECOMMENDED)';
+                badgeEl.textContent = `Độ tin cậy: ${recPct}%`;
+            } else {
+                card.className = 'result-box not-recommended';
+                iconEl.textContent = '⚠️';
+                textEl.textContent = 'KHÔNG KHUYẾN NGHỊ (NOT RECOMMENDED)';
+                badgeEl.textContent = `Độ tin cậy: ${notRecPct}%`;
+            }
+
+            card.style.display = 'block';
+            card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function showError(id, message) {
+            const el = document.getElementById(id);
+            if (el) {
+                el.textContent = message;
+                el.style.display = 'block';
+            }
+        }
+
+        function clearErrors() {
+            document.querySelectorAll('.error-message').forEach(el => {
+                el.textContent = '';
+                el.style.display = 'none';
+            });
+        }
+
+        function showLoading() {
+            document.getElementById('loadingState').style.display = 'block';
+            document.getElementById('submitBtn').disabled = true;
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingState').style.display = 'none';
+            document.getElementById('submitBtn').disabled = false;
+        }
+
+        function hideResult() {
+            document.getElementById('resultCard').style.display = 'none';
+        }
+
+        // Check health on load
+        async function checkHealth() {
+            try {
+                const res = await fetch('/health');
+                const data = await res.json();
+                if (data.status === 'healthy') {
+                    document.getElementById('systemStatus').innerHTML = '<span class="status-dot"></span> Model Ready';
+                } else {
+                    document.getElementById('systemStatus').innerHTML = '<span class="status-dot" style="background:red;"></span> Model Error';
+                }
+            } catch (e) {
+                // Ignore if offline
+            }
+        }
+        checkHealth();
+    </script>
+</body>
+</html>

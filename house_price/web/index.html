@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dự đoán Giá Nhà Đất Hà Nội | PropTech AI Valuation</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #059669;
+            --primary-hover: #047857;
+            --primary-light: #ecfdf5;
+            --primary-glow: rgba(5, 150, 105, 0.18);
+            --accent: #3b82f6;
+            --accent-light: #eff6ff;
+            --dark: #0f172a;
+            --gray-800: #1e293b;
+            --gray-700: #334155;
+            --gray-500: #64748b;
+            --gray-300: #cbd5e1;
+            --gray-100: #f1f5f9;
+            --card-bg: #ffffff;
+            --border-radius: 18px;
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+            --shadow-lg: 0 20px 35px -10px rgba(5, 150, 105, 0.15);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #f0fdf4 0%, #f8fafc 40%, #eff6ff 100%);
+            color: var(--dark);
+            min-height: 100vh;
+            padding: 30px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 920px;
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            overflow: hidden;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #065f46 0%, #047857 50%, #0d9488 100%);
+            color: white;
+            padding: 36px 40px;
+            position: relative;
+        }
+
+        .header-badge-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .brand-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.18);
+            padding: 5px 12px;
+            border-radius: 9999px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .system-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            background: rgba(255, 255, 255, 0.15);
+            color: #d1fae5;
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-weight: 500;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #34d399;
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 8px #34d399;
+        }
+
+        .header h1 {
+            font-size: 26px;
+            font-weight: 800;
+            line-height: 1.25;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            font-size: 14px;
+            color: #a7f3d0;
+            line-height: 1.5;
+        }
+
+        /* Content Body */
+        .content {
+            padding: 35px 40px;
+        }
+
+        /* Quick Samples Bar */
+        .sample-bar {
+            margin-bottom: 26px;
+            padding: 16px 18px;
+            background: #f8fafc;
+            border: 1px solid var(--gray-300);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .sample-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--gray-700);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .sample-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .sample-btn {
+            background: white;
+            border: 1px solid #cbd5e1;
+            color: var(--gray-700);
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 12.5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .sample-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: var(--primary-light);
+            transform: translateY(-1px);
+        }
+
+        /* Form Grid */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        label {
+            font-size: 13.5px;
+            font-weight: 600;
+            color: var(--gray-700);
+            margin-bottom: 6px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        label span.req {
+            color: #ef4444;
+        }
+
+        label span.hint {
+            font-weight: 400;
+            font-size: 12px;
+            color: var(--gray-500);
+        }
+
+        input, select {
+            font-family: inherit;
+            font-size: 14.5px;
+            padding: 11px 14px;
+            border: 1.5px solid var(--gray-300);
+            border-radius: 10px;
+            background: white;
+            color: var(--dark);
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3.5px var(--primary-glow);
+        }
+
+        optgroup {
+            font-weight: 700;
+            color: var(--gray-800);
+        }
+
+        .dims-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .error-message {
+            font-size: 12px;
+            color: #ef4444;
+            margin-top: 4px;
+            display: none;
+        }
+
+        /* Action Buttons */
+        .actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 14px 24px;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            flex: 2;
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(5, 150, 105, 0.4);
+        }
+
+        .btn-secondary {
+            flex: 1;
+            background: var(--gray-100);
+            color: var(--gray-700);
+        }
+
+        .btn-secondary:hover {
+            background: #e2e8f0;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* Result Section */
+        .result-box {
+            margin-top: 32px;
+            background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%);
+            border: 2px solid #a7f3d0;
+            border-radius: var(--border-radius);
+            padding: 28px;
+            display: none;
+            animation: fadeIn 0.35s ease;
+            box-shadow: var(--shadow-lg);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-top-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 20px;
+            border-bottom: 1.5px solid #d1fae5;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .valuation-title {
+            font-size: 13.5px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #047857;
+        }
+
+        .valuation-price {
+            font-size: 32px;
+            font-weight: 800;
+            color: #065f46;
+            line-height: 1.1;
+            margin-top: 4px;
+        }
+
+        .unit-price-box {
+            background: #ecfdf5;
+            padding: 12px 18px;
+            border-radius: 12px;
+            border: 1px solid #6ee7b7;
+            text-align: right;
+        }
+
+        .unit-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--gray-700);
+        }
+
+        .unit-val {
+            font-size: 20px;
+            font-weight: 800;
+            color: #047857;
+        }
+
+        /* Price Range Indicator */
+        .price-range-section {
+            margin: 20px 0;
+            background: white;
+            padding: 16px 20px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .range-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: var(--gray-700);
+            margin-bottom: 8px;
+        }
+
+        .range-bar-track {
+            height: 10px;
+            background: #e2e8f0;
+            border-radius: 9999px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .range-bar-fill {
+            height: 100%;
+            width: 70%;
+            margin: 0 auto;
+            background: linear-gradient(90deg, #34d399, #059669);
+            border-radius: 9999px;
+        }
+
+        /* Details Grid */
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .detail-card {
+            background: white;
+            padding: 12px 14px;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+            text-align: center;
+        }
+
+        .detail-title {
+            font-size: 11.5px;
+            color: var(--gray-500);
+            font-weight: 600;
+        }
+
+        .detail-val {
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--gray-800);
+            margin-top: 4px;
+        }
+
+        /* Loading Spinner */
+        .loading-state {
+            display: none;
+            text-align: center;
+            padding: 24px;
+        }
+
+        .spinner {
+            width: 32px;
+            height: 32px;
+            border: 3.5px solid #d1fae5;
+            border-top: 3.5px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Footer */
+        .footer {
+            padding: 20px 40px;
+            background: #f8fafc;
+            border-top: 1px solid var(--gray-100);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: var(--gray-500);
+        }
+
+        @media (max-width: 640px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            .form-group.full-width {
+                grid-column: span 1;
+            }
+            .dims-wrapper {
+                grid-template-columns: 1fr;
+            }
+            .details-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .content, .header, .footer {
+                padding: 24px 20px;
+            }
+            .unit-price-box {
+                text-align: left;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-badge-row">
+                <span class="brand-badge">🏡 Hanoi PropTech Valuation</span>
+                <span class="system-status" id="systemStatus">
+                    <span class="status-dot"></span> Pipeline Ready (Random Forest)
+                </span>
+            </div>
+            <h1>Dự đoán Giá Nhà Đất Hà Nội</h1>
+            <p>Hệ thống định giá tự động (AVM) sử dụng Machine Learning Pipeline (Random Forest Regressor) được huấn luyện trên hơn 64,000 giao dịch nhà đất thực tế tại Hà Nội.</p>
+        </header>
+
+        <!-- Main Body -->
+        <div class="content">
+            <!-- Sample Presets -->
+            <div class="sample-bar">
+                <div class="sample-title">
+                    <span>⚡ Thử nhanh BĐS mẫu:</span>
+                </div>
+                <div class="sample-buttons">
+                    <button type="button" class="sample-btn" onclick="loadSample('sample_pho_co')">🏛️ Mặt phố Hoàn Kiếm</button>
+                    <button type="button" class="sample-btn" onclick="loadSample('sample_tay_ho')">🏖️ Biệt thự Hồ Tây</button>
+                    <button type="button" class="sample-btn" onclick="loadSample('sample_cau_giay')">🚗 Ngõ ô tô Cầu Giấy</button>
+                    <button type="button" class="sample-btn" onclick="loadSample('sample_dong_anh')">🌾 Ngoại thành Đông Anh</button>
+                </div>
+            </div>
+
+            <!-- Valuation Form -->
+            <form id="valuationForm" novalidate>
+                <div class="form-grid">
+                    <!-- Area (m2) -->
+                    <div class="form-group">
+                        <label for="area">Diện tích nhà đất (m²) <span class="req">*</span> <span class="hint">(5 - 3000 m²)</span></label>
+                        <input type="number" id="area" name="area" step="0.1" min="5" max="3000" value="60" required placeholder="Ví dụ: 60.5">
+                        <div class="error-message" id="areaError"></div>
+                    </div>
+
+                    <!-- District Dropdown with Urban / Suburban groups -->
+                    <div class="form-group">
+                        <label for="district">Quận / Huyện <span class="req">*</span></label>
+                        <select id="district" name="district" required>
+                            <optgroup label="Quận Nội Thành (Trung tâm)">
+                                <option value="Quận Hoàn Kiếm">Quận Hoàn Kiếm</option>
+                                <option value="Quận Ba Đình">Quận Ba Đình</option>
+                                <option value="Quận Tây Hồ">Quận Tây Hồ</option>
+                                <option value="Quận Cầu Giấy" selected>Quận Cầu Giấy</option>
+                                <option value="Quận Đống Đa">Quận Đống Đa</option>
+                                <option value="Quận Hai Bà Trưng">Quận Hai Bà Trưng</option>
+                                <option value="Quận Thanh Xuân">Quận Thanh Xuân</option>
+                                <option value="Quận Nam Từ Liêm">Quận Nam Từ Liêm</option>
+                                <option value="Quận Bắc Từ Liêm">Quận Bắc Từ Liêm</option>
+                                <option value="Quận Hoàng Mai">Quận Hoàng Mai</option>
+                                <option value="Quận Hà Đông">Quận Hà Đông</option>
+                                <option value="Quận Long Biên">Quận Long Biên</option>
+                            </optgroup>
+                            <optgroup label="Huyện Ngoại Thành">
+                                <option value="Huyện Gia Lâm">Huyện Gia Lâm</option>
+                                <option value="Huyện Đông Anh">Huyện Đông Anh</option>
+                                <option value="Huyện Hoài Đức">Huyện Hoài Đức</option>
+                                <option value="Huyện Thanh Trì">Huyện Thanh Trì</option>
+                                <option value="Huyện Sóc Sơn">Huyện Sóc Sơn</option>
+                                <option value="Huyện Đan Phượng">Huyện Đan Phượng</option>
+                                <option value="Huyện Thường Tín">Huyện Thường Tín</option>
+                                <option value="Huyện Thanh Oai">Huyện Thanh Oai</option>
+                                <option value="Huyện Chương Mỹ">Huyện Chương Mỹ</option>
+                                <option value="Huyện Thạch Thất">Huyện Thạch Thất</option>
+                                <option value="Huyện Quốc Oai">Huyện Quốc Oai</option>
+                                <option value="Huyện Mê Linh">Huyện Mê Linh</option>
+                                <option value="Huyện Phúc Thọ">Huyện Phúc Thọ</option>
+                                <option value="Huyện Mỹ Đức">Huyện Mỹ Đức</option>
+                                <option value="Thị xã Sơn Tây">Thị xã Sơn Tây</option>
+                            </optgroup>
+                        </select>
+                        <div class="error-message" id="districtError"></div>
+                    </div>
+
+                    <!-- Dimensions: Length & Width -->
+                    <div class="form-group full-width">
+                        <label>Kích thước chiều dài & mặt tiền (m) <span class="hint">(Tùy chọn - Dùng tính Tỷ lệ khuôn đất Aspect Ratio)</span></label>
+                        <div class="dims-wrapper">
+                            <div>
+                                <input type="number" id="length" name="length" step="0.1" min="1" max="200" value="12" placeholder="Chiều dài (m), ví dụ: 12">
+                            </div>
+                            <div>
+                                <input type="number" id="width" name="width" step="0.1" min="1" max="100" value="5" placeholder="Mặt tiền / Rộng (m), ví dụ: 5">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Property Type -->
+                    <div class="form-group">
+                        <label for="propertyType">Loại hình nhà ở <span class="req">*</span></label>
+                        <select id="propertyType" name="propertyType" required>
+                            <option value="Nhà ngõ, hẻm" selected>Nhà ngõ, hẻm</option>
+                            <option value="Nhà mặt phố, mặt tiền">Nhà mặt phố, mặt tiền</option>
+                            <option value="Nhà biệt thự">Nhà biệt thự</option>
+                            <option value="Nhà phố liền kề">Nhà phố liền kề</option>
+                        </select>
+                        <div class="error-message" id="propertyTypeError"></div>
+                    </div>
+
+                    <!-- Legal Status -->
+                    <div class="form-group">
+                        <label for="legalStatus">Giấy tờ pháp lý <span class="req">*</span></label>
+                        <select id="legalStatus" name="legalStatus" required>
+                            <option value="Đã có sổ" selected>Đã có sổ đỏ / sổ hồng</option>
+                            <option value="Đang chờ sổ">Đang chờ sổ</option>
+                            <option value="Giấy tờ khác">Giấy tờ khác / Hợp đồng mua bán</option>
+                            <option value="Unknown">Chưa rõ / Chưa có sổ</option>
+                        </select>
+                        <div class="error-message" id="legalStatusError"></div>
+                    </div>
+
+                    <!-- Bedrooms -->
+                    <div class="form-group">
+                        <label for="bedrooms">Số phòng ngủ <span class="req">*</span></label>
+                        <select id="bedrooms" name="bedrooms" required>
+                            <option value="1">1 Phòng ngủ</option>
+                            <option value="2">2 Phòng ngủ</option>
+                            <option value="3" selected>3 Phòng ngủ</option>
+                            <option value="4">4 Phòng ngủ</option>
+                            <option value="5">5 Phòng ngủ</option>
+                            <option value="6">6 Phòng ngủ</option>
+                            <option value="7">7 Phòng ngủ</option>
+                            <option value="8">8 Phòng ngủ</option>
+                            <option value="9">9 Phòng ngủ</option>
+                            <option value="10+">10+ Phòng ngủ</option>
+                            <option value="Unknown">Chưa rõ</option>
+                        </select>
+                        <div class="error-message" id="bedroomsError"></div>
+                    </div>
+                </div>
+
+                <!-- Submit and Reset Buttons -->
+                <div class="actions">
+                    <button type="submit" class="btn btn-primary" id="submitBtn">
+                        <span>🏷️ Định Giá Bất Động Sản</span>
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="resetForm()">
+                        <span>Làm mới</span>
+                    </button>
+                </div>
+            </form>
+
+            <!-- Loading Spinner -->
+            <div class="loading-state" id="loadingState">
+                <div class="spinner"></div>
+                <p style="font-size: 14px; color: var(--gray-500); font-weight: 500;">Đang xử lý đặc trưng & tính toán qua Random Forest Regressor...</p>
+            </div>
+
+            <!-- Result Card -->
+            <div class="result-box" id="resultCard">
+                <div class="result-top-card">
+                    <div>
+                        <div class="valuation-title">Ước tính Giá trị Bất động sản</div>
+                        <div class="valuation-price" id="totalPriceVal">5.47 Tỷ VNĐ</div>
+                    </div>
+                    <div class="unit-price-box">
+                        <div class="unit-label">Đơn giá ước tính / m²</div>
+                        <div class="unit-val" id="priceM2Val">91.25 Triệu / m²</div>
+                    </div>
+                </div>
+
+                <!-- Price Range Interval -->
+                <div class="price-range-section">
+                    <div class="range-header">
+                        <span>Khoảng giá kỳ vọng (MAE ± sai số):</span>
+                        <strong id="priceRangeText">4.77 Tỷ — 6.17 Tỷ VNĐ</strong>
+                    </div>
+                    <div class="range-bar-track">
+                        <div class="range-bar-fill"></div>
+                    </div>
+                </div>
+
+                <!-- Derived Features Summary -->
+                <div class="details-grid">
+                    <div class="detail-card">
+                        <div class="detail-title">Tỷ lệ khuôn đất</div>
+                        <div class="detail-val" id="featAspectRatio">2.40 (Dài/Rộng)</div>
+                    </div>
+                    <div class="detail-card">
+                        <div class="detail-title">Diện tích kích thước</div>
+                        <div class="detail-val" id="featCalcArea">60.0 m²</div>
+                    </div>
+                    <div class="detail-card">
+                        <div class="detail-title">Đầy đủ kích thước</div>
+                        <div class="detail-val" id="featHasDims">Có (1)</div>
+                    </div>
+                    <div class="detail-card">
+                        <div class="detail-title">Pháp lý đảm bảo</div>
+                        <div class="detail-val" id="featHasLegal">Có (1)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <span>Assignment 2 • Hanoi House Price Prediction • Random Forest Pipeline (R² = 0.373, MAE = 23.34 triệu/m²)</span>
+            <span>FastAPI Server</span>
+        </footer>
+    </div>
+
+    <!-- JavaScript Logic -->
+    <script>
+        const samplesData = {
+            sample_pho_co: {
+                area: 85.0,
+                length: 17.0,
+                width: 5.0,
+                district: "Quận Hoàn Kiếm",
+                property_type: "Nhà mặt phố, mặt tiền",
+                legal_status: "Đã có sổ",
+                bedrooms: "4"
+            },
+            sample_tay_ho: {
+                area: 180.0,
+                length: 18.0,
+                width: 10.0,
+                district: "Quận Tây Hồ",
+                property_type: "Nhà biệt thự",
+                legal_status: "Đã có sổ",
+                bedrooms: "5"
+            },
+            sample_cau_giay: {
+                area: 55.0,
+                length: 11.0,
+                width: 5.0,
+                district: "Quận Cầu Giấy",
+                property_type: "Nhà ngõ, hẻm",
+                legal_status: "Đã có sổ",
+                bedrooms: "3"
+            },
+            sample_dong_anh: {
+                area: 70.0,
+                length: 14.0,
+                width: 5.0,
+                district: "Huyện Đông Anh",
+                property_type: "Nhà ngõ, hẻm",
+                legal_status: "Đã có sổ",
+                bedrooms: "2"
+            }
+        };
+
+        function loadSample(sampleId) {
+            const sample = samplesData[sampleId];
+            if (!sample) return;
+
+            document.getElementById('area').value = sample.area;
+            document.getElementById('length').value = sample.length || '';
+            document.getElementById('width').value = sample.width || '';
+            document.getElementById('district').value = sample.district;
+            document.getElementById('propertyType').value = sample.property_type;
+            document.getElementById('legalStatus').value = sample.legal_status;
+            document.getElementById('bedrooms').value = sample.bedrooms;
+
+            clearErrors();
+            hideResult();
+
+            submitForm();
+        }
+
+        function resetForm() {
+            document.getElementById('valuationForm').reset();
+            clearErrors();
+            hideResult();
+        }
+
+        document.getElementById('valuationForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            submitForm();
+        });
+
+        async function submitForm() {
+            clearErrors();
+            hideResult();
+
+            const areaVal = parseFloat(document.getElementById('area').value);
+            const lengthVal = document.getElementById('length').value ? parseFloat(document.getElementById('length').value) : null;
+            const widthVal = document.getElementById('width').value ? parseFloat(document.getElementById('width').value) : null;
+            const districtVal = document.getElementById('district').value;
+            const propertyTypeVal = document.getElementById('propertyType').value;
+            const legalStatusVal = document.getElementById('legalStatus').value;
+            const bedroomsVal = document.getElementById('bedrooms').value;
+
+            if (isNaN(areaVal) || areaVal <= 5 || areaVal > 3000) {
+                showError('areaError', 'Vui lòng nhập diện tích hợp lệ từ 5 đến 3000 m².');
+                return;
+            }
+
+            showLoading();
+
+            const payload = {
+                area: areaVal,
+                length: lengthVal,
+                width: widthVal,
+                district: districtVal,
+                property_type: propertyTypeVal,
+                legal_status: legalStatusVal,
+                bedrooms: bedroomsVal
+            };
+
+            try {
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await response.json();
+                hideLoading();
+
+                if (data.status.startsWith('error')) {
+                    alert('Lỗi định giá: ' + data.formatted_total_price);
+                } else {
+                    renderResult(data);
+                }
+            } catch (err) {
+                hideLoading();
+                console.error(err);
+                alert('Không thể kết nối đến máy chủ. Vui lòng kiểm tra lại kết nối.');
+            }
+        }
+
+        function renderResult(data) {
+            document.getElementById('totalPriceVal').textContent = data.formatted_total_price;
+            document.getElementById('priceM2Val').textContent = `${data.price_per_m2_million.toFixed(2)} Triệu / m²`;
+            document.getElementById('priceRangeText').textContent = `${data.price_range_low_billion.toFixed(2)} Tỷ — ${data.price_range_high_billion.toFixed(2)} Tỷ VNĐ`;
+
+            if (data.derived_features) {
+                document.getElementById('featAspectRatio').textContent = typeof data.derived_features.aspect_ratio === 'number' 
+                    ? `${data.derived_features.aspect_ratio.toFixed(2)}` 
+                    : 'Không có';
+                document.getElementById('featCalcArea').textContent = typeof data.derived_features.calculated_area === 'number'
+                    ? `${data.derived_features.calculated_area.toFixed(1)} m²`
+                    : 'Không có';
+                document.getElementById('featHasDims').textContent = data.derived_features.has_dimensions ? 'Có (1)' : 'Không (0)';
+                document.getElementById('featHasLegal').textContent = data.derived_features.has_legal_docs ? 'Có (1)' : 'Không (0)';
+            }
+
+            const card = document.getElementById('resultCard');
+            card.style.display = 'block';
+            card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function showError(id, message) {
+            const el = document.getElementById(id);
+            if (el) {
+                el.textContent = message;
+                el.style.display = 'block';
+            }
+        }
+
+        function clearErrors() {
+            document.querySelectorAll('.error-message').forEach(el => {
+                el.textContent = '';
+                el.style.display = 'none';
+            });
+        }
+
+        function showLoading() {
+            document.getElementById('loadingState').style.display = 'block';
+            document.getElementById('submitBtn').disabled = true;
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingState').style.display = 'none';
+            document.getElementById('submitBtn').disabled = false;
+        }
+
+        function hideResult() {
+            document.getElementById('resultCard').style.display = 'none';
+        }
+
+        async function checkHealth() {
+            try {
+                const res = await fetch('/health');
+                const data = await res.json();
+                if (data.status === 'healthy') {
+                    document.getElementById('systemStatus').innerHTML = `<span class="status-dot"></span> Model Ready (${data.algorithm})`;
+                } else {
+                    document.getElementById('systemStatus').innerHTML = '<span class="status-dot" style="background:red;"></span> Model Error';
+                }
+            } catch (e) {}
+        }
+        checkHealth();
+    </script>
+</body>
+</html>
