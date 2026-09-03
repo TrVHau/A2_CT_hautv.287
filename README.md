@@ -4,6 +4,7 @@
 [![Python](https://img.shields.io/badge/Python-3.11-blue.svg)](https://www.python.org/)
 [![Scikit-Learn](https://img.shields.io/badge/scikit--learn-1.9.0-orange.svg)](https://scikit-learn.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.110+-green.svg)](https://fastapi.tiangolo.com/)
+[![Kaggle](https://img.shields.io/badge/Kaggle-Datasets-20BEFF.svg)](https://www.kaggle.com/)
 [![PTIT](https://img.shields.io/badge/PTIT-Intelligent_System_Development-red.svg)](https://portal.ptit.edu.vn/)
 
 ---
@@ -45,11 +46,34 @@ graph LR
 
 ## 🏆 Bảng tổng hợp 3 Ứng dụng Machine Learning
 
-| Ứng dụng | Loại bài toán | Dữ liệu đầu vào | Không gian đặc trưng $\mathbf{x}_i$ | Mô hình lựa chọn tối ưu | Hiệu năng trên Test Set | Endpoint triển khai |
+| Ứng dụng | Loại bài toán | Dữ liệu & Kaggle Source | Không gian $\mathbf{x}_i$ | Mô hình lựa chọn tối ưu | Hiệu năng trên Test Set | Endpoint triển khai |
 |---|---|---|---|---|---|---|
-| **1. Diabetes Prediction** | Phân loại nhị phân (*Binary Classification*) | `diabetes_prediction_dataset.csv`<br>(100,000 bản ghi) | $d = 15$<br>(Chuẩn hóa Z-Score + OHE) | **Random Forest Classifier**<br>(Tối ưu dữ liệu mất cân bằng) | **Accuracy: 97.2%**<br>**F1-Score: 81.3%**<br>**ROC-AUC: 96.1%** | `POST /predict`<br>`GET /health` |
-| **2. House Price Prediction** | Hồi quy giá trị liên tục (*Regression*) | `VN_housing_dataset.csv`<br>(30,229 quan sát) | $d = 11$<br>(RobustScaler + OHE) | **Random Forest Regressor**<br>(Chống chịu ngoại lệ cao) | **MAE: 1.46 tỷ**<br>**RMSE: 1.85 tỷ**<br>**$R^2$: 0.2997** | `POST /predict`<br>`GET /health` |
-| **3. Customer Behavior** | Phân loại đa phương thức (*Multimodal Classification*) | `Womens Clothing Reviews.csv`<br>(23,486 đánh giá) | $d = 1,038$<br>(TF-IDF 1,000 + Tabular 38) | **Logistic Regression (Balanced)**<br>(Multimodal Fusion) | **Accuracy: 93.3%**<br>**F1-Score: 95.8%**<br>**ROC-AUC: 97.7%** | `POST /predict`<br>`GET /health` |
+| **1. Diabetes Prediction** | Phân loại nhị phân (*Binary Classification*) | [Diabetes Prediction Dataset](https://www.kaggle.com/datasets/iammustafatz/diabetes-prediction-dataset)<br>(100,000 bản ghi) | $d = 15$<br>(Z-Score + OHE) | **Random Forest Classifier**<br>(Tối ưu dữ liệu mất cân bằng) | **Accuracy: 97.2%**<br>**F1-Score: 81.3%**<br>**ROC-AUC: 96.1%** | `POST /predict`<br>`GET /health` |
+| **2. House Price Prediction** | Hồi quy giá trị liên tục (*Regression*) | [Vietnam Housing Dataset Hanoi](https://www.kaggle.com/datasets/ladcva/vietnam-housing-dataset-hanoi/data)<br>(30,229 quan sát) | $d = 11$<br>(RobustScaler + OHE) | **Random Forest Regressor**<br>(Chống chịu ngoại lệ cao) | **MAE: 1.46 tỷ**<br>**RMSE: 1.85 tỷ**<br>**$R^2$: 0.2997** | `POST /predict`<br>`GET /health` |
+| **3. Customer Behavior** | Phân loại đa phương thức (*Multimodal Classification*) | [Women's Clothing Reviews](https://www.kaggle.com/datasets/nicapotato/womens-ecommerce-clothing-reviews)<br>(23,486 đánh giá) | $d = 1,038$<br>(TF-IDF 1,000 + Tabular 38) | **Logistic Regression (Balanced)**<br>(Multimodal Fusion) | **Accuracy: 93.3%**<br>**F1-Score: 95.8%**<br>**ROC-AUC: 97.7%** | `POST /predict`<br>`GET /health` |
+
+---
+
+## 📊 Nguồn dữ liệu & Liên kết Kaggle (Dataset References)
+
+Dự án sử dụng 3 bộ dữ liệu thực tế từ Kaggle:
+
+1. **Diabetes Prediction Dataset**:
+   - **Link Kaggle**: [https://www.kaggle.com/datasets/iammustafatz/diabetes-prediction-dataset](https://www.kaggle.com/datasets/iammustafatz/diabetes-prediction-dataset)
+   - **Tác giả**: Mohammed Mustafa
+   - **Quy mô**: 100,000 bản ghi bệnh nhân thực tế với 8 đặc trưng lâm sàng và nhân khẩu học (`age`, `bmi`, `HbA1c_level`, `blood_glucose_level`, `gender`, `smoking_history`, `hypertension`, `heart_disease`).
+   - **Mục tiêu**: Dự đoán nhãn `diabetes` $\in \{0, 1\}$.
+
+2. **Vietnam Housing Dataset (Hanoi House Prices)**:
+   - **Link Kaggle**: [https://www.kaggle.com/datasets/ladcva/vietnam-housing-dataset-hanoi/data](https://www.kaggle.com/datasets/ladcva/vietnam-housing-dataset-hanoi/data)
+   - **Quy mô**: 30,229 quan sát tin đăng bất động sản tại Hà Nội với các đặc trưng diện tích, số phòng ngủ, phòng tắm, số tầng, tình trạng nội thất, khả năng tiếp cận đường.
+   - **Mục tiêu**: Dự đoán đơn giá và tổng giá trị nhà đất (`Price` - tỷ VNĐ).
+
+3. **Women's E-Commerce Clothing Reviews Dataset**:
+   - **Link Kaggle**: [https://www.kaggle.com/datasets/nicapotato/womens-ecommerce-clothing-reviews](https://www.kaggle.com/datasets/nicapotato/womens-ecommerce-clothing-reviews)
+   - **Tác giả**: Nicapotato
+   - **Quy mô**: 23,486 đánh giá sản phẩm thực tế gồm tiêu đề, văn bản nhận xét (`Review Text`), điểm sao (`Rating`), lượt vote hữu ích, phân nhóm ngành hàng (`Division`, `Department`, `Class Name`).
+   - **Mục tiêu**: Dự đoán khả năng khuyến nghị sản phẩm (`Recommended IND` $\in \{0, 1\}$).
 
 ---
 
@@ -65,7 +89,7 @@ assignment2/
 │
 ├── diabetes/                                          # ỨNG DỤNG 1: DỰ ĐOÁN TIỂU ĐƯỜNG
 │   ├── data/
-│   │   └── diabetes_prediction_dataset.csv            # Bộ dữ liệu 100,000 bệnh nhân
+│   │   └── diabetes_prediction_dataset.csv            # Bộ dữ liệu 100,000 bệnh nhân (Kaggle)
 │   ├── notebook/
 │   │   └── diabetes_prediction.ipynb                  # Notebook đầy đủ 23 Sections + 29 biểu đồ
 │   ├── models/
@@ -76,7 +100,7 @@ assignment2/
 │       └── index.html                                 # Giao diện Web Client tương tác
 │
 ├── house_price/                                       # ỨNG DỤNG 2: DỰ ĐOÁN GIÁ NHÀ
-│   ├── VN_housing_dataset.csv                         # Bộ dữ liệu 30,229 tin bất động sản
+│   ├── VN_housing_dataset.csv                         # Bộ dữ liệu 30,229 tin BĐS (Kaggle)
 │   ├── notebook/
 │   │   └── house_price_prediction.ipynb               # Notebook 23 Sections phân tích hồi quy
 │   ├── models/
@@ -87,7 +111,7 @@ assignment2/
 │       └── index.html                                 # Giao diện Web Client định giá nhà
 │
 └── customer_behavior/                                 # ỨNG DỤNG 3: HÀNH VI KHÁCH HÀNG (MULTIMODAL)
-    ├── Womens Clothing E-Commerce Reviews.csv         # Bộ dữ liệu 23,486 đánh giá thương mại điện tử
+    ├── Womens Clothing E-Commerce Reviews.csv         # Bộ dữ liệu 23,486 đánh giá TMĐT (Kaggle)
     ├── notebook/
     │   └── customer_behavior.ipynb                    # Notebook Multimodal (Text TF-IDF + Tabular)
     ├── models/

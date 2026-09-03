@@ -97,6 +97,7 @@ Với Customer Behavior, Title và Review Text được ghép, chuyển về ch�
 
 
 ### Link github notebook: https://github.com/TrVHau/A2_CT_hautv.287/blob/main/diabetes/notebook/diabetes_prediction.ipynb
+Link Kaggle Dataset: https://www.kaggle.com/datasets/iammustafatz/diabetes-prediction-dataset
 
 
 ### Mô tả bài toán và dữ liệu
@@ -169,6 +170,7 @@ Model và preprocessor được lưu tại thư mục model dưới dạng .sav.
 
 
 ### Link github notebook: https://github.com/TrVHau/A2_CT_hautv.287/blob/main/house_price/notebook/house_price_prediction.ipynb
+Link Kaggle Dataset: https://www.kaggle.com/datasets/ladcva/vietnam-housing-dataset-hanoi/data
 
 
 ### Mô tả bài toán, dữ liệu và biểu diễn
@@ -236,6 +238,7 @@ Preprocessor và năm model hồi quy được lưu dưới dạng .sav. Endpoin
 
 
 ### Link github notebook: https://github.com/TrVHau/A2_CT_hautv.287/blob/main/customer_behavior/notebook/customer_behavior.ipynb
+Link Kaggle Dataset: https://www.kaggle.com/datasets/nicapotato/womens-ecommerce-clothing-reviews
 
 
 ### Bài toán, dữ liệu và target
