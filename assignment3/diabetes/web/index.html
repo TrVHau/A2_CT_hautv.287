@@ -1,0 +1,417 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dự đoán Bệnh Tiểu Đường - Assignment 03 (4 Mô hình)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="bg-slate-900 text-slate-100 min-h-screen">
+    <div class="max-w-6xl mx-auto p-6">
+      <!-- Header -->
+      <header class="mb-8 text-center border-b border-slate-800 pb-6">
+        <span
+          class="px-3 py-1 bg-indigo-950 border border-indigo-700 text-indigo-300 text-xs rounded-full font-semibold uppercase tracking-wider"
+        >
+          Assignment 03 • Intelligent System Development
+        </span>
+        <h1 class="text-3xl font-bold mt-3 text-white">
+          Hệ Thống Dự Đoán Bệnh Tiểu Đường
+        </h1>
+        <p class="text-slate-400 mt-1">
+          So sánh đồng thời 4 mô hình: Logistic Regression, Decision Tree,
+          Random Forest & Deep Learning (PyTorch MLP)
+        </p>
+      </header>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <!-- Form Input -->
+        <div
+          class="lg:col-span-5 bg-slate-800/80 p-6 rounded-2xl border border-slate-700 shadow-xl backdrop-blur"
+        >
+          <h2
+            class="text-lg font-semibold text-indigo-400 mb-4 flex items-center gap-2"
+          >
+            <i class="fa-solid fa-user-doctor"></i> Thông tin bệnh nhân
+          </h2>
+
+          <form id="predictForm" class="space-y-4">
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs text-slate-400 mb-1"
+                  >Giới tính</label
+                >
+                <select
+                  id="gender"
+                  class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm focus:border-indigo-500 outline-none"
+                >
+                  <option value="Female">Nữ (Female)</option>
+                  <option value="Male">Nam (Male)</option>
+                  <option value="Other">Khác (Other)</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs text-slate-400 mb-1">Tuổi</label>
+                <input
+                  type="number"
+                  id="age"
+                  value="54"
+                  min="0"
+                  max="120"
+                  class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm focus:border-indigo-500 outline-none"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs text-slate-400 mb-1"
+                  >Huyết áp cao</label
+                >
+                <select
+                  id="hypertension"
+                  class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm focus:border-indigo-500 outline-none"
+                >
+                  <option value="0">Không (0)</option>
+                  <option value="1">Có (1)</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs text-slate-400 mb-1"
+                  >Bệnh tim mạch</label
+                >
+                <select
+                  id="heart_disease"
+                  class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm focus:border-indigo-500 outline-none"
+                >
+                  <option value="0">Không (0)</option>
+                  <option value="1">Có (1)</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs text-slate-400 mb-1"
+                >Tiền sử hút thuốc</label
+              >
+              <select
+                id="smoking_history"
+                class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm focus:border-indigo-500 outline-none"
+              >
+                <option value="never">Chưa từng hút (never)</option>
+                <option value="No Info">Không có thông tin (No Info)</option>
+                <option value="current">Đang hút (current)</option>
+                <option value="former">Đã cai (former)</option>
+                <option value="ever">Từng hút (ever)</option>
+                <option value="not current">
+                  Không hút hiện tại (not current)
+                </option>
+              </select>
+            </div>
+
+            <div class="grid grid-cols-3 gap-3">
+              <div>
+                <label class="block text-xs text-slate-400 mb-1">BMI</label>
+                <input
+                  type="number"
+                  id="bmi"
+                  value="27.32"
+                  step="0.1"
+                  class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm focus:border-indigo-500 outline-none"
+                  required
+                />
+              </div>
+              <div>
+                <label class="block text-xs text-slate-400 mb-1"
+                  >HbA1c (%)</label
+                >
+                <input
+                  type="number"
+                  id="HbA1c_level"
+                  value="6.6"
+                  step="0.1"
+                  class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm focus:border-indigo-500 outline-none"
+                  required
+                />
+              </div>
+              <div>
+                <label class="block text-xs text-slate-400 mb-1"
+                  >Đường huyết</label
+                >
+                <input
+                  type="number"
+                  id="blood_glucose_level"
+                  value="140"
+                  class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm focus:border-indigo-500 outline-none"
+                  required
+                />
+              </div>
+            </div>
+
+            <!-- Preset test buttons -->
+            <div class="pt-2">
+              <span class="text-xs text-slate-400 block mb-1"
+                >Mẫu thử nhanh:</span
+              >
+              <div class="flex gap-2">
+                <button
+                  type="button"
+                  onclick="loadSample(1)"
+                  class="text-xs bg-slate-700 hover:bg-slate-600 px-3 py-1.5 rounded-md text-slate-300 transition"
+                >
+                  🟢 Nguy cơ thấp
+                </button>
+                <button
+                  type="button"
+                  onclick="loadSample(2)"
+                  class="text-xs bg-red-950 hover:bg-red-900 border border-red-800 px-3 py-1.5 rounded-md text-red-200 transition"
+                >
+                  🔴 Nguy cơ cao
+                </button>
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              id="submitBtn"
+              class="w-full mt-4 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3 px-4 rounded-xl shadow-lg shadow-indigo-500/20 transition flex items-center justify-center gap-2"
+            >
+              <i class="fa-solid fa-brain"></i> Chạy Dự Đoán (Cả 4 Mô Hình)
+            </button>
+          </form>
+        </div>
+
+        <!-- Result Panel -->
+        <div class="lg:col-span-7 space-y-4">
+          <div class="flex items-center justify-between">
+            <h2
+              class="text-lg font-semibold text-slate-200 flex items-center gap-2"
+            >
+              <i class="fa-solid fa-chart-pie text-indigo-400"></i> Kết quả phân
+              tích đối chiếu
+            </h2>
+            <span
+              id="loadingSpinner"
+              class="hidden text-xs text-indigo-400 flex items-center gap-2"
+            >
+              <i class="fa-solid fa-spinner fa-spin"></i> Đang suy luận...
+            </span>
+          </div>
+
+          <div id="resultsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Cards will be injected by JavaScript -->
+            <div
+              class="col-span-2 bg-slate-800/40 border border-slate-700/60 p-8 rounded-2xl text-center text-slate-400"
+            >
+              <i
+                class="fa-solid fa-arrow-left text-3xl mb-2 text-slate-500"
+              ></i>
+              <p>
+                Nhập thông tin bệnh nhân và bấm <b>"Chạy Dự Đoán"</b> để so sánh
+                4 mô hình.
+              </p>
+            </div>
+          </div>
+
+          <!-- Model technical details -->
+          <div
+            class="bg-slate-800/40 border border-slate-700/40 p-4 rounded-xl text-xs text-slate-400"
+          >
+            <div
+              class="font-semibold text-slate-300 mb-1 flex items-center gap-1.5"
+            >
+              <i class="fa-solid fa-circle-info text-indigo-400"></i> Đặc tính
+              mô hình:
+            </div>
+            <ul class="list-disc list-inside space-y-0.5 text-slate-400">
+              <li>
+                <b>Logistic Regression:</b> Phân loại tuyến tính baseline, tốc
+                độ nhanh.
+              </li>
+              <li>
+                <b>Decision Tree:</b> Cây phân nhánh phi tuyến tính
+                (max_depth=10).
+              </li>
+              <li>
+                <b>Random Forest:</b> Ensemble 200 cây (F1-score cao nhất).
+              </li>
+              <li>
+                <b>Deep Learning:</b> Mạng nơ-ron PyTorch DeeperMLP (8 &rarr; 64
+                &rarr; 32 &rarr; 2, ReLU, Adam).
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const samples = {
+        1: {
+          gender: "Female",
+          age: 28,
+          hypertension: 0,
+          heart_disease: 0,
+          smoking_history: "never",
+          bmi: 21.5,
+          HbA1c_level: 4.8,
+          blood_glucose_level: 90,
+        },
+        2: {
+          gender: "Male",
+          age: 67,
+          hypertension: 1,
+          heart_disease: 1,
+          smoking_history: "current",
+          bmi: 34.2,
+          HbA1c_level: 8.5,
+          blood_glucose_level: 210,
+        },
+      };
+
+      function loadSample(id) {
+        const s = samples[id];
+        for (const k in s) {
+          const el = document.getElementById(k);
+          if (el) el.value = s[k];
+        }
+      }
+
+      const modelMeta = {
+        logistic_regression: {
+          title: "Logistic Regression",
+          icon: "fa-chart-line",
+          badge: "ML Baseline",
+          color: "blue",
+        },
+        decision_tree: {
+          title: "Decision Tree",
+          icon: "fa-tree",
+          badge: "Single Tree",
+          color: "amber",
+        },
+        random_forest: {
+          title: "Random Forest",
+          icon: "fa-cubes-stacked",
+          badge: "Ensemble Bagging",
+          color: "emerald",
+        },
+        pytorch_mlp: {
+          title: "Deep Learning (PyTorch MLP)",
+          icon: "fa-network-wired",
+          badge: "Learned Representation",
+          color: "purple",
+        },
+      };
+
+      document
+        .getElementById("predictForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const btn = document.getElementById("submitBtn");
+          const spinner = document.getElementById("loadingSpinner");
+          btn.disabled = true;
+          spinner.classList.remove("hidden");
+
+          const payload = {
+            gender: document.getElementById("gender").value,
+            age: parseFloat(document.getElementById("age").value),
+            hypertension: parseInt(
+              document.getElementById("hypertension").value,
+            ),
+            heart_disease: parseInt(
+              document.getElementById("heart_disease").value,
+            ),
+            smoking_history: document.getElementById("smoking_history").value,
+            bmi: parseFloat(document.getElementById("bmi").value),
+            HbA1c_level: parseFloat(
+              document.getElementById("HbA1c_level").value,
+            ),
+            blood_glucose_level: parseInt(
+              document.getElementById("blood_glucose_level").value,
+            ),
+            model_choice: "all",
+          };
+
+          try {
+            const res = await fetch("/predict", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(payload),
+            });
+            const data = await res.json();
+
+            if (data.success) {
+              renderResults(data.results);
+            } else {
+              alert("Lỗi: " + data.error);
+            }
+          } catch (err) {
+            alert("Không thể kết nối API: " + err);
+          } finally {
+            btn.disabled = false;
+            spinner.classList.add("hidden");
+          }
+        });
+
+      function renderResults(results) {
+        const grid = document.getElementById("resultsGrid");
+        grid.innerHTML = "";
+
+        for (const key in results) {
+          const r = results[key];
+          const meta = modelMeta[key] || {
+            title: key,
+            icon: "fa-brain",
+            badge: "Model",
+            color: "indigo",
+          };
+          const isRisk = r.prediction === 1;
+          const probPercent = (r.probability_diabetes * 100).toFixed(1);
+
+          const card = document.createElement("div");
+          card.className = `bg-slate-800 border ${isRisk ? "border-red-600/70 bg-red-950/20" : "border-slate-700 bg-slate-800/80"} p-5 rounded-2xl shadow-lg flex flex-col justify-between transition hover:border-indigo-500`;
+
+          card.innerHTML = `
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="flex items-center gap-2">
+                                <i class="fa-solid ${meta.icon} text-indigo-400 text-base"></i>
+                                <span class="font-bold text-sm text-slate-200">${meta.title}</span>
+                            </div>
+                            <span class="text-[10px] bg-slate-900 text-slate-400 px-2 py-0.5 rounded border border-slate-700">
+                                ${meta.badge}
+                            </span>
+                        </div>
+
+                        <div class="mb-3">
+                            <span class="text-xs ${isRisk ? "text-red-400" : "text-emerald-400"} font-semibold uppercase tracking-wider">
+                                ${isRisk ? "🔴 " + r.label : "🟢 " + r.label}
+                            </span>
+                            <div class="text-2xl font-bold mt-1 text-white">
+                                ${probPercent}% <span class="text-xs font-normal text-slate-400">xác suất tiểu đường</span>
+                            </div>
+                        </div>
+
+                        <!-- Progress Bar -->
+                        <div class="w-full bg-slate-900 rounded-full h-2.5 border border-slate-700 overflow-hidden mb-3">
+                            <div class="h-full rounded-full ${isRisk ? "bg-red-500" : "bg-emerald-500"} transition-all duration-500" style="width: ${probPercent}%"></div>
+                        </div>
+                    </div>
+
+                    <div class="pt-2 border-t border-slate-700/50 flex justify-between text-[11px] text-slate-400">
+                        <span>Độ tin cậy: <b>${(Math.max(r.probability_no_diabetes, r.probability_diabetes) * 100).toFixed(1)}%</b></span>
+                        <span>Độ trễ: <b>${r.latency_ms} ms</b></span>
+                    </div>
+                `;
+          grid.appendChild(card);
+        }
+      }
+    </script>
+  </body>
+</html>

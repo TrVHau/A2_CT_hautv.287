@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Customer Review Sentiment - Assignment 03</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="bg-indigo-950 text-indigo-50 min-h-screen">
+    <div class="max-w-6xl mx-auto p-6">
+      <header class="mb-8 text-center border-b border-indigo-900 pb-6">
+        <span
+          class="px-3 py-1 bg-pink-900/50 border border-pink-700 text-pink-300 text-xs rounded-full font-semibold uppercase tracking-wider"
+        >
+          Assignment 03 • Natural Language Processing
+        </span>
+        <h1 class="text-3xl font-bold mt-3 text-white">
+          Phân Tích Cảm Xúc Khách Hàng (Customer Behavior)
+        </h1>
+        <p class="text-indigo-300 mt-1">
+          Hệ thống phân tích Review sản phẩm bằng 4 mô hình AI (Multi-Model
+          Evaluation)
+        </p>
+      </header>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <div
+          class="lg:col-span-5 bg-indigo-900/40 p-6 rounded-2xl border border-indigo-800 shadow-xl"
+        >
+          <h2
+            class="text-lg font-semibold text-pink-400 mb-4 flex items-center gap-2"
+          >
+            <i class="fa-solid fa-comment-dots"></i> Nhập đánh giá của khách
+            hàng (Tiếng Anh)
+          </h2>
+
+          <form id="predictForm" class="space-y-4">
+            <div>
+              <textarea
+                id="review"
+                rows="5"
+                class="w-full bg-indigo-950/80 border border-indigo-700 rounded-lg p-3 text-sm focus:border-pink-500 outline-none resize-none"
+                placeholder="Ví dụ: Absolutely wonderful - silky and sexy and comfortable..."
+                required
+              ></textarea>
+            </div>
+
+            <div class="pt-2">
+              <span class="text-xs text-indigo-300 block mb-2"
+                >Mẫu thử nhanh:</span
+              >
+              <div class="flex flex-col gap-2">
+                <button
+                  type="button"
+                  onclick="loadSample(1)"
+                  class="text-left text-xs bg-emerald-900/40 hover:bg-emerald-800/60 border border-emerald-800/50 px-3 py-2 rounded-md text-emerald-200 transition"
+                >
+                  <b>Positive:</b> "Love this dress! It's sooo pretty. I
+                  happened to find it in a store..."
+                </button>
+                <button
+                  type="button"
+                  onclick="loadSample(2)"
+                  class="text-left text-xs bg-red-900/40 hover:bg-red-800/60 border border-red-800/50 px-3 py-2 rounded-md text-red-200 transition"
+                >
+                  <b>Negative:</b> "Very disappointed. The material feels cheap
+                  and the sizing is completely off..."
+                </button>
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              id="submitBtn"
+              class="w-full mt-4 bg-pink-600 hover:bg-pink-500 text-white font-semibold py-3 px-4 rounded-xl shadow-lg shadow-pink-500/20 transition flex items-center justify-center gap-2"
+            >
+              <i class="fa-solid fa-microchip"></i> Phân tích Cảm xúc
+            </button>
+          </form>
+        </div>
+
+        <div class="lg:col-span-7 space-y-4">
+          <div class="flex items-center justify-between">
+            <h2
+              class="text-lg font-semibold text-indigo-200 flex items-center gap-2"
+            >
+              <i class="fa-solid fa-chart-simple text-pink-400"></i> Kết quả dự
+              đoán đồng thời
+            </h2>
+            <span
+              id="loadingSpinner"
+              class="hidden text-xs text-pink-400 flex items-center gap-2"
+            >
+              <i class="fa-solid fa-spinner fa-spin"></i> Processing NLP
+              models...
+            </span>
+          </div>
+
+          <div id="resultsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div
+              class="col-span-2 bg-indigo-900/20 border border-indigo-800/60 p-8 rounded-2xl text-center text-indigo-300/60"
+            >
+              <i
+                class="fa-solid fa-robot text-4xl mb-3 block text-indigo-800"
+              ></i>
+              <p>
+                Nhập đánh giá và phân tích để xem sự đồng thuận giữa các mô hình
+                AI.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const samples = {
+        1: "Love this dress! it's sooo pretty. i happened to find it in a store, and i'm glad i did bc i never would have ordered it online bc it's petite. i bought a petite and am 5'8\". i love the length on me- hits just a little below the knee.",
+        2: "Very disappointed. The material feels cheap and the sizing is completely off. I washed it once following the instructions and it shrank two full sizes. Definitely returning this item and would not recommend to anyone.",
+      };
+
+      function loadSample(id) {
+        document.getElementById("review").value = samples[id];
+      }
+
+      const modelMeta = {
+        naive_bayes: {
+          title: "Multinomial Naive Bayes",
+          icon: "fa-box",
+          badge: "Fast Baseline",
+        },
+        logistic_regression: {
+          title: "Logistic Regression",
+          icon: "fa-chart-line",
+          badge: "Linear Text Classifier",
+        },
+        random_forest: {
+          title: "Random Forest",
+          icon: "fa-cubes-stacked",
+          badge: "Tree Ensemble",
+        },
+        pytorch_mlp: {
+          title: "Deep Learning MLP",
+          icon: "fa-network-wired",
+          badge: "Neural Embedding",
+        },
+      };
+
+      document
+        .getElementById("predictForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const btn = document.getElementById("submitBtn");
+          const spinner = document.getElementById("loadingSpinner");
+          btn.disabled = true;
+          spinner.classList.remove("hidden");
+
+          const payload = {
+            review_text: document.getElementById("review").value,
+          };
+
+          try {
+            const res = await fetch("/predict", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(payload),
+            });
+            const data = await res.json();
+
+            if (data.success) renderResults(data.results);
+            else alert("Lỗi: " + data.error);
+          } catch (err) {
+            alert("Không kết nối được API: " + err);
+          } finally {
+            btn.disabled = false;
+            spinner.classList.add("hidden");
+          }
+        });
+
+      function renderResults(results) {
+        const grid = document.getElementById("resultsGrid");
+        grid.innerHTML = "";
+
+        for (const key in results) {
+          const r = results[key];
+          const meta = modelMeta[key] || {
+            title: key,
+            icon: "fa-brain",
+            badge: "Model",
+          };
+          const isPositive = r.prediction === 1;
+          const prob = (r.probability * 100).toFixed(1);
+
+          const card = document.createElement("div");
+          card.className = `bg-indigo-900/40 border ${isPositive ? "border-emerald-600/50 hover:border-emerald-400" : "border-red-600/50 hover:border-red-400"} p-5 rounded-2xl shadow-lg flex flex-col justify-between transition relative overflow-hidden`;
+
+          // Background gradient touch
+          const bgGradient = isPositive
+            ? "bg-gradient-to-br from-emerald-900/20 to-transparent"
+            : "bg-gradient-to-br from-red-900/20 to-transparent";
+
+          card.innerHTML = `
+                    <div class="absolute inset-0 ${bgGradient} pointer-events-none"></div>
+                    <div class="relative z-10">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center gap-2">
+                                <i class="fa-solid ${meta.icon} text-pink-400 text-base"></i>
+                                <span class="font-bold text-sm text-indigo-100">${meta.title}</span>
+                            </div>
+                            <span class="text-[10px] bg-indigo-950 text-indigo-300 px-2 py-0.5 rounded border border-indigo-800">
+                                ${meta.badge}
+                            </span>
+                        </div>
+                        
+                        <div class="flex items-center gap-3 mb-2">
+                            <div class="h-10 w-10 rounded-full flex items-center justify-center ${isPositive ? "bg-emerald-500/20 text-emerald-400" : "bg-red-500/20 text-red-400"}">
+                                <i class="fa-solid ${isPositive ? "fa-thumbs-up" : "fa-thumbs-down"} text-xl"></i>
+                            </div>
+                            <div>
+                                <div class="text-sm font-semibold ${isPositive ? "text-emerald-400" : "text-red-400"}">${r.label}</div>
+                                <div class="text-xs text-indigo-300 mt-0.5">Xác suất: <b>${prob}%</b></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="relative z-10 pt-3 border-t border-indigo-800/50 text-[11px] text-indigo-400 mt-2 text-right">
+                        Độ trễ: <b>${r.latency_ms} ms</b>
+                    </div>
+                `;
+          grid.appendChild(card);
+        }
+      }
+    </script>
+  </body>
+</html>

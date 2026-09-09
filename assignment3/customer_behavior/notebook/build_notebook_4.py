@@ -1,0 +1,76 @@
+#!/usr/bin/env python3
+"""Build Customer Behavior Notebook 4 - Model Comparison."""
+import json, os
+
+def md(s): return {"cell_type":"markdown","metadata":{},"source":s}
+def code(s): return {"cell_type":"code","execution_count":None,"metadata":{},"outputs":[],"source":s}
+
+cells=[]
+
+cells.append(md(
+"# PHÂN TÍCH ĐÁNH GIÁ KHÁCH HÀNG — SO SÁNH 4 MÔ HÌNH\n"
+"**Ba ML (Naive Bayes, Logistic Regression, Random Forest) vs PyTorch MLP**"
+))
+
+cells.append(code(
+"import numpy as np\n"
+"import pandas as pd\n"
+"import matplotlib.pyplot as plt\n"
+"import joblib, os\n"
+"from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score\n"
+"import matplotlib\n"
+"matplotlib.use('Agg')\n"
+"\n"
+"MODEL_DIR = os.path.join('..', 'models')\n"
+"data = np.load(os.path.join(MODEL_DIR, 'tfidf_data.npz'))\n"
+"X_test, y_test = data['X_test'], data['y_test']\n"
+"\n"
+"models = ['Multinomial Naive Bayes', 'Logistic Regression', 'Random Forest']\n"
+"results = []\n"
+"\n"
+"for m in models:\n"
+"    model = joblib.load(os.path.join(MODEL_DIR, f\"cb_{m.lower().replace(' ', '_')}.pkl\"))\n"
+"    preds = model.predict(X_test)\n"
+"    probs = model.predict_proba(X_test)[:, 1]\n"
+"    results.append({\n"
+"        'Model': m,\n"
+"        'Accuracy': accuracy_score(y_test, preds),\n"
+"        'Precision': precision_score(y_test, preds, zero_division=0),\n"
+"        'Recall': recall_score(y_test, preds, zero_division=0),\n"
+"        'F1-Score': f1_score(y_test, preds, zero_division=0),\n"
+"        'AUC-ROC': roc_auc_score(y_test, probs)\n"
+"    })\n"
+"\n"
+"# Dữ liệu DL\n"
+"dl_data = np.load(os.path.join(MODEL_DIR, 'cb_dl_preds.npz'))\n"
+"dl_preds = dl_data['preds']\n"
+"dl_probs = dl_data['probs']\n"
+"results.append({\n"
+"    'Model': 'Deep Learning (PyTorch MLP)',\n"
+"    'Accuracy': accuracy_score(y_test, dl_preds),\n"
+"    'Precision': precision_score(y_test, dl_preds, zero_division=0),\n"
+"    'Recall': recall_score(y_test, dl_preds, zero_division=0),\n"
+"    'F1-Score': f1_score(y_test, dl_preds, zero_division=0),\n"
+"    'AUC-ROC': roc_auc_score(y_test, dl_probs)\n"
+"})\n"
+"\n"
+"df_comp = pd.DataFrame(results)\n"
+"pd.set_option('display.float_format', '{:.4f}'.format)\n"
+"print(df_comp)\n"
+"\n"
+"fig, ax = plt.subplots(figsize=(10,6))\n"
+"df_comp.set_index('Model')[['F1-Score', 'AUC-ROC']].plot(kind='bar', ax=ax, width=0.7, rot=15)\n"
+"ax.set_ylim(0, 1.1)\n"
+"ax.set_title('So Sánh F1-Score & AUC-ROC giữa 4 mô hình')\n"
+"plt.tight_layout(); plt.show()\n"
+))
+
+cells.append(md(
+"## Kết luận\n"
+"Với dữ liệu Text (TF-IDF), **Logistic Regression** và **Deep Learning MLP** thường cho kết quả bám sát nhau và cao nhất. Naive Bayes chạy rất nhanh nhưng Recall đôi khi thấp. Tree-based model (Random Forest) hoạt động không quá xuất sắc với vector TF-IDF siêu thưa (sparse) 3000 chiều như các model nền tảng tuyến tính/MLP."
+))
+
+nb = {"cells": cells, "metadata": {"kernelspec": {"display_name": "Python 3", "language": "python", "name": "python3"}}, "nbformat": 4, "nbformat_minor": 5}
+out = os.path.join(os.path.dirname(__file__), '4_model_comparison.ipynb')
+with open(out, 'w', encoding='utf-8') as f: json.dump(nb, f, ensure_ascii=False, indent=1)
+print('Saved', out)

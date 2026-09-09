@@ -1,0 +1,65 @@
+nohup: ignoring input
+INFO:     Started server process [453077]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:40962 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40962 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+/home/dau/.conda/envs/assignment2/lib/python3.11/site-packages/sklearn/utils/validation.py:2827: UserWarning: X does not have valid feature names, but StandardScaler was fitted with feature names
+  warnings.warn(
+INFO:     127.0.0.1:51408 - "POST /predict HTTP/1.1" 200 OK
+/home/dau/.conda/envs/assignment2/lib/python3.11/site-packages/sklearn/utils/validation.py:2827: UserWarning: X does not have valid feature names, but StandardScaler was fitted with feature names
+  warnings.warn(
+INFO:     127.0.0.1:55748 - "POST /predict HTTP/1.1" 200 OK
+/home/dau/.conda/envs/assignment2/lib/python3.11/site-packages/sklearn/utils/validation.py:2827: UserWarning: X does not have valid feature names, but StandardScaler was fitted with feature names
+  warnings.warn(
+INFO:     127.0.0.1:55764 - "POST /predict HTTP/1.1" 200 OK
+/home/dau/.conda/envs/assignment2/lib/python3.11/site-packages/sklearn/utils/validation.py:2827: UserWarning: X does not have valid feature names, but StandardScaler was fitted with feature names
+  warnings.warn(
+INFO:     127.0.0.1:49936 - "POST /predict HTTP/1.1" 200 OK
+/home/dau/.conda/envs/assignment2/lib/python3.11/site-packages/sklearn/utils/validation.py:2827: UserWarning: X does not have valid feature names, but StandardScaler was fitted with feature names
+  warnings.warn(
+INFO:     127.0.0.1:49936 - "POST /predict HTTP/1.1" 200 OK
+/home/dau/.conda/envs/assignment2/lib/python3.11/site-packages/sklearn/utils/validation.py:2827: UserWarning: X does not have valid feature names, but StandardScaler was fitted with feature names
+  warnings.warn(
+INFO:     127.0.0.1:49936 - "POST /predict HTTP/1.1" 200 OK
+/home/dau/.conda/envs/assignment2/lib/python3.11/site-packages/sklearn/utils/validation.py:2827: UserWarning: X does not have valid feature names, but StandardScaler was fitted with feature names
+  warnings.warn(
+INFO:     127.0.0.1:49936 - "POST /predict HTTP/1.1" 200 OK
+/home/dau/.conda/envs/assignment2/lib/python3.11/site-packages/sklearn/utils/validation.py:2827: UserWarning: X does not have valid feature names, but StandardScaler was fitted with feature names
+  warnings.warn(
+INFO:     127.0.0.1:49936 - "POST /predict HTTP/1.1" 200 OK
+/home/dau/.conda/envs/assignment2/lib/python3.11/site-packages/sklearn/utils/validation.py:2827: UserWarning: X does not have valid feature names, but StandardScaler was fitted with feature names
+  warnings.warn(
+INFO:     127.0.0.1:49936 - "POST /predict HTTP/1.1" 200 OK
+/home/dau/.conda/envs/assignment2/lib/python3.11/site-packages/sklearn/utils/validation.py:2827: UserWarning: X does not have valid feature names, but StandardScaler was fitted with feature names
+  warnings.warn(
+INFO:     127.0.0.1:52074 - "POST /predict HTTP/1.1" 200 OK
+/home/dau/.conda/envs/assignment2/lib/python3.11/site-packages/sklearn/utils/validation.py:2827: UserWarning: X does not have valid feature names, but StandardScaler was fitted with feature names
+  warnings.warn(
+INFO:     127.0.0.1:48766 - "POST /predict HTTP/1.1" 200 OK
+/home/dau/.conda/envs/assignment2/lib/python3.11/site-packages/sklearn/utils/validation.py:2827: UserWarning: X does not have valid feature names, but StandardScaler was fitted with feature names
+  warnings.warn(
+INFO:     127.0.0.1:56342 - "POST /predict HTTP/1.1" 200 OK
+/home/dau/.conda/envs/assignment2/lib/python3.11/site-packages/sklearn/utils/validation.py:2827: UserWarning: X does not have valid feature names, but StandardScaler was fitted with feature names
+  warnings.warn(
+INFO:     127.0.0.1:56342 - "POST /predict HTTP/1.1" 200 OK
+/home/dau/.conda/envs/assignment2/lib/python3.11/site-packages/sklearn/utils/validation.py:2827: UserWarning: X does not have valid feature names, but StandardScaler was fitted with feature names
+  warnings.warn(
+INFO:     127.0.0.1:56342 - "POST /predict HTTP/1.1" 200 OK
+/home/dau/.conda/envs/assignment2/lib/python3.11/site-packages/sklearn/utils/validation.py:2827: UserWarning: X does not have valid feature names, but StandardScaler was fitted with feature names
+  warnings.warn(
+INFO:     127.0.0.1:58932 - "POST /predict HTTP/1.1" 200 OK
+/home/dau/.conda/envs/assignment2/lib/python3.11/site-packages/sklearn/utils/validation.py:2827: UserWarning: X does not have valid feature names, but StandardScaler was fitted with feature names
+  warnings.warn(
+INFO:     127.0.0.1:40324 - "POST /predict HTTP/1.1" 200 OK
+/home/dau/.conda/envs/assignment2/lib/python3.11/site-packages/sklearn/utils/validation.py:2827: UserWarning: X does not have valid feature names, but StandardScaler was fitted with feature names
+  warnings.warn(
+INFO:     127.0.0.1:36910 - "POST /predict HTTP/1.1" 200 OK
+/home/dau/.conda/envs/assignment2/lib/python3.11/site-packages/sklearn/utils/validation.py:2827: UserWarning: X does not have valid feature names, but StandardScaler was fitted with feature names
+  warnings.warn(
+INFO:     127.0.0.1:42174 - "POST /predict HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [453077]

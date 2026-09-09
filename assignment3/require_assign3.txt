@@ -1,0 +1,11 @@
+1) chuẩn bị data
+|
+diabetes
+house-price
+comments
+
+2) chọn 3 mô hình ML cơ bản 
+
+3) mô hình deep learning
+
+4) so sánh 4 mô hình 
