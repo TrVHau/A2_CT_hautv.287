@@ -40,34 +40,20 @@ HEX_ROW_ALT = 'F8FAFC'
 def create_document():
     doc = docx.Document()
     
-    # Page setup A4
-    for s in doc.sections:
-        s.top_margin = Inches(0.8)
-        s.bottom_margin = Inches(0.8)
-        s.left_margin = Inches(1.0)
-        s.right_margin = Inches(0.8)
-        s.page_width = Inches(8.27)
-        s.page_height = Inches(11.69)
-        
-        # Configure Header and Footer
-        header = s.header
-        hp = header.paragraphs[0]
-        hp.alignment = WD_ALIGN_PARAGRAPH.RIGHT
-        hrun = hp.add_run("BÁO CÁO BÀI TẬP LỚN 3 — PHÁT TRIỂN CÁC HỆ THỐNG THÔNG MINH")
-        hrun.font.name = 'Times New Roman'
-        hrun.font.size = Pt(8.5)
-        hrun.font.italic = True
-        hrun.font.color.rgb = C_MUTED
-        
-        footer = s.footer
-        fp = footer.paragraphs[0]
-        fp.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
-        frun1 = fp.add_run("Sinh viên: Trần Văn Hậu — MSV: B23DCCN287 — Lớp: D23CQCN01-B")
-        frun1.font.name = 'Times New Roman'
-        frun1.font.size = Pt(8.5)
-        frun1.font.italic = True
-        frun1.font.color.rgb = C_MUTED
-        
+    # Page setup A4 - Section 1 (Cover Page)
+    s1 = doc.sections[0]
+    s1.top_margin = Inches(0.8)
+    s1.bottom_margin = Inches(0.8)
+    s1.left_margin = Inches(1.0)
+    s1.right_margin = Inches(0.8)
+    s1.page_width = Inches(8.27)
+    s1.page_height = Inches(11.69)
+    
+    # Add cover frame (pgBorders) to Section 1
+    sectPr1 = s1._sectPr
+    pgBorders = parse_xml(f'<w:pgBorders {nsdecls("w")} w:offsetFrom="text"><w:top w:val="double" w:sz="18" w:space="18" w:color="1E3A8A"/><w:left w:val="double" w:sz="18" w:space="18" w:color="1E3A8A"/><w:bottom w:val="double" w:sz="18" w:space="18" w:color="1E3A8A"/><w:right w:val="double" w:sz="18" w:space="18" w:color="1E3A8A"/></w:pgBorders>')
+    sectPr1.append(pgBorders)
+    
     return doc
 
 # XML Helpers
@@ -87,97 +73,164 @@ def set_table_borders(table, color=HEX_BORDER, sz='4', val='single'):
 
 # Typography Builders
 def add_cover_page(doc):
-    p_inst = doc.add_paragraph()
-    p_inst.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    p_inst.paragraph_format.space_before = Pt(0)
-    p_inst.paragraph_format.space_after = Pt(2)
-    r = p_inst.add_run("BỘ GIÁO DỤC VÀ ĐÀO TẠO\nHỌC VIỆN CÔNG NGHỆ BƯU CHÍNH VIỄN THÔNG\nKHOA CÔNG NGHỆ THÔNG TIN 1\nBỘ MÔN PHÁT TRIỂN CÁC HỆ THỐNG THÔNG MINH\n")
-    r.font.name = 'Times New Roman'
-    r.font.size = Pt(12)
-    r.font.bold = True
-    r.font.color.rgb = C_SLATE
+    p_top = doc.add_paragraph()
+    p_top.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    p_top.paragraph_format.space_before = Pt(20)
+    p_top.paragraph_format.space_after = Pt(0)
+    p_top.paragraph_format.line_spacing = 1.2
+    r_top = p_top.add_run("HỌC VIỆN CÔNG NGHỆ BƯU CHÍNH VIỄN THÔNG\nKHOA CÔNG NGHỆ THÔNG TIN 1")
+    r_top.font.name = 'Times New Roman'
+    r_top.font.size = Pt(16)
+    r_top.font.bold = True
+    r_top.font.color.rgb = RGBColor(0, 0, 0)
     
-    # Decorative line
-    p_line = doc.add_paragraph()
-    p_line.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    p_line.paragraph_format.space_before = Pt(0)
-    p_line.paragraph_format.space_after = Pt(40)
-    r_line = p_line.add_run("─────────── ★ ───────────")
-    r_line.font.color.rgb = C_NAVY
+    # Add Logo
+    p_logo = doc.add_paragraph()
+    p_logo.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    p_logo.paragraph_format.space_before = Pt(18)
+    p_logo.paragraph_format.space_after = Pt(18)
+    
+    logo_path = ROOT / 'assignment3' / 'report' / 'ptit_logo.png'
+    if logo_path.exists():
+        r_logo = p_logo.add_run()
+        r_logo.add_picture(str(logo_path), width=Inches(1.5))
+    else:
+        for _ in range(4):
+            doc.add_paragraph()
+            
+    # Spacing
+    for _ in range(3):
+        p_sp = doc.add_paragraph()
+        p_sp.paragraph_format.space_before = Pt(0)
+        p_sp.paragraph_format.space_after = Pt(0)
     
     # Title
     p_title = doc.add_paragraph()
     p_title.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    p_title.paragraph_format.space_before = Pt(20)
-    p_title.paragraph_format.space_after = Pt(12)
-    r_t1 = p_title.add_run("BÁO CÁO BÀI TẬP LỚN 3 (ASSIGNMENT 03)\n")
+    p_title.paragraph_format.space_before = Pt(0)
+    p_title.paragraph_format.space_after = Pt(6)
+    p_title.paragraph_format.line_spacing = 1.2
+    r_t1 = p_title.add_run("BÁO CÁO MÔN HỌC\nPHÁT TRIỂN CÁC HỆ THỐNG THÔNG MINH\n")
     r_t1.font.name = 'Times New Roman'
-    r_t1.font.size = Pt(22)
+    r_t1.font.size = Pt(18)
     r_t1.font.bold = True
-    r_t1.font.color.rgb = C_NAVY
+    r_t1.font.color.rgb = RGBColor(0, 0, 0)
+    
+    p_a3 = doc.add_paragraph()
+    p_a3.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    p_a3.paragraph_format.space_before = Pt(0)
+    p_a3.paragraph_format.space_after = Pt(8)
+    r_a3 = p_a3.add_run("ASSIGNMENT 03")
+    r_a3.font.name = 'Times New Roman'
+    r_a3.font.size = Pt(18)
+    r_a3.font.bold = True
+    r_a3.font.color.rgb = RGBColor(0, 0, 0)
     
     p_sub = doc.add_paragraph()
     p_sub.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p_sub.paragraph_format.space_before = Pt(0)
-    p_sub.paragraph_format.space_after = Pt(40)
-    r_sub = p_sub.add_run("XÂY DỰNG VÀ TỐI ƯU HÓA HỆ THỐNG HỌC SÂU (DEEP LEARNING)\nVÀ HỌC BIỂU DIỄN (REPRESENTATION LEARNING) TỪ ĐẦU")
+    p_sub.paragraph_format.space_after = Pt(0)
+    r_sub = p_sub.add_run("From Data Representation to Deep Learning & Deployable Systems")
     r_sub.font.name = 'Times New Roman'
-    r_sub.font.size = Pt(14)
-    r_sub.font.bold = True
-    r_sub.font.color.rgb = C_SLATE
+    r_sub.font.size = Pt(13)
+    r_sub.font.italic = True
+    r_sub.font.color.rgb = RGBColor(0, 0, 0)
     
-    # Info Box
-    tbl = doc.add_table(rows=6, cols=2)
+    # Spacing paragraphs
+    for _ in range(3):
+        p_sp = doc.add_paragraph()
+        p_sp.paragraph_format.space_before = Pt(0)
+        p_sp.paragraph_format.space_after = Pt(0)
+    
+    # Info Box matching Assignment 2
+    tbl = doc.add_table(rows=4, cols=2)
     tbl.alignment = WD_TABLE_ALIGNMENT.CENTER
     tbl.autofit = False
-    tbl.columns[0].width = Inches(2.2)
-    tbl.columns[1].width = Inches(3.8)
+    tbl.columns[0].width = Inches(1.8)
+    tbl.columns[1].width = Inches(3.2)
     
     info_data = [
-        ("Giảng viên hướng dẫn:", "PGS. TS. TRẦN ĐÌNH QUẾ"),
-        ("Họ và tên sinh viên:", "TRẦN VĂN HẬU"),
+        ("Họ tên:", "Trần Văn Hậu"),
         ("Mã sinh viên:", "B23DCCN287"),
-        ("Lớp chuyên ngành:", "D23CQCN01-B (D23CTPM01-B)"),
-        ("Học kỳ thực hiện:", "Học kỳ II — Năm học 2025 – 2026"),
-        ("Học phần:", "Phát triển các Hệ thống Thông minh")
+        ("Lớp:", "D23CQCN01-B"),
+        ("Giảng viên", "PGS. TS. Trần Đình Quế"),
     ]
     
     for row_idx, (k, v) in enumerate(info_data):
         c0, c1 = tbl.cell(row_idx, 0), tbl.cell(row_idx, 1)
-        set_cell_margins(c0, 60, 60, 100, 100)
-        set_cell_margins(c1, 60, 60, 100, 100)
+        set_cell_margins(c0, 50, 50, 80, 80)
+        set_cell_margins(c1, 50, 50, 80, 80)
         
         p0 = c0.paragraphs[0]
         p0.paragraph_format.space_before = Pt(0)
         p0.paragraph_format.space_after = Pt(0)
         r0 = p0.add_run(k)
         r0.font.name = 'Times New Roman'
-        r0.font.size = Pt(12)
+        r0.font.size = Pt(11.5)
         r0.font.bold = True
-        r0.font.color.rgb = C_SLATE
+        r0.font.color.rgb = RGBColor(0, 0, 0)
         
         p1 = c1.paragraphs[0]
         p1.paragraph_format.space_before = Pt(0)
         p1.paragraph_format.space_after = Pt(0)
         r1 = p1.add_run(v)
         r1.font.name = 'Times New Roman'
-        r1.font.size = Pt(12)
-        r1.font.bold = (row_idx in (0, 1, 2))
-        r1.font.color.rgb = C_NAVY if (row_idx in (0, 1, 2)) else C_BODY
+        r1.font.size = Pt(11.5)
+        r1.font.color.rgb = RGBColor(0, 0, 0)
         
-    set_table_borders(tbl, color='94A3B8', sz='6', val='single')
+    set_table_borders(tbl, color='CBD5E1', sz='4', val='single')
     
-    p_foot = doc.add_paragraph()
-    p_foot.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    p_foot.paragraph_format.space_before = Pt(80)
-    p_foot.paragraph_format.space_after = Pt(0)
-    rf = p_foot.add_run("Hà Nội – Năm 2026")
-    rf.font.name = 'Times New Roman'
-    rf.font.size = Pt(12)
-    rf.font.bold = True
-    rf.font.color.rgb = C_SLATE
+    # Spacing paragraphs
+    for _ in range(6):
+        p_sp = doc.add_paragraph()
+        p_sp.paragraph_format.space_before = Pt(0)
+        p_sp.paragraph_format.space_after = Pt(0)
     
-    doc.add_page_break()
+    # Bottom Location & Year
+    p_bot = doc.add_paragraph()
+    p_bot.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    p_bot.paragraph_format.space_before = Pt(0)
+    p_bot.paragraph_format.space_after = Pt(0)
+    r_bot = p_bot.add_run("Hà Nội – 2026")
+    r_bot.font.name = 'Times New Roman'
+    r_bot.font.size = Pt(16)
+    r_bot.font.bold = True
+    r_bot.font.color.rgb = RGBColor(0, 0, 0)
+    
+    # Configure next section (Body without borders)
+    from docx.enum.section import WD_SECTION_START
+    s2 = doc.add_section(WD_SECTION_START.NEW_PAGE)
+    s2.top_margin = Inches(0.8)
+    s2.bottom_margin = Inches(0.8)
+    s2.left_margin = Inches(1.0)
+    s2.right_margin = Inches(0.8)
+    
+    # Remove borders for Body section (clear existing first)
+    sectPr2 = s2._sectPr
+    existing_borders = sectPr2.find(qn('w:pgBorders'))
+    if existing_borders is not None:
+        sectPr2.remove(existing_borders)
+    pgBorders2 = parse_xml(f'<w:pgBorders {nsdecls("w")}><w:top w:val="none"/><w:left w:val="none"/><w:bottom w:val="none"/><w:right w:val="none"/></w:pgBorders>')
+    sectPr2.append(pgBorders2)
+    
+    # Configure Header/Footer for body
+    header = s2.header
+    hp = header.paragraphs[0]
+    hp.alignment = WD_ALIGN_PARAGRAPH.RIGHT
+    hrun = hp.add_run("BÁO CÁO ASSIGNMENT 03 — PHÁT TRIỂN CÁC HỆ THỐNG THÔNG MINH")
+    hrun.font.name = 'Times New Roman'
+    hrun.font.size = Pt(8.5)
+    hrun.font.italic = True
+    hrun.font.color.rgb = C_MUTED
+    
+    footer = s2.footer
+    fp = footer.paragraphs[0]
+    fp.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
+    frun1 = fp.add_run("Sinh viên: Trần Văn Hậu — MSV: B23DCCN287 — Lớp: D23CQCN01-B")
+    frun1.font.name = 'Times New Roman'
+    frun1.font.size = Pt(8.5)
+    frun1.font.italic = True
+    frun1.font.color.rgb = C_MUTED
 
 def add_toc_page(doc):
     p = doc.add_paragraph()
