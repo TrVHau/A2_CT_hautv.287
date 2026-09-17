@@ -3,7 +3,7 @@ CNN
 RNN
 LSTM
 
-1. load 3 dataset
+1. load dataset
    // 2 data images
 2. a) discover CNN model
    b) models impoved from CNN
