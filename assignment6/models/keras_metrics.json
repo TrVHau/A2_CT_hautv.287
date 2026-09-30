@@ -1,0 +1,18 @@
+[
+  {
+    "mae": 7.2707,
+    "rmse": 8.5319,
+    "framework": "Keras",
+    "dataset": "stock",
+    "window": 30,
+    "epochs": 18
+  },
+  {
+    "mae": 15.2323,
+    "rmse": 19.7212,
+    "framework": "Keras",
+    "dataset": "transactions",
+    "window": 30,
+    "epochs": 18
+  }
+]

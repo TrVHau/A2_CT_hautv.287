@@ -1,0 +1,18 @@
+[
+  {
+    "mae": 45.4288,
+    "rmse": 46.5312,
+    "framework": "PyTorch",
+    "dataset": "stock",
+    "window": 30,
+    "epochs": 18
+  },
+  {
+    "mae": 24.61,
+    "rmse": 30.7257,
+    "framework": "PyTorch",
+    "dataset": "transactions",
+    "window": 30,
+    "epochs": 18
+  }
+]

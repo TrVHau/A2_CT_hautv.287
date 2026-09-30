@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>RNN Time-series Predictor</title>
+    <style>
+      :root {
+        --ink: #17221c;
+        --paper: #f4f0e5;
+        --accent: #d65a38;
+        --line: #c9c0ae;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--ink);
+        font:
+          16px Georgia,
+          serif;
+      }
+      main {
+        max-width: 920px;
+        margin: auto;
+        padding: 48px 22px;
+      }
+      header {
+        border-bottom: 2px solid var(--ink);
+        padding-bottom: 24px;
+      }
+      h1 {
+        font-size: clamp(2.4rem, 7vw, 5.5rem);
+        line-height: 0.92;
+        margin: 12px 0;
+        max-width: 700px;
+      }
+      p {
+        line-height: 1.55;
+      }
+      .eyebrow {
+        color: var(--accent);
+        font:
+          bold 12px Arial,
+          sans-serif;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+      .panel {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 28px;
+        margin-top: 28px;
+        border-bottom: 1px solid var(--line);
+        padding-bottom: 30px;
+      }
+      label {
+        display: block;
+        font:
+          bold 12px Arial,
+          sans-serif;
+        text-transform: uppercase;
+        margin: 14px 0 6px;
+      }
+      select,
+      textarea,
+      button {
+        width: 100%;
+        border: 1px solid var(--line);
+        background: #fffaf0;
+        padding: 12px;
+        font: inherit;
+      }
+      textarea {
+        min-height: 140px;
+        resize: vertical;
+      }
+      button {
+        background: var(--ink);
+        color: var(--paper);
+        cursor: pointer;
+        margin-top: 14px;
+      }
+      button:hover {
+        background: var(--accent);
+      }
+      #result {
+        font-size: 2.5rem;
+        color: var(--accent);
+        margin-top: 22px;
+      }
+      .note {
+        font:
+          13px Arial,
+          sans-serif;
+        color: #596057;
+      }
+      @media (max-width: 680px) {
+        .panel {
+          grid-template-columns: 1fr;
+        }
+        main {
+          padding-top: 26px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <div class="eyebrow">
+          Assignment 06 / <span id="framework">RNN deployment</span>
+        </div>
+        <h1>Dự đoán chuỗi thời gian.</h1>
+        <p>
+          Một bước dự báo tiếp theo từ 30 ngày gần nhất, dùng mô hình đã huấn
+          luyện.
+        </p>
+      </header>
+      <section class="panel">
+        <div>
+          <label for="dataset">Bộ dữ liệu</label
+          ><select id="dataset">
+            <option value="stock">Giá chứng khoán</option>
+            <option value="transactions">Số giao dịch mua hàng</option></select
+          ><label for="values">30 giá trị gần nhất</label
+          ><textarea
+            id="values"
+            placeholder="Để trống để dùng 30 giá trị cuối trong dữ liệu mẫu"
+          ></textarea
+          ><button id="predict">Dự đoán giá trị kế tiếp</button>
+        </div>
+        <div>
+          <p class="note">
+            API tự chọn model theo web server đang chạy. Dữ liệu nhập cách nhau
+            bằng dấu phẩy hoặc xuống dòng.
+          </p>
+          <div id="result">--</div>
+          <p id="detail" class="note"></p>
+        </div>
+      </section>
+      <script>
+        const dataset = document.querySelector("#dataset"),
+          values = document.querySelector("#values"),
+          result = document.querySelector("#result"),
+          detail = document.querySelector("#detail");
+        async function loadSeries() {
+          const r = await fetch(`/series/${dataset.value}`);
+          const d = await r.json();
+          values.value = d.values.join(", ");
+        }
+        dataset.addEventListener("change", loadSeries);
+        document
+          .querySelector("#predict")
+          .addEventListener("click", async () => {
+            const raw = values.value.trim();
+            const data = { dataset: dataset.value };
+            if (raw) data.values = raw.split(/[\s,]+/).map(Number);
+            const response = await fetch("/predict", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(data),
+            });
+            const d = await response.json();
+            if (!response.ok) {
+              result.textContent = "Lỗi";
+              detail.textContent = d.detail;
+              return;
+            }
+            result.textContent = d.prediction;
+            detail.textContent = `${d.framework} / ${d.dataset} / cửa sổ ${d.window} ngày`;
+          });
+        loadSeries();
+      </script>
+    </main>
+  </body>
+</html>
