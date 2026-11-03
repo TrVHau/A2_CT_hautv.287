@@ -1,0 +1,127 @@
+{
+  "oracle_finite_horizon": {
+    "delta_20": {
+      "delta": 0.2,
+      "mean_exact_reward": 35.0,
+      "step_rewards": [
+        35.0,
+        35.0,
+        35.0,
+        35.0,
+        35.0,
+        35.0,
+        35.0,
+        35.0,
+        35.0,
+        35.0,
+        35.0,
+        35.0,
+        35.0,
+        35.0,
+        35.0,
+        35.0,
+        35.0,
+        35.0,
+        35.0,
+        35.0
+      ],
+      "terminal_step_action_d0": 0,
+      "terminal_step_action_d1": 0,
+      "step1_action_d0": 0,
+      "step1_action_d1": 0
+    },
+    "delta_10": {
+      "delta": 0.1,
+      "mean_exact_reward": 35.1,
+      "step_rewards": [
+        35.0,
+        35.0,
+        35.0,
+        35.0,
+        35.0,
+        35.0,
+        35.0,
+        35.0,
+        35.0,
+        35.0,
+        35.0,
+        35.0,
+        35.0,
+        35.0,
+        35.0,
+        35.0,
+        35.0,
+        35.0,
+        35.0,
+        37.0
+      ],
+      "terminal_step_action_d0": 1,
+      "terminal_step_action_d1": 1,
+      "step1_action_d0": 0,
+      "step1_action_d1": 0
+    },
+    "delta_05": {
+      "delta": 0.05,
+      "mean_exact_reward": 37.35,
+      "step_rewards": [
+        41.625,
+        37.125,
+        37.125,
+        37.125,
+        37.125,
+        37.125,
+        37.125,
+        37.125,
+        37.125,
+        37.125,
+        37.125,
+        37.125,
+        37.125,
+        37.125,
+        37.125,
+        37.125,
+        37.125,
+        37.125,
+        37.125,
+        37.125
+      ],
+      "terminal_step_action_d0": 1,
+      "terminal_step_action_d1": 1,
+      "step1_action_d0": 1,
+      "step1_action_d1": 1
+    }
+  },
+  "policy_transfer": {
+    "transfer_to_10": {
+      "source_delta": 0.2,
+      "target_delta": 0.1,
+      "transferred_mean": 35.0,
+      "target_oracle_mean": 35.1,
+      "gap": 0.10000000000000142
+    },
+    "transfer_to_05": {
+      "source_delta": 0.2,
+      "target_delta": 0.05,
+      "transferred_mean": 35.0,
+      "target_oracle_mean": 37.35,
+      "gap": 2.3500000000000014
+    }
+  },
+  "censored_mle": {
+    "true_theta": [
+      -0.8,
+      0.9,
+      0.7,
+      -0.45
+    ],
+    "fitted_theta": [
+      -0.8058797246910491,
+      0.9285989383703216,
+      0.6200826900489363,
+      -0.45054272368661036
+    ],
+    "nll": 4482.189483841078,
+    "total_observations": 5000,
+    "censored_ratio": 0.05
+  }
+}

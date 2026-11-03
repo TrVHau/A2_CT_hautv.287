@@ -1,0 +1,76 @@
+{
+  "dataset_name": "UCI Online Retail (541,909 transactions)",
+  "demand_regimes": {
+    "median_customers": 52.0,
+    "low_demand_mean": 38.83225806451613,
+    "high_demand_mean": 71.62666666666667,
+    "demand_ratio": 1.8445145926787394
+  },
+  "price_elasticity": {
+    "mean_elasticity": -3.142867785703672,
+    "median_elasticity": -3.0416520530781295,
+    "product_elasticities": [
+      {
+        "stock_code": "84077",
+        "description": "WORLD WAR 2 GLIDERS ASSTD DESIGNS",
+        "elasticity": -4.3863974114704725
+      },
+      {
+        "stock_code": "22197",
+        "description": "SMALL POPCORN HOLDER",
+        "elasticity": -2.502093627276333
+      },
+      {
+        "stock_code": "21212",
+        "description": "PACK OF 72 RETROSPOT CAKE CASES",
+        "elasticity": -3.712522621128457
+      },
+      {
+        "stock_code": "23084",
+        "description": "RABBIT NIGHT LIGHT",
+        "elasticity": 0.25529851627360683
+      },
+      {
+        "stock_code": "22492",
+        "description": "MINI PAINT SET VINTAGE ",
+        "elasticity": -4.601604233370672
+      },
+      {
+        "stock_code": "22616",
+        "description": "PACK OF 12 LONDON TISSUES ",
+        "elasticity": -4.012012563013996
+      },
+      {
+        "stock_code": "21977",
+        "description": "PACK OF 60 PINK PAISLEY CAKE CASES",
+        "elasticity": -4.370334408795179
+      },
+      {
+        "stock_code": "17003",
+        "description": "BROCADE RING PURSE ",
+        "elasticity": -3.7665732874002877
+      },
+      {
+        "stock_code": "22178",
+        "description": "VICTORIAN GLASS HANGING T-LIGHT",
+        "elasticity": -2.9007622341949233
+      },
+      {
+        "stock_code": "21915",
+        "description": "RED  HARMONICA IN BOX ",
+        "elasticity": -2.6878767468319396
+      }
+    ]
+  },
+  "calibrated_parameters": {
+    "base_conversion": 0.32,
+    "high_demand_bonus": 0.22,
+    "own_discount_bonus": 0.24196725855954926,
+    "competitor_discount_penalty": 0.08,
+    "unit_cost": 5.0,
+    "base_price": 10.0,
+    "discount_rate": 0.2,
+    "low_demand_customers": 12,
+    "high_demand_customers": 25
+  }
+}

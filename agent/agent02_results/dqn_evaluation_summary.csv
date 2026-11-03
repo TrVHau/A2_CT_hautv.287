@@ -1,0 +1,6 @@
+seed,agent,mean_reward_per_step,discount_action_rate
+11,DQN,34.8785,0.0
+22,DQN,34.715,0.0
+33,DQN,34.2341,0.4229
+44,DQN,34.7152,0.0256
+55,DQN,34.904,0.0
