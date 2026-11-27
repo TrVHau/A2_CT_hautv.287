@@ -1,0 +1,25 @@
+# HƯỚNG DẪN SỬ DỤNG THUỐC HẠ GLUCOSE MÁU VÀ CÁC CHỐNG CHỈ ĐỊNH ĐẶC BIỆT
+Căn cứ theo Hướng dẫn của Bộ Y Tế và Hiệp hội Đái tháo đường Hoa Kỳ (ADA).
+
+## 1. Thuốc hàng đầu (First-line): Metformin (Biguanide)
+- Cơ chế: Giảm sản xuất glucose ở gan, tăng tính nhạy cảm của thụ thể insulin tại mô ngoại vi, không gây hạ đường huyết khi dùng đơn trị và không làm tăng cân.
+- Liều khởi đầu: 500 mg - 850 mg x 1-2 lần/ngày, uống trong hoặc sau bữa ăn để giảm tác dụng phụ trên đường tiêu hóa.
+- Chống chỉ định tuyệt đối:
+  + Bệnh nhân có mức lọc cầu thận ước tính eGFR < 30 mL/phút/1.73 m2 (suy thận nặng giai đoạn 4-5).
+  + Bệnh nhân suy gan nặng, sốc nhiễm trùng, thiếu oxy mô cấp (suy tim cấp mất bù, nhồi máu cơ tim cấp).
+- Cân nhắc giảm liều: Nếu eGFR trong khoảng 30 - 44 mL/phút/1.73 m2, tối đa không quá 1000 mg/ngày.
+- Tương tác đặc biệt nguy hiểm với RƯỢU BIA (Ethanol): Metformin ức chế tân tạo glucose ở gan từ lactate. Khi uống rượu bia, quá trình chuyển hóa alcohol cạnh tranh NAD+ ở gan làm tích tụ acid lactic nghiêm trọng, dẫn đến nguy cơ toan acid lactic máu (Lactic Acidosis) có tỷ lệ tử vong lên đến 50%. Khuyến cáo: Tuyệt đối tránh uống rượu bia khi đang sử dụng thuốc Metformin.
+
+## 2. Thuốc ức chế kênh đồng vận Natri - Glucose 2 (SGLT2 inhibitors)
+- Hoạt chất tiêu biểu: Empagliflozin, Dapagliflozin, Canagliflozin.
+- Cơ chế: Ức chế tái hấp thu glucose tại ống lượn gần của thận, bài tiết glucose qua nước tiểu.
+- Lợi ích vượt trội: Ưu tiên chỉ định hàng đầu ở bệnh nhân đái tháo đường típ 2 có suy tim phân suất tống máu giảm (HFrEF) hoặc bảo tồn (HFpEF) hoặc bệnh thận mạn (CKD), giúp giảm tỷ lệ tử vong tim mạch và nhập viện vì suy tim.
+
+## 3. Thuốc nhóm Thiazolidinediones (TZD - Pioglitazone)
+- Cơ chế: Kích hoạt PPAR-gamma tăng nhạy cảm insulin ở mô mỡ và cơ.
+- Chống chỉ định đặc biệt: Chống chỉ định ở bệnh nhân có tiền sử hoặc đang bị suy tim (NYHA I-IV) do thuốc gây phù, ứ trệ dịch tuần hoàn làm nặng thêm tình trạng suy tim.
+
+## 4. Nhóm Sulfonylureas (Gliclazide, Glimepiride) và Insulin
+- Cơ chế: Kích thích tế bào beta đảo tụy tiết insulin (độc lập với nồng độ glucose).
+- Nguy cơ chính: Hạ đường huyết (Hypoglycemia, glucose máu < 70 mg/dL hoặc < 3.9 mmol/L).
+- Xử trí hạ đường huyết cấp: Áp dụng quy tắc 15-15: Uống ngay 15g carbohydrate tác dụng nhanh (1/2 ly nước ngọt có đường, 3-4 viên kẹo đường hoặc 1 thìa canh đường pha nước), nghỉ ngơi 15 phút rồi đo lại đường huyết. Nếu vẫn < 70 mg/dL tiếp tục bổ sung thêm 15g.

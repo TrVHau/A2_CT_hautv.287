@@ -1,0 +1,14 @@
+# NGUYÊN TẮC DINH DƯỠNG LÂM SÀNG VÀ CHỈ SỐ ĐƯỜNG HUYẾT CỦA THỰC PHẨM (GI)
+Tài liệu hướng dẫn dinh dưỡng cho người bệnh đái tháo đường của Viện Dinh Dưỡng Quốc Gia.
+
+## 1. Phân loại chỉ số đường huyết của thực phẩm (Glycemic Index - GI)
+- GI thấp (<= 55): Tiêu hóa và hấp thu chậm, không làm tăng vọt glucose máu sau ăn. Khuyến nghị sử dụng chính.
+  Ví dụ: Gạo lứt (GI ~ 50), yến mạch (GI ~ 55), đậu đỗ (GI ~ 28-35), rau xanh hầu hết (GI < 15), táo, bưởi, ổi.
+- GI trung bình (56 - 69): Sử dụng ở mức vừa phải.
+- GI cao (>= 70): Hấp thu nhanh, làm đường huyết tăng vọt sau ăn, bắt tụy tiết insulin ồ ạt.
+  Ví dụ: Cơm trắng (GI ~ 73-83), xôi nếp (GI ~ 85-93), bánh mì trắng (GI ~ 75), khoai tây nướng, nước ngọt.
+
+## 2. Lời khuyên cụ thể về các món ăn truyền thống Việt Nam
+- Cơm trắng: Người đái tháo đường không nhất thiết phải kiêng tuyệt đối cơm trắng nhưng cần định lượng chặt chẽ (1/2 đến 2/3 bát mỗi bữa). Nên ăn theo thứ tự: ăn rau xanh trước -> ăn đạm thịt/cá -> ăn cơm cuối cùng. Thứ tự này giúp chất xơ làm chậm tốc độ rỗng dạ dày và làm phẳng đỉnh đường huyết sau ăn.
+- Thịt gà: Thịt gà (đặc biệt là ức gà bỏ da) là nguồn protein nạc chất lượng cao (GI = 0), không chứa carbohydrate, cung cấp amino acid thiết yếu mà không làm tăng đường huyết. Bệnh nhân đái tháo đường hoàn toàn ăn được, nên ưu tiên gà luộc hoặc hấp, tránh chiên rán ngập dầu mỡ hoặc tẩm bột.
+- Xôi nếp và bánh chưng: Có thành phần amylopectin rất cao, GI lên tới 85-95. Cần hạn chế tối đa, nếu ăn phải giảm khẩu phần cơm tương ứng và tăng lượng rau xanh.

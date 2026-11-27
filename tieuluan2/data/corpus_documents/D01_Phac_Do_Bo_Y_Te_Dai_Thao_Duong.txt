@@ -1,0 +1,21 @@
+HƯỚNG DẪN CHẨN ĐOÁN VÀ ĐIỀU TRỊ ĐÁI THÁO ĐƯỜNG TÍP 2
+(Ban hành kèm theo Quyết định số 5481/QĐ-BYT của Bộ trưởng Bộ Y tế)
+
+1. Tiêu chuẩn chẩn đoán đái tháo đường:
+Chẩn đoán đái tháo đường dựa vào 1 trong 4 tiêu chuẩn sau đây:
+a) Glucose huyết tương lúc đói (FPG) >= 126 mg/dL (7.0 mmol/L). Lúc đói được định nghĩa là không ăn trong ít nhất 8 giờ.
+b) Glucose huyết tương ở thời điểm 2 giờ sau khi làm nghiệm pháp dung nạp glucose đường uống 75g (OGTT) >= 200 mg/dL (11.1 mmol/L).
+c) HbA1c >= 6.5% (48 mmol/mol). Xét nghiệm phải được thực hiện tại phòng xét nghiệm chuẩn hóa theo phương pháp NGSP.
+d) Ở bệnh nhân có triệu chứng kinh điển của tăng glucose huyết (tiểu nhiều, uống nhiều, ăn nhiều, sút cân không rõ nguyên nhân) hoặc cơn tăng glucose huyết cấp, nồng độ glucose huyết tương ngẫu nhiên >= 200 mg/dL (11.1 mmol/L).
+
+Nếu không có triệu chứng kinh điển, cần xét nghiệm lặp lại lần 2 vào một ngày khác để khẳng định.
+
+2. Tiền đái tháo đường:
+- Rối loạn glucose lúc đói (IFG): FPG từ 100 đến 125 mg/dL (5.6 đến 6.9 mmol/L).
+- Rối loạn dung nạp glucose (IGT): Glucose 2 giờ trong OGTT từ 140 đến 199 mg/dL (7.8 đến 11.0 mmol/L).
+- HbA1c từ 5.7% đến 6.4% (39 đến 47 mmol/mol).
+
+3. Mục tiêu điều trị cá thể hóa:
+- HbA1c chung: < 7.0% (53 mmol/mol) nhằm giảm biến chứng mạch máu nhỏ và mạch máu lớn.
+- HbA1c chặt chẽ hơn (< 6.5%): Cho người trẻ, mới mắc bệnh, không có bệnh tim mạch xơ vữa, nguy cơ hạ đường huyết thấp.
+- HbA1c nới lỏng (< 8.0%): Cho người cao tuổi, thời gian mắc bệnh kéo dài, có tiền sử hạ đường huyết nặng, nhiều biến chứng vi mạch hoặc đa bệnh lý đi kèm.

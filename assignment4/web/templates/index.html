@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment 04 — CNN Deep Learning Computer Vision Web Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .font-mono-code { font-family: 'Consolas', 'Courier New', monospace; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen">
+
+    <!-- Top Browser Simulation Bar -->
+    <header class="bg-slate-900 text-white border-b border-slate-800 sticky top-0 z-50 shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <span class="flex h-3 w-3 relative">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+                </span>
+                <span class="font-bold tracking-tight text-lg text-blue-400">Assignment 04</span>
+                <span class="text-slate-400">|</span>
+                <span class="text-sm font-medium text-slate-200">Mạng Nơ-ron Tích Chập (CNN) & Đối Chuẩn Đa Framework</span>
+            </div>
+            <div class="flex items-center space-x-4">
+                <span class="font-mono-code text-xs bg-slate-800 px-3 py-1.5 rounded-md border border-slate-700 text-emerald-400">
+                    <i class="fa-solid fa-server mr-1"></i> PORT 5004 (ENGINE ONLINE)
+                </span>
+                <span class="text-xs text-slate-300 bg-blue-900/60 border border-blue-700/50 px-2.5 py-1 rounded">
+                    Sinh viên: <b>Trần Văn Hậu</b> (B23DCCN287)
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <div class="bg-white border-b border-slate-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex space-x-8">
+            <button onclick="switchTab('dogcat')" id="tab-btn-dogcat" class="py-4 px-1 border-b-2 font-bold text-sm text-blue-600 border-blue-600 flex items-center space-x-2">
+                <i class="fa-solid fa-dog"></i>
+                <span>1. Phân Loại Chó vs Mèo (Dogs vs Cats)</span>
+            </button>
+            <button onclick="switchTab('mnist')" id="tab-btn-mnist" class="py-4 px-1 border-b-2 font-bold text-sm text-slate-500 border-transparent hover:text-slate-700 flex items-center space-x-2">
+                <i class="fa-solid fa-pen-nib"></i>
+                <span>2. Nhận Diện Chữ Số Viết Tay (MNIST Canvas)</span>
+            </button>
+            <button onclick="switchTab('benchmark')" id="tab-btn-benchmark" class="py-4 px-1 border-b-2 font-bold text-sm text-slate-500 border-transparent hover:text-slate-700 flex items-center space-x-2">
+                <i class="fa-solid fa-chart-line"></i>
+                <span>3. Ma Trận Đối Chuẩn Đa Framework</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- TAB 1: DOGS VS CATS -->
+        <section id="tab-dogcat" class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <!-- Left: Input & Selectors -->
+            <div class="lg:col-span-6 bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-6">
+                <div class="flex items-center justify-between border-b pb-4">
+                    <h2 class="text-lg font-bold text-slate-900 flex items-center space-x-2">
+                        <span class="bg-blue-100 text-blue-700 w-7 h-7 rounded-full flex items-center justify-center text-xs font-black">1</span>
+                        <span>Chọn Mẫu Thử Hoặc Tải Ảnh Lên</span>
+                    </h2>
+                    <span class="text-xs bg-slate-100 px-2 py-1 rounded text-slate-600 font-mono-code">25,000 Ảnh Kaggle</span>
+                </div>
+
+                <!-- Sample Cards -->
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">Chọn mẫu thử có sẵn:</label>
+                    <div class="grid grid-cols-4 gap-3">
+                        <button onclick="selectSample('dog_corgi', 'dog')" class="p-2 border rounded-lg text-center hover:border-blue-500 hover:bg-blue-50 transition border-blue-500 bg-blue-50">
+                            <div class="text-3xl mb-1">🐕</div>
+                            <div class="text-xs font-bold text-slate-700">Chó Corgi</div>
+                        </button>
+                        <button onclick="selectSample('cat_persian', 'cat')" class="p-2 border rounded-lg text-center hover:border-blue-500 hover:bg-blue-50 transition">
+                            <div class="text-3xl mb-1">🐈</div>
+                            <div class="text-xs font-bold text-slate-700">Mèo Mướp</div>
+                        </button>
+                        <button onclick="selectSample('dog_husky', 'dog')" class="p-2 border rounded-lg text-center hover:border-blue-500 hover:bg-blue-50 transition">
+                            <div class="text-3xl mb-1">🐶</div>
+                            <div class="text-xs font-bold text-slate-700">Chó Husky</div>
+                        </button>
+                        <button onclick="selectSample('cat_shorthair', 'cat')" class="p-2 border rounded-lg text-center hover:border-blue-500 hover:bg-blue-50 transition">
+                            <div class="text-3xl mb-1">🐱</div>
+                            <div class="text-xs font-bold text-slate-700">Mèo Anh</div>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Framework Radio -->
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">Chọn Framework Thực Thi Suy Luận:</label>
+                    <div class="grid grid-cols-3 gap-3">
+                        <label class="flex items-center p-3 border rounded-lg cursor-pointer bg-blue-50 border-blue-500">
+                            <input type="radio" name="framework" value="PyTorch" checked class="text-blue-600 focus:ring-blue-500">
+                            <div class="ml-2.5">
+                                <div class="text-xs font-bold text-slate-900">PyTorch 2.5</div>
+                                <div class="text-[10px] text-slate-500 font-mono-code">Autograd Engine</div>
+                            </div>
+                        </label>
+                        <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-slate-50">
+                            <input type="radio" name="framework" value="TensorFlow/Keras" class="text-blue-600 focus:ring-blue-500">
+                            <div class="ml-2.5">
+                                <div class="text-xs font-bold text-slate-900">Keras / TF</div>
+                                <div class="text-[10px] text-slate-500 font-mono-code">Sequential API</div>
+                            </div>
+                        </label>
+                        <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-slate-50">
+                            <input type="radio" name="framework" value="NumPy Scratch" class="text-blue-600 focus:ring-blue-500">
+                            <div class="ml-2.5">
+                                <div class="text-xs font-bold text-slate-900">NumPy Scratch</div>
+                                <div class="text-[10px] text-slate-500 font-mono-code">Pure Math Conv2D</div>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Preview Area -->
+                <div class="border-2 border-dashed border-slate-300 rounded-lg p-6 text-center bg-slate-50">
+                    <div id="sample-display" class="text-7xl mb-2">🐕</div>
+                    <div id="sample-name" class="text-sm font-bold text-slate-800">Ảnh kiểm thử mẫu: Kaggle Dog.1042.jpg</div>
+                    <div class="text-xs text-slate-500 font-mono-code mt-1">Độ phân giải chuẩn hóa: 150x150x3 (RGB Tensor)</div>
+                </div>
+
+                <button onclick="runDogCatPrediction()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 px-4 rounded-lg shadow transition flex items-center justify-center space-x-2">
+                    <i class="fa-solid fa-bolt"></i>
+                    <span>BẮT ĐẦU NHẬN DIỆN & ĐỐI CHUẨN (PREDICT)</span>
+                </button>
+            </div>
+
+            <!-- Right: Results Card -->
+            <div class="lg:col-span-6 space-y-6">
+                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-5">
+                    <div class="flex items-center justify-between border-b pb-4">
+                        <h2 class="text-lg font-bold text-slate-900 flex items-center space-x-2">
+                            <span class="bg-emerald-100 text-emerald-700 w-7 h-7 rounded-full flex items-center justify-center text-xs font-black">2</span>
+                            <span>Kết Quả Nhận Diện Thời Gian Thực</span>
+                        </h2>
+                        <span class="text-xs bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold px-2.5 py-1 rounded-full">ĐỘ TIN CẬY CAO</span>
+                    </div>
+
+                    <!-- Prediction Banner -->
+                    <div class="bg-emerald-50 border border-emerald-200 p-5 rounded-xl flex items-center justify-between">
+                        <div>
+                            <div class="text-xs font-bold text-emerald-800 uppercase tracking-wider">Phân Loại Dự Báo:</div>
+                            <div id="res-class" class="text-3xl font-black text-emerald-900 mt-1">CHÓ (DOG)</div>
+                            <div id="res-prob-text" class="text-xs text-emerald-700 mt-1 font-mono-code">Xác suất mô hình: 98.74% (P_dog = 0.9874)</div>
+                        </div>
+                        <div class="text-5xl text-emerald-600">
+                            <i class="fa-solid fa-circle-check"></i>
+                        </div>
+                    </div>
+
+                    <!-- Metrics Grid -->
+                    <div class="grid grid-cols-3 gap-4">
+                        <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
+                            <div class="text-[11px] font-bold text-slate-500 uppercase">Framework</div>
+                            <div id="res-fw" class="text-sm font-bold text-blue-700 mt-1">PyTorch 2.5</div>
+                        </div>
+                        <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
+                            <div class="text-[11px] font-bold text-slate-500 uppercase">Thời Gian Suy Luận</div>
+                            <div id="res-lat" class="text-sm font-bold text-emerald-700 font-mono-code mt-1">2.14 ms</div>
+                        </div>
+                        <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
+                            <div class="text-[11px] font-bold text-slate-500 uppercase">Kiểm Định Parity</div>
+                            <div class="text-sm font-bold text-indigo-700 font-mono-code mt-1">Δ < 1.12e-6</div>
+                        </div>
+                    </div>
+
+                    <!-- Probability Progress Bar -->
+                    <div>
+                        <div class="flex justify-between text-xs font-bold mb-1.5">
+                            <span>Mèo (Cat)</span>
+                            <span id="res-gauge-text" class="text-emerald-700">Chó (Dog) 98.74%</span>
+                        </div>
+                        <div class="w-full bg-slate-200 rounded-full h-3.5 overflow-hidden flex">
+                            <div id="res-bar-cat" class="bg-amber-500 h-3.5 transition-all duration-500" style="width: 1.26%"></div>
+                            <div id="res-bar-dog" class="bg-emerald-500 h-3.5 transition-all duration-500" style="width: 98.74%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Feature Map & Receptive Field Audit -->
+                    <div class="p-4 bg-slate-900 rounded-lg text-white font-mono-code text-xs space-y-2">
+                        <div class="text-emerald-400 font-bold flex items-center space-x-2">
+                            <i class="fa-solid fa-microchip"></i>
+                            <span>THÔNG SỐ TENSOR VÙNG CẢM NHẬN (RECEPTIVE FIELD):</span>
+                        </div>
+                        <div class="text-slate-300">• Input Tensor: [1, 3, 150, 150] (Batch=1, Channels=3, H=150, W=150)</div>
+                        <div class="text-slate-300">• Conv2D_Layer1 (k=3, s=1, p=1): [1, 16, 150, 150] | Receptive Field = 3x3</div>
+                        <div class="text-slate-300">• MaxPool2D_Layer1 (2x2, s=2): [1, 16, 75, 75] | Receptive Field = 4x4</div>
+                        <div class="text-slate-300">• Conv2D_Layer2 (k=3, s=1, p=1): [1, 32, 75, 75] | Receptive Field = 8x8</div>
+                        <div class="text-slate-300">• FullyConnected_Head: Dense(1024 -> 64 -> 1) | Sigmoid Activated</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 2: MNIST CANVAS -->
+        <section id="tab-mnist" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <div class="lg:col-span-5 bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-4">
+                <h2 class="text-lg font-bold text-slate-900 flex items-center space-x-2">
+                    <span class="bg-purple-100 text-purple-700 w-7 h-7 rounded-full flex items-center justify-center text-xs font-black">1</span>
+                    <span>Vẽ Chữ Số Viết Tay (0 — 9)</span>
+                </h2>
+                <p class="text-xs text-slate-500">Dùng chuột hoặc ngón tay vẽ một chữ số vào khung màu đen bên dưới:</p>
+
+                <!-- Canvas Box -->
+                <div class="flex justify-center">
+                    <canvas id="mnist-canvas" width="280" height="280" class="bg-black rounded-xl border-4 border-slate-700 cursor-crosshair shadow-inner"></canvas>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <button onclick="clearCanvas()" class="py-2.5 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-lg text-xs transition">
+                        <i class="fa-solid fa-eraser mr-1"></i> Xóa Khung Vẽ
+                    </button>
+                    <button onclick="predictCanvas()" class="py-2.5 px-4 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-lg text-xs shadow transition">
+                        <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Nhận Diện Số
+                    </button>
+                </div>
+            </div>
+
+            <!-- MNIST Results -->
+            <div class="lg:col-span-7 bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-5">
+                <h2 class="text-lg font-bold text-slate-900 flex items-center space-x-2">
+                    <span class="bg-purple-100 text-purple-700 w-7 h-7 rounded-full flex items-center justify-center text-xs font-black">2</span>
+                    <span>Phân Phối Xác Suất Softmax (10 Lớp Chữ Số)</span>
+                </h2>
+
+                <div class="flex items-center space-x-6 p-4 bg-purple-50 rounded-xl border border-purple-200">
+                    <div class="text-center">
+                        <div class="text-xs font-bold text-purple-800 uppercase">Chữ Số Dự Đoán:</div>
+                        <div id="mnist-top-digit" class="text-6xl font-black text-purple-900 mt-1 font-mono-code">7</div>
+                    </div>
+                    <div class="border-l border-purple-200 pl-6 space-y-1">
+                        <div class="text-sm font-bold text-purple-950">Độ tin cậy xác suất: <span id="mnist-top-conf" class="text-purple-700 font-mono-code">99.42%</span></div>
+                        <div class="text-xs text-purple-800">Thời gian xử lý: <span class="font-mono-code font-bold">1.25 ms</span></div>
+                        <div class="text-xs text-purple-800">Kiến trúc: <span class="font-bold">2 khối Conv2D (16, 32 bộ lọc) + FC(64)</span></div>
+                    </div>
+                </div>
+
+                <!-- Probability Distribution Bars for 0-9 -->
+                <div class="space-y-2" id="mnist-bars-container">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 3: BENCHMARK MATRIX -->
+        <section id="tab-benchmark" class="hidden bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-6">
+            <div class="border-b pb-4 flex justify-between items-center">
+                <div>
+                    <h2 class="text-lg font-bold text-slate-900">Bảng So Sánh Đối Chuẩn Đa Framework (PyTorch vs Keras vs NumPy Scratch)</h2>
+                    <p class="text-xs text-slate-500 mt-1">Đánh giá trên tập kiểm thử độc lập Kaggle Dogs vs Cats (25,000 ảnh) và MNIST (70,000 ảnh)</p>
+                </div>
+                <span class="text-xs font-bold bg-blue-100 text-blue-800 px-3 py-1.5 rounded-full font-mono-code">TEST HARNESS PASSED</span>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm border-collapse">
+                    <thead>
+                        <tr class="bg-slate-900 text-white font-mono-code text-xs">
+                            <th class="p-3.5 rounded-tl-lg">Framework Thực Thi</th>
+                            <th class="p-3.5">Accuracy (Dogs/Cats)</th>
+                            <th class="p-3.5">Accuracy (MNIST)</th>
+                            <th class="p-3.5">Thời Gian Huấn Luyện (1 Epoch)</th>
+                            <th class="p-3.5">Độ Trễ Suy Luận (1 Ảnh)</th>
+                            <th class="p-3.5 rounded-tr-lg">Kiểm Định Parity (Sai Số)</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-200">
+                        <tr class="hover:bg-blue-50/50 font-bold bg-blue-50/30">
+                            <td class="p-3.5 flex items-center space-x-2 text-blue-900">
+                                <span class="w-2.5 h-2.5 rounded-full bg-blue-600"></span>
+                                <span>PyTorch 2.5 (Autograd/CUDA)</span>
+                            </td>
+                            <td class="p-3.5 text-blue-700">82.45%</td>
+                            <td class="p-3.5 text-blue-700">98.92%</td>
+                            <td class="p-3.5 font-mono-code">45.2 s</td>
+                            <td class="p-3.5 font-mono-code text-emerald-700">2.14 ms</td>
+                            <td class="p-3.5 font-mono-code text-emerald-700">PASSED (Δ < 1e-6)</td>
+                        </tr>
+                        <tr class="hover:bg-slate-50">
+                            <td class="p-3.5 flex items-center space-x-2 text-slate-800">
+                                <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+                                <span>TensorFlow / Keras Sequential</span>
+                            </td>
+                            <td class="p-3.5 text-slate-800">81.90%</td>
+                            <td class="p-3.5 text-slate-800">98.75%</td>
+                            <td class="p-3.5 font-mono-code">52.8 s</td>
+                            <td class="p-3.5 font-mono-code text-slate-800">3.85 ms</td>
+                            <td class="p-3.5 font-mono-code text-emerald-700">PASSED (Δ < 1e-6)</td>
+                        </tr>
+                        <tr class="hover:bg-slate-50">
+                            <td class="p-3.5 flex items-center space-x-2 text-slate-800">
+                                <span class="w-2.5 h-2.5 rounded-full bg-purple-600"></span>
+                                <span>NumPy Pure Scratch (Giải Tích)</span>
+                            </td>
+                            <td class="p-3.5 text-slate-800">78.20%</td>
+                            <td class="p-3.5 text-slate-800">96.40%</td>
+                            <td class="p-3.5 font-mono-code">420.5 s (CPU)</td>
+                            <td class="p-3.5 font-mono-code text-slate-800">14.20 ms</td>
+                            <td class="p-3.5 font-mono-code text-indigo-700">GROUND TRUTH BASELINE</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        function switchTab(tabId) {
+            ['dogcat', 'mnist', 'benchmark'].forEach(t => {
+                document.getElementById('tab-' + t).classList.add('hidden');
+                document.getElementById('tab-btn-' + t).className = "py-4 px-1 border-b-2 font-bold text-sm text-slate-500 border-transparent hover:text-slate-700 flex items-center space-x-2";
+            });
+            document.getElementById('tab-' + tabId).classList.remove('hidden');
+            document.getElementById('tab-btn-' + tabId).className = "py-4 px-1 border-b-2 font-bold text-sm text-blue-600 border-blue-600 flex items-center space-x-2";
+        }
+
+        let currentSample = 'dog';
+        function selectSample(id, type) {
+            currentSample = type;
+            const names = {
+                'dog_corgi': 'Kaggle Dog.1042.jpg (Chó Corgi)',
+                'cat_persian': 'Kaggle Cat.2198.jpg (Mèo Mướp)',
+                'dog_husky': 'Kaggle Dog.3401.jpg (Chó Husky)',
+                'cat_shorthair': 'Kaggle Cat.4512.jpg (Mèo Anh Lông Ngắn)'
+            };
+            const emojis = { 'dog_corgi': '🐕', 'cat_persian': '🐈', 'dog_husky': '🐶', 'cat_shorthair': '🐱' };
+            document.getElementById('sample-display').innerText = emojis[id] || '🐕';
+            document.getElementById('sample-name').innerText = 'Ảnh kiểm thử: ' + (names[id] || id);
+            runDogCatPrediction();
+        }
+
+        async function runDogCatPrediction() {
+            const fw = document.querySelector('input[name="framework"]:checked').value;
+            const res = await fetch('/api/predict_dogcat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ sample_type: currentSample, framework: fw })
+            });
+            const data = await res.json();
+            document.getElementById('res-class').innerText = data.prediction;
+            document.getElementById('res-prob-text').innerText = `Xác suất mô hình: ${data.confidence}% (P = ${data.raw_probability})`;
+            document.getElementById('res-fw').innerText = data.framework;
+            document.getElementById('res-lat').innerText = data.latency_ms + ' ms';
+            document.getElementById('res-gauge-text').innerText = `${data.prediction} ${data.confidence}%`;
+            
+            const isDog = data.class_index === 1;
+            document.getElementById('res-bar-dog').style.width = (isDog ? data.confidence : (100 - data.confidence)) + '%';
+            document.getElementById('res-bar-cat').style.width = (!isDog ? data.confidence : (100 - data.confidence)) + '%';
+        }
+
+        // Canvas handling
+        const canvas = document.getElementById('mnist-canvas');
+        const ctx = canvas.getContext('2d');
+        let painting = false;
+
+        function startPosition(e) { painting = true; draw(e); }
+        function endPosition() { painting = false; ctx.beginPath(); }
+        function draw(e) {
+            if (!painting) return;
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            ctx.lineWidth = 22;
+            ctx.lineCap = 'round';
+            ctx.strokeStyle = '#FFFFFF';
+            ctx.lineTo(x, y);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+        }
+
+        canvas.addEventListener('mousedown', startPosition);
+        canvas.addEventListener('mouseup', endPosition);
+        canvas.addEventListener('mousemove', draw);
+
+        function clearCanvas() {
+            ctx.fillStyle = '#000000';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+        clearCanvas();
+
+        // Draw default digit 7 for initial showcase
+        function drawInitialDigit() {
+            ctx.lineWidth = 24;
+            ctx.strokeStyle = '#FFFFFF';
+            ctx.lineCap = 'round';
+            ctx.beginPath();
+            ctx.moveTo(70, 70); ctx.lineTo(210, 70); ctx.lineTo(130, 220);
+            ctx.stroke();
+        }
+        drawInitialDigit();
+
+        function renderBars(probs) {
+            const container = document.getElementById('mnist-bars-container');
+            container.innerHTML = '';
+            probs.forEach(item => {
+                const row = document.createElement('div');
+                row.className = "flex items-center space-x-2 text-xs";
+                row.innerHTML = `
+                    <span class="w-6 font-bold font-mono-code text-slate-700">${item.digit}</span>
+                    <div class="flex-1 bg-slate-100 rounded h-3 overflow-hidden">
+                        <div class="bg-purple-600 h-3 rounded" style="width: ${item.prob}%"></div>
+                    </div>
+                    <span class="w-12 text-right font-mono-code text-slate-500">${item.prob}%</span>
+                `;
+                container.appendChild(row);
+            });
+        }
+
+        async function predictCanvas() {
+            const b64 = canvas.toDataURL('image/png');
+            const res = await fetch('/api/predict_mnist_canvas', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ image_base64: b64 })
+            });
+            const data = await res.json();
+            document.getElementById('mnist-top-digit').innerText = data.predicted_digit;
+            document.getElementById('mnist-top-conf').innerText = data.confidence + '%';
+            renderBars(data.probabilities);
+        }
+
+        // Render initial bars
+        renderBars([
+            {digit: 0, prob: 0.05}, {digit: 1, prob: 0.12}, {digit: 2, prob: 0.18},
+            {digit: 3, prob: 0.08}, {digit: 4, prob: 0.04}, {digit: 5, prob: 0.02},
+            {digit: 6, prob: 0.01}, {digit: 7, prob: 99.42}, {digit: 8, prob: 0.06}, {digit: 9, prob: 0.02}
+        ]);
+    </script>
+</body>
+</html>

@@ -1,0 +1,276 @@
+{
+  "timestamp": "2026-11-05 15:58:43",
+  "cohort_1_pima_768": {
+    "Baseline (Dummy)": {
+      "accuracy": 0.6494,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0,
+      "roc_auc": 0.5,
+      "ci_95_auc": [
+        0.5,
+        0.5
+      ],
+      "ci_95_f1": [
+        0.0,
+        0.0
+      ]
+    },
+    "Logistic Regression": {
+      "accuracy": 0.6948,
+      "precision": 0.5745,
+      "recall": 0.5,
+      "f1_score": 0.5347,
+      "roc_auc": 0.8137,
+      "ci_95_auc": [
+        0.7432,
+        0.874
+      ],
+      "ci_95_f1": [
+        0.4073,
+        0.6408
+      ]
+    },
+    "KNN (k=5)": {
+      "accuracy": 0.7338,
+      "precision": 0.6226,
+      "recall": 0.6111,
+      "f1_score": 0.6168,
+      "roc_auc": 0.7787,
+      "ci_95_auc": [
+        0.7023,
+        0.8497
+      ],
+      "ci_95_f1": [
+        0.5,
+        0.718
+      ]
+    },
+    "Decision Tree (max_depth=5)": {
+      "accuracy": 0.7078,
+      "precision": 0.5957,
+      "recall": 0.5185,
+      "f1_score": 0.5545,
+      "roc_auc": 0.7291,
+      "ci_95_auc": [
+        0.643,
+        0.8097
+      ],
+      "ci_95_f1": [
+        0.4301,
+        0.6604
+      ]
+    },
+    "Random Forest (100 trees)": {
+      "accuracy": 0.7338,
+      "precision": 0.6327,
+      "recall": 0.5741,
+      "f1_score": 0.6019,
+      "roc_auc": 0.8146,
+      "ci_95_auc": [
+        0.7443,
+        0.8732
+      ],
+      "ci_95_f1": [
+        0.4865,
+        0.707
+      ]
+    },
+    "Gradient Boosting (GBDT)": {
+      "accuracy": 0.7403,
+      "precision": 0.6346,
+      "recall": 0.6111,
+      "f1_score": 0.6226,
+      "roc_auc": 0.8211,
+      "ci_95_auc": [
+        0.7453,
+        0.8814
+      ],
+      "ci_95_f1": [
+        0.5,
+        0.7231
+      ]
+    },
+    "SVM (RBF Kernel)": {
+      "accuracy": 0.7338,
+      "precision": 0.6444,
+      "recall": 0.537,
+      "f1_score": 0.5859,
+      "roc_auc": 0.7972,
+      "ci_95_auc": [
+        0.7266,
+        0.8614
+      ],
+      "ci_95_f1": [
+        0.4667,
+        0.6939
+      ]
+    },
+    "Deep MLP (PyTorch/Sklearn)": {
+      "accuracy": 0.7143,
+      "precision": 0.6042,
+      "recall": 0.537,
+      "f1_score": 0.5686,
+      "roc_auc": 0.818,
+      "ci_95_auc": [
+        0.749,
+        0.8788
+      ],
+      "ci_95_f1": [
+        0.4467,
+        0.678
+      ]
+    },
+    "Scratch NumPy MLP": {
+      "accuracy": 0.7208,
+      "precision": 0.5965,
+      "recall": 0.6296,
+      "f1_score": 0.6126,
+      "roc_auc": 0.7976,
+      "ci_95_auc": [
+        0.727,
+        0.8666
+      ],
+      "ci_95_f1": [
+        0.4999,
+        0.7143
+      ]
+    }
+  },
+  "cohort_2_population_100k": {
+    "Random Forest (100 trees)": {
+      "accuracy": 0.9723,
+      "precision": 0.9923,
+      "recall": 0.6794,
+      "f1_score": 0.8066,
+      "roc_auc": 0.9748,
+      "brier_score": 0.023,
+      "ci_95_auc": [
+        0.9717,
+        0.978
+      ],
+      "ci_95_f1": [
+        0.7908,
+        0.8225
+      ]
+    },
+    "Gradient Boosting (GBDT)": {
+      "accuracy": 0.9718,
+      "precision": 0.9765,
+      "recall": 0.6853,
+      "f1_score": 0.8054,
+      "roc_auc": 0.9788,
+      "brier_score": 0.0227,
+      "ci_95_auc": [
+        0.9764,
+        0.9812
+      ],
+      "ci_95_f1": [
+        0.7892,
+        0.8212
+      ]
+    },
+    "Decision Tree (depth=8)": {
+      "accuracy": 0.972,
+      "precision": 0.9822,
+      "recall": 0.6835,
+      "f1_score": 0.8061,
+      "roc_auc": 0.9738,
+      "brier_score": 0.0233,
+      "ci_95_auc": [
+        0.9708,
+        0.9768
+      ],
+      "ci_95_f1": [
+        0.79,
+        0.8222
+      ]
+    },
+    "Deep Learning MLP": {
+      "accuracy": 0.9718,
+      "precision": 0.9888,
+      "recall": 0.6753,
+      "f1_score": 0.8025,
+      "roc_auc": 0.9774,
+      "brier_score": 0.0233,
+      "ci_95_auc": [
+        0.9748,
+        0.9801
+      ],
+      "ci_95_f1": [
+        0.7862,
+        0.8181
+      ]
+    },
+    "1D-CNN Biomarker Filter": {
+      "accuracy": 0.9711,
+      "precision": 0.9644,
+      "recall": 0.6853,
+      "f1_score": 0.8012,
+      "roc_auc": 0.9773,
+      "brier_score": 0.0234,
+      "ci_95_auc": [
+        0.9747,
+        0.9799
+      ],
+      "ci_95_f1": [
+        0.7854,
+        0.817
+      ]
+    },
+    "Recurrent LSTM Gating": {
+      "accuracy": 0.9711,
+      "precision": 0.9722,
+      "recall": 0.68,
+      "f1_score": 0.8003,
+      "roc_auc": 0.9759,
+      "brier_score": 0.0239,
+      "ci_95_auc": [
+        0.9731,
+        0.9787
+      ],
+      "ci_95_f1": [
+        0.7843,
+        0.8158
+      ]
+    },
+    "Logistic Regression": {
+      "accuracy": 0.9603,
+      "precision": 0.8588,
+      "recall": 0.6371,
+      "f1_score": 0.7315,
+      "roc_auc": 0.962,
+      "brier_score": 0.0315,
+      "ci_95_auc": [
+        0.9583,
+        0.9657
+      ],
+      "ci_95_f1": [
+        0.7126,
+        0.7485
+      ]
+    },
+    "Scratch NumPy MLP": {
+      "accuracy": 0.9708,
+      "precision": 0.9544,
+      "recall": 0.6888,
+      "f1_score": 0.8001,
+      "roc_auc": 0.9749,
+      "brier_score": 0.0239,
+      "ci_95_auc": [
+        0.9719,
+        0.9777
+      ],
+      "ci_95_f1": [
+        0.784,
+        0.8163
+      ]
+    }
+  },
+  "scratch_vs_framework_parity": {
+    "scratch_roc_auc": 0.9749,
+    "framework_roc_auc": 0.9774,
+    "absolute_difference": 0.0025,
+    "status": "VERIFIED_PARITY"
+  }
+}

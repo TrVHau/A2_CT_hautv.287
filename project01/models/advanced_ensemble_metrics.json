@@ -1,0 +1,18 @@
+{
+  "super_stacking_ensemble": {
+    "roc_auc": 0.9778,
+    "accuracy": 0.9714,
+    "recall": 0.7071,
+    "precision": 0.9413,
+    "f1_score": 0.8075,
+    "brier_score": 0.024,
+    "meta_learner": "Logistic Regression with L2 Regularization",
+    "base_models_count": 8
+  },
+  "tabresnet_attention": {
+    "roc_auc": 0.9793,
+    "accuracy": 0.9546,
+    "d_model": 32,
+    "heads": 4
+  }
+}

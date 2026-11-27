@@ -1,0 +1,612 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dự đoán giá nhà – Desktop</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blue:   #1a56db;
+      --blue-d: #1245b8;
+      --green:  #057a55;
+      --green-l:#ecfdf5;
+      --red:    #b91c1c;
+      --red-l:  #fef2f2;
+      --bg:     #f1f5f9;
+      --card:   #ffffff;
+      --border: #e2e8f0;
+      --text:   #1e293b;
+      --muted:  #64748b;
+      --r:      12px;
+      --sh:     0 2px 14px rgba(0,0,0,.07);
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    /* ── Topbar ── */
+    .topbar {
+      background: linear-gradient(135deg, #1a56db 0%, #0d3699 100%);
+      color: #fff;
+      padding: 0 32px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 10px rgba(0,0,0,.2);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .topbar-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -.3px;
+    }
+
+    .topbar-sub {
+      font-size: 12px;
+      opacity: .75;
+    }
+
+    .topbar-switch {
+      background: rgba(255,255,255,.15);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,.3);
+      border-radius: 8px;
+      padding: 7px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background .2s;
+      white-space: nowrap;
+    }
+    .topbar-switch:hover { background: rgba(255,255,255,.25); }
+
+    /* ── Layout ── */
+    .page { display: flex; height: calc(100vh - 60px); overflow: hidden; }
+
+    /* Left panel – form */
+    .panel-left {
+      width: 420px;
+      min-width: 360px;
+      background: var(--card);
+      border-right: 1px solid var(--border);
+      overflow-y: auto;
+      padding: 28px 28px 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
+
+    /* Right panel – results & stats */
+    .panel-right {
+      flex: 1;
+      overflow-y: auto;
+      padding: 28px 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* ── Shared card ── */
+    .card {
+      background: var(--card);
+      border-radius: var(--r);
+      box-shadow: var(--sh);
+      padding: 22px 24px;
+    }
+
+    .card-title {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .6px;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    /* ── Form ── */
+    .section-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .8px;
+      color: var(--blue);
+      margin-bottom: 12px;
+    }
+
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .grid-1 { display: grid; grid-template-columns: 1fr; gap: 12px; }
+
+    .field { display: flex; flex-direction: column; gap: 5px; }
+
+    label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .opt-tag {
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--muted);
+      background: #f1f5f9;
+      border-radius: 4px;
+      padding: 1px 5px;
+    }
+
+    input, select {
+      padding: 9px 11px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: 13px;
+      color: var(--text);
+      background: white;
+      width: 100%;
+      transition: border-color .2s, box-shadow .2s;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24'%3E%3Cpath fill='%2364748b' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 9px center;
+      padding-right: 30px;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(26,86,219,.1);
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 4px 0;
+    }
+
+    .btn-predict {
+      width: 100%;
+      padding: 13px;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--blue), var(--blue-d));
+      color: white;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: .2px;
+      transition: opacity .2s, transform .1s;
+      box-shadow: 0 4px 12px rgba(26,86,219,.3);
+    }
+    .btn-predict:hover { opacity: .92; }
+    .btn-predict:active { transform: scale(.99); }
+
+    /* ── Result hero ── */
+    .result-hero {
+      background: var(--green-l);
+      border: 1.5px solid #a7f3d0;
+      border-radius: var(--r);
+      padding: 28px 32px;
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      animation: fadeSlide .35s ease;
+    }
+
+    @keyframes fadeSlide {
+      from { opacity: 0; transform: translateY(-6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .result-icon { font-size: 42px; line-height: 1; }
+
+    .result-body {}
+
+    .result-label {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .6px;
+      color: var(--green);
+      margin-bottom: 4px;
+    }
+
+    .result-price {
+      font-size: 48px;
+      font-weight: 800;
+      color: var(--green);
+      letter-spacing: -2px;
+      line-height: 1;
+    }
+
+    .result-unit { font-size: 20px; font-weight: 500; color: var(--green); margin-left: 4px; }
+
+    .result-note { font-size: 12px; color: #065f46; opacity: .7; margin-top: 6px; }
+
+    .error-box {
+      background: var(--red-l);
+      border: 1.5px solid #fca5a5;
+      border-radius: var(--r);
+      padding: 14px 18px;
+      color: var(--red);
+      font-size: 13px;
+    }
+
+    /* ── Stats row ── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+    }
+
+    .stat-box {
+      background: var(--card);
+      border-radius: 10px;
+      box-shadow: var(--sh);
+      padding: 14px 12px;
+      text-align: center;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      margin-bottom: 6px;
+    }
+
+    .stat-value {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--blue);
+    }
+
+    .stat-unit { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+    /* ── Comparison table ── */
+    .cmp-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    .cmp-table th {
+      background: #f8fafc;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      color: var(--muted);
+      padding: 10px 14px;
+      text-align: left;
+      border-bottom: 2px solid var(--border);
+      white-space: nowrap;
+    }
+
+    .cmp-table td {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+      color: var(--muted);
+    }
+
+    .cmp-table tr.best td {
+      color: var(--green);
+      font-weight: 700;
+      background: #f0fdf4;
+    }
+
+    .cmp-table tr:last-child td { border-bottom: none; }
+
+    .badge {
+      display: inline-block;
+      background: #dcfce7;
+      color: var(--green);
+      font-size: 9px;
+      font-weight: 800;
+      padding: 2px 7px;
+      border-radius: 20px;
+      letter-spacing: .3px;
+      margin-left: 5px;
+      vertical-align: middle;
+    }
+
+    /* ── Right panel top grid ── */
+    .right-top {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .model-pill {
+      background: var(--card);
+      border-radius: 10px;
+      box-shadow: var(--sh);
+      padding: 16px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--muted);
+      min-width: 200px;
+    }
+
+    .model-pill strong { color: var(--text); font-size: 13px; }
+
+    .placeholder-box {
+      background: var(--card);
+      border: 2px dashed var(--border);
+      border-radius: var(--r);
+      padding: 36px 24px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .placeholder-box .big-icon { font-size: 40px; margin-bottom: 10px; }
+  </style>
+</head>
+<body>
+
+<!-- Topbar -->
+<div class="topbar">
+  <div>
+    <div class="topbar-brand">🏠 Hệ Thống Định Giá Nhà Đất Việt Nam Nâng Cao</div>
+    <div class="topbar-sub">Học phần Hệ thống Thông minh · Trịnh Vũ Hậu (B21DCCN287) · {{ metrics.name }} (R² = {{ metrics.r2 }})</div>
+  </div>
+  <div style="display:flex;gap:10px;align-items:center;">
+    <button onclick="openGallery()" style="background:#10b981;color:white;border:none;padding:7px 14px;border-radius:8px;font-weight:600;font-size:12px;cursor:pointer;display:flex;align-items:center;gap:6px;">
+      <span>📊</span> Thư Viện 14 Biểu Đồ (300 DPI)
+    </button>
+    <a href="/mobile" class="topbar-switch">📱 Giao diện Mobile</a>
+  </div>
+</div>
+
+<!-- Two-panel layout -->
+<div class="page">
+
+  <!-- ── LEFT – Form ── -->
+  <aside class="panel-left">
+
+    <div>
+      <div class="section-label">📐 Thông số cơ bản</div>
+      <form method="POST" id="mainForm">
+        <div class="grid-2">
+          <div class="field">
+            <label>Diện tích (m²)</label>
+            <input type="number" name="area" min="1" step="0.5" placeholder="VD: 80" required
+                   value="{{ request.form.area if request.form.area else '' }}" />
+          </div>
+          <div class="field">
+            <label>Số tầng</label>
+            <input type="number" name="floors" min="1" max="30" step="1" placeholder="VD: 3"
+                   value="{{ request.form.floors if request.form.floors else '' }}" />
+          </div>
+          <div class="field">
+            <label>Phòng ngủ</label>
+            <input type="number" name="bedrooms" min="1" max="20" step="1" placeholder="VD: 3"
+                   value="{{ request.form.bedrooms if request.form.bedrooms else '' }}" />
+          </div>
+          <div class="field">
+            <label>Phòng tắm</label>
+            <input type="number" name="bathrooms" min="1" max="20" step="1" placeholder="VD: 2"
+                   value="{{ request.form.bathrooms if request.form.bathrooms else '' }}" />
+          </div>
+        </div>
+
+        <div class="divider" style="margin: 16px 0;"></div>
+        <div class="section-label">📏 Thông số đường / mặt tiền <span class="opt-tag">tuỳ chọn</span></div>
+        <div class="grid-2">
+          <div class="field">
+            <label>Mặt tiền (m)</label>
+            <input type="number" name="frontage" step="0.1" placeholder="VD: 5"
+                   value="{{ request.form.frontage if request.form.frontage else '' }}" />
+          </div>
+          <div class="field">
+            <label>Đường vào (m)</label>
+            <input type="number" name="access_road" step="0.1" placeholder="VD: 6"
+                   value="{{ request.form.access_road if request.form.access_road else '' }}" />
+          </div>
+        </div>
+
+        <div class="divider" style="margin: 16px 0;"></div>
+        <div class="section-label">🧭 Hướng & pháp lý</div>
+        <div class="grid-2">
+          <div class="field">
+            <label>Hướng nhà</label>
+            <select name="house_direction">
+              <option value="">-- Không xác định --</option>
+              {% for d in directions %}
+              <option {% if request.form.house_direction == d %}selected{% endif %}>{{ d }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="field">
+            <label>Hướng ban công</label>
+            <select name="balcony_direction">
+              <option value="">-- Không xác định --</option>
+              {% for d in directions %}
+              <option {% if request.form.balcony_direction == d %}selected{% endif %}>{{ d }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="field">
+            <label>Pháp lý</label>
+            <select name="legal_status">
+              <option value="">-- Không xác định --</option>
+              {% for l in legal %}
+              <option {% if request.form.legal_status == l %}selected{% endif %}>{{ l }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="field">
+            <label>Nội thất</label>
+            <select name="furniture_state">
+              <option value="">-- Không xác định --</option>
+              {% for f in furniture %}
+              <option {% if request.form.furniture_state == f %}selected{% endif %}>{{ f }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+
+        <div style="margin-top: 22px;">
+          <button class="btn-predict" type="submit">🔮 Dự đoán giá nhà</button>
+        </div>
+      </form>
+    </div>
+
+  </aside>
+
+  <!-- ── RIGHT – Results & Stats ── -->
+  <main class="panel-right">
+
+    <!-- Result or placeholder -->
+    {% if prediction is not none %}
+    <div class="result-hero">
+      <div class="result-icon">🏡</div>
+      <div class="result-body">
+        <div class="result-label">Giá nhà dự đoán</div>
+        <div>
+          <span class="result-price">{{ "%.2f"|format(prediction) }}</span>
+          <span class="result-unit">tỉ đồng</span>
+        </div>
+        <div class="result-note">Kết quả mang tính tham khảo, phụ thuộc thị trường thực tế.</div>
+      </div>
+    </div>
+    {% elif error %}
+    <div class="error-box">❌ Lỗi: {{ error }}</div>
+    {% else %}
+    <div class="placeholder-box">
+      <div class="big-icon">🏠</div>
+      <div>Nhập thông tin bất động sản bên trái và nhấn <strong>Dự đoán</strong></div>
+    </div>
+    {% endif %}
+
+    <!-- 5-metric stats of best model -->
+    <div>
+      <div class="card-title" style="padding-left:2px;">📊 Hiệu năng mô hình tốt nhất – {{ metrics.name }}</div>
+      <div class="stats-grid">
+        <div class="stat-box">
+          <div class="stat-label">MAE</div>
+          <div class="stat-value">{{ metrics.mae }}</div>
+          <div class="stat-unit">tỉ đồng</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">MSE</div>
+          <div class="stat-value">{{ metrics.mse }}</div>
+          <div class="stat-unit">(tỉ)²</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">RMSE</div>
+          <div class="stat-value">{{ metrics.rmse }}</div>
+          <div class="stat-unit">tỉ đồng</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">R²</div>
+          <div class="stat-value">{{ metrics.r2 }}</div>
+          <div class="stat-unit">hệ số xác định</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">MAPE</div>
+          <div class="stat-value">{{ metrics.mape }}%</div>
+          <div class="stat-unit">sai số %</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Comparison table -->
+    <div class="card">
+      <div class="card-title">🤖 So sánh 5 mô hình học máy</div>
+      <table class="cmp-table">
+        <thead>
+          <tr>
+            <th>Mô hình</th>
+            <th>MAE</th>
+            <th>MSE</th>
+            <th>RMSE</th>
+            <th>R²</th>
+            <th>MAPE (%)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in metrics.comparison %}
+          <tr {% if row.best %}class="best"{% endif %}>
+            <td>{{ row.model }}{% if row.best %}<span class="badge">TỐT NHẤT</span>{% endif %}</td>
+            <td>{{ row.mae }}</td>
+            <td>{{ row.mse }}</td>
+            <td>{{ row.rmse }}</td>
+            <td>{{ row.r2 }}</td>
+            <td>{{ row.mape }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <p style="font-size:11px;color:var(--muted);margin-top:10px;">
+        * RMSE / MAE đơn vị: tỉ đồng · Dataset: 30,229 mẫu · Train/Test: 80/20
+      </p>
+    </div>
+
+  </main>
+</div>
+
+
+<!-- Modal Thư Viện 14 Biểu Đồ -->
+<div id="galleryModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(15,23,42,0.85);z-index:9999;backdrop-filter:blur(4px);overflow-y:auto;padding:24px;">
+  <div style="max-width:1100px;margin:0 auto;background:#ffffff;border-radius:16px;box-shadow:0 25px 50px -12px rgba(0,0,0,0.25);overflow:hidden;">
+    <div style="background:linear-gradient(135deg,#1e3a8a,#2563eb);color:#ffffff;padding:20px 24px;display:flex;justify-content:space-between;align-items:center;">
+      <div>
+        <h2 style="font-size:18px;font-weight:700;margin:0;">📊 THƯ VIỆN 14 BIỂU ĐỒ NGHIÊN CỨU & KIỂM ĐỊNH CHUYÊN SÂU (300 DPI)</h2>
+        <p style="font-size:12px;opacity:0.85;margin:4px 0 0 0;">Hệ thống Định giá Nhà đất Việt Nam · Trịnh Vũ Hậu (B21DCCN287) · PTIT 2026</p>
+      </div>
+      <button onclick="closeGallery()" style="background:rgba(255,255,255,0.2);color:#ffffff;border:none;width:36px;height:36px;border-radius:50%;font-size:18px;cursor:pointer;">✕</button>
+    </div>
+    <div style="padding:24px;display:grid;grid-template-columns:repeat(auto-fit, minmax(320px, 1fr));gap:20px;">
+      {% for fig in figures %}
+      <div style="border:1px solid #e2e8f0;border-radius:12px;padding:12px;background:#f8fafc;display:flex;flex-direction:column;justify-content:space-between;">
+        <div>
+          <a href="/figures/{{ fig.file }}" target="_blank">
+            <img src="/figures/{{ fig.file }}" alt="{{ fig.title }}" style="width:100%;height:190px;object-fit:cover;border-radius:8px;border:1px solid #cbd5e1;cursor:pointer;" />
+          </a>
+          <h4 style="font-size:13px;font-weight:700;color:#1e293b;margin:10px 0 4px 0;">{{ fig.id }}. {{ fig.title }}</h4>
+          <p style="font-size:11.5px;color:#64748b;line-height:1.4;">{{ fig.desc }}</p>
+        </div>
+        <div style="margin-top:10px;">
+          <a href="/figures/{{ fig.file }}" target="_blank" style="display:inline-block;background:#3b82f6;color:#ffffff;text-decoration:none;padding:5px 10px;border-radius:6px;font-size:11px;font-weight:600;">🔍 Phóng to 300 DPI</a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<script>
+function openGallery() {
+  document.getElementById('galleryModal').style.display = 'block';
+}
+function closeGallery() {
+  document.getElementById('galleryModal').style.display = 'none';
+}
+</script>
+
+</body>
+</html>

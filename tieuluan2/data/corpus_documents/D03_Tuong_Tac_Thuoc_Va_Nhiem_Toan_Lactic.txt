@@ -1,0 +1,11 @@
+CẢNH BÁO TƯƠNG TÁC THUỐC: METFORMIN VÀ RƯỢU BIA - NGUY CƠ NHIỄM TOAN LACTIC
+
+1. Cơ chế sinh bệnh học tương tác đa tầng:
+Nhiễm toan lactic (Lactic Acidosis) là biến chứng chuyển hóa hiếm gặp (tần suất khoảng 3-10 ca/100.000 bệnh nhân-năm) nhưng cực kỳ nghiêm trọng với tỷ lệ tử vong lên tới 30-50%.
+Khi bệnh nhân đang dùng Metformin mà tiêu thụ rượu bia (ethanol), hai con đường ức chế độc lập sẽ cộng hưởng làm suy sụp khả năng thanh thải lactate của cơ thể:
+- Con đường 1 (Tác động của Ethanol): Quá trình chuyển hóa ethanol ở gan bởi enzyme alcohol dehydrogenase (ADH) chuyển NAD+ thành NADH, làm tăng vọt tỷ lệ NADH/NAD+ trong tế bào chất. Tỷ lệ khử cao này đẩy cân bằng phản ứng lactate dehydrogenase (LDH) theo chiều pyruvate -> lactate, làm ức chế mạnh mẽ quá trình chuyển hóa lactate thành pyruvate để tân tạo glucose.
+- Con đường 2 (Tác động của Metformin): Metformin ức chế phức hợp I ty thể, làm giảm oxy hóa tế bào và tăng tỷ lệ yếm khí, dẫn tới sản sinh thêm lactate từ mô ruột và mô ngoại biên. Đồng thời, Metformin ức chế glycerophosphate dehydrogenase ty thể (mGPD), ngăn chặn sự vận chuyển tương đương khử vào ty thể.
+
+2. Hậu quả lâm sàng:
+Nồng độ acid lactic trong máu tăng vọt vượt ngưỡng > 5.0 mmol/L, khoảng trống anion (anion gap) mở rộng > 16 mEq/L, pH máu tụt giảm < 7.35. Bệnh nhân có biểu hiện thở nhanh sâu kiểu Kussmaul, buồn nôn, đau bụng dữ dội, hạ thân nhiệt, suy tuần hoàn và hôn mê.
+Khuyến cáo tuyệt đối: Bệnh nhân đang sử dụng Metformin phải kiêng hoàn toàn rượu bia và đồ uống có cồn. Cần ngừng Metformin trước khi thực hiện các can thiệp có dùng thuốc cản quang chứa iod ít nhất 48 giờ.

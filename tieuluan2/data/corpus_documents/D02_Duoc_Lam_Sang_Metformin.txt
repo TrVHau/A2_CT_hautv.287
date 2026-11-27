@@ -1,0 +1,17 @@
+DƯỢC LÂM SÀNG METFORMIN VÀ CÁC THUỐC HẠ ĐƯỜNG HUYẾT ĐƯỜNG UỐNG
+
+1. Cơ chế tác dụng của Metformin:
+Metformin thuộc nhóm biguanide, là lựa chọn đầu tay (first-line therapy) cho đái tháo đường típ 2:
+- Ức chế phức hợp I chuỗi hô hấp ty thể tại tế bào gan, làm giảm ATP và tăng AMP nội bào.
+- Hoạt hóa enzym AMPK (AMP-activated protein kinase), dẫn đến ức chế phiên mã các enzym tân tạo đường (gluconeogenesis) và phân giải glycogen tại gan.
+- Tăng nhạy cảm với insulin ở mô ngoại vi (cơ xương và mô mỡ) thông qua việc tăng chuyển vị thể vận chuyển glucose GLUT-4 lên màng tế bào.
+- Làm chậm hấp thu glucose ở đường tiêu hóa và kích thích tiết GLP-1 từ tế bào L ruột.
+
+2. Liều dùng và chỉnh liều:
+- Liều khởi đầu: 500 mg hoặc 850 mg uống 1-2 lần/ngày trong hoặc ngay sau bữa ăn để giảm tác dụng không mong muốn trên đường tiêu hóa.
+- Tăng liều dần mỗi 1-2 tuần. Liều tối đa hiệu quả: 2000 mg/ngày (tối đa tuyệt đối: 2550 mg/ngày chia 3 lần).
+- Điều chỉnh theo mức lọc cầu thận ước tính (eGFR):
+  + eGFR >= 60 mL/phút/1.73m2: Không cần chỉnh liều.
+  + eGFR 45-59 mL/phút/1.73m2: Liều tối đa 1000 mg/ngày, theo dõi chức năng thận mỗi 3-6 tháng.
+  + eGFR 30-44 mL/phút/1.73m2: Cân nhắc giảm liều tối đa 500 mg/ngày, không khuyến cáo khởi trị mới.
+  + eGFR < 30 mL/phút/1.73m2: Chống chỉ định tuyệt đối do tích lũy thuốc làm tăng nguy cơ nhiễm toan lactic.

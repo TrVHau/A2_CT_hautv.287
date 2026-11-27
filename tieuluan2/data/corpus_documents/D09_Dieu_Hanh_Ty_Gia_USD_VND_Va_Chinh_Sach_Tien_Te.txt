@@ -1,0 +1,13 @@
+CƠ CHẾ TRUYỀN DẪN CHÍNH SÁCH TIỀN TỆ VÀ ĐIỀU HÀNH TỶ GIÁ USD/VND CỦA NHNN
+
+1. Cơ chế xác định tỷ giá trung tâm:
+Ngân hàng Nhà nước công bố tỷ giá trung tâm của Đồng Việt Nam với Đô la Mỹ hàng ngày, được xác định trên cơ sở:
+- Diễn biến bình quân gia quyền tỷ giá trên thị trường liên ngân hàng phiên liền trước.
+- Biến động của rổ đồng tiền thuộc các đối tác thương mại và vay nợ lớn nhất của Việt Nam.
+- Các cân đối kinh tế vĩ mô và mục tiêu kiểm soát lạm phát của chính phủ.
+- Biên độ giao dịch hiện hành áp dụng là +/- 5% so với tỷ giá trung tâm.
+
+2. Các công cụ can thiệp bình ổn tỷ giá:
+- Nghiệp vụ thị trường mở (OMO): Phát hành tín phiếu NHNN để hút bớt thanh khoản VND dư thừa trong hệ thống ngân hàng, kéo lãi suất liên ngân hàng VND tăng lên, thu hẹp chênh lệch lãi suất VND - USD nhằm giảm áp lực đầu cơ tỷ giá.
+- Bán ngoại tệ can thiệp: Bán USD từ quỹ dự trữ ngoại hối nhà nước (giao ngay hoặc kỳ hạn có hủy ngang) để đáp ứng nhu cầu ngoại tệ hợp pháp của nền kinh tế.
+- Lãi suất điều hành: Điều chỉnh trần lãi suất huy động, lãi suất tái cấp vốn và lãi suất tái chiết khấu khi áp lạm phát và áp lực mất giá tỷ giá vượt ngưỡng kiểm soát.

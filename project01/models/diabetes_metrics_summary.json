@@ -1,0 +1,65 @@
+{
+  "Random_Forest": {
+    "accuracy": 0.9724,
+    "precision": 0.9931,
+    "recall": 0.6794,
+    "f1_score": 0.8068,
+    "roc_auc": 0.9748,
+    "training_time_sec": 0.79,
+    "parameters": 6400
+  },
+  "Gradient_Boosting": {
+    "accuracy": 0.9718,
+    "precision": 0.9765,
+    "recall": 0.6853,
+    "f1_score": 0.8054,
+    "roc_auc": 0.9788,
+    "training_time_sec": 3.78,
+    "parameters": 1600
+  },
+  "Decision_Tree": {
+    "accuracy": 0.972,
+    "precision": 0.9822,
+    "recall": 0.6835,
+    "f1_score": 0.8061,
+    "roc_auc": 0.9738,
+    "training_time_sec": 0.14,
+    "parameters": 256
+  },
+  "Logistic_Regression": {
+    "accuracy": 0.9603,
+    "precision": 0.8588,
+    "recall": 0.6371,
+    "f1_score": 0.7315,
+    "roc_auc": 0.962,
+    "training_time_sec": 0.06,
+    "parameters": 18
+  },
+  "Deep_Learning_MLP": {
+    "accuracy": 0.9718,
+    "precision": 0.9847,
+    "recall": 0.6794,
+    "f1_score": 0.804,
+    "roc_auc": 0.9775,
+    "training_time_sec": 7.56,
+    "parameters": 2722
+  },
+  "1D_CNN": {
+    "accuracy": 0.971,
+    "precision": 0.9667,
+    "recall": 0.6829,
+    "f1_score": 0.8004,
+    "roc_auc": 0.9773,
+    "training_time_sec": 5.18,
+    "parameters": 1274
+  },
+  "Recurrent_LSTM": {
+    "accuracy": 0.9711,
+    "precision": 0.9722,
+    "recall": 0.6794,
+    "f1_score": 0.7999,
+    "roc_auc": 0.9759,
+    "training_time_sec": 5.3,
+    "parameters": 4546
+  }
+}

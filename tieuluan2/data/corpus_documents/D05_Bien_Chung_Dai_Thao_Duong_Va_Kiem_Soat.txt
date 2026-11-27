@@ -1,0 +1,10 @@
+BIẾN CHỨNG MẠCH MÁU VÀ CHIẾN LƯỢC QUẢN TRỊ TOÀN DIỆN
+
+1. Biến chứng mạch máu nhỏ (Microvascular Complications):
+- Bệnh võng mạc đái tháo đường: Nguyên nhân hàng đầu gây mù lòa mắc phải. Khám đáy mắt giãn đồng tử ít nhất 1 lần/năm.
+- Bệnh thận đái tháo đường: Tổn thương cầu thận tiến triển dẫn tới suy thận giai đoạn cuối. Tầm soát bằng tỷ số Albumin/Creatinine niệu (UACR) và eGFR hàng năm. UACR >= 30 mg/g định nghĩa tiểu đạm vi thể. Thuốc ức chế men chuyển (ACEi) hoặc chẹn thụ thể AT1 (ARB), kết hợp SGLT2i là trụ cột bảo vệ thận.
+- Bệnh thần kinh ngoại biên: Gây mất cảm giác bảo vệ ở bàn chân, loét bàn chân và đoạn chi. Kiểm tra cảm giác bằng monofilament 10g.
+
+2. Biến chứng mạch máu lớn (Macrovascular Complications):
+- Bệnh mạch vành, nhồi máu cơ tim và đột quỵ chiếm > 60% nguyên nhân tử vong ở bệnh nhân đái tháo đường típ 2.
+- Cần kiểm soát huyết áp mục tiêu < 130/80 mmHg và hạ lipid máu tích cực bằng Statin liều trung bình đến cao (mục tiêu LDL-C < 70 mg/dL hoặc < 55 mg/dL nếu có nguy cơ rất cao).

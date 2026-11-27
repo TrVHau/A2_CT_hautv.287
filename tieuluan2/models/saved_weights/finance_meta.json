@@ -1,0 +1,20 @@
+{
+  "ticker": "FPT",
+  "window_size": 30,
+  "feature_cols": [
+    "ret_target",
+    "ret_usdvnd",
+    "ret_xau",
+    "ret_dxy",
+    "ret_vn30",
+    "ma20_dev",
+    "vol20"
+  ],
+  "metrics": {
+    "rmse_model": 0.01496,
+    "rmse_naive": 0.01483,
+    "ratio_to_naive": 1.0088,
+    "directional_accuracy_pct": 52.31
+  },
+  "last_known_price": 141.02000427246094
+}

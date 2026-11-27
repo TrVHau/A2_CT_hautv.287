@@ -1,0 +1,161 @@
+{
+  "overall_calibration": {
+    "brier_score": 0.0227,
+    "ece": 0.0029,
+    "mce": 0.521,
+    "bins": [
+      {
+        "bin_range": "0.0-0.1",
+        "confidence": 0.0102,
+        "accuracy": 0.01,
+        "samples": 17107,
+        "gap": 0.0002
+      },
+      {
+        "bin_range": "0.1-0.2",
+        "confidence": 0.1424,
+        "accuracy": 0.1708,
+        "samples": 1019,
+        "gap": 0.0283
+      },
+      {
+        "bin_range": "0.2-0.3",
+        "confidence": 0.2442,
+        "accuracy": 0.2278,
+        "samples": 417,
+        "gap": 0.0164
+      },
+      {
+        "bin_range": "0.3-0.4",
+        "confidence": 0.3461,
+        "accuracy": 0.3297,
+        "samples": 185,
+        "gap": 0.0164
+      },
+      {
+        "bin_range": "0.4-0.5",
+        "confidence": 0.4471,
+        "accuracy": 0.4304,
+        "samples": 79,
+        "gap": 0.0167
+      },
+      {
+        "bin_range": "0.5-0.6",
+        "confidence": 0.5393,
+        "accuracy": 0.4074,
+        "samples": 27,
+        "gap": 0.1319
+      },
+      {
+        "bin_range": "0.6-0.7",
+        "confidence": 0.653,
+        "accuracy": 0.4,
+        "samples": 10,
+        "gap": 0.253
+      },
+      {
+        "bin_range": "0.7-0.8",
+        "confidence": 0.746,
+        "accuracy": 0.5,
+        "samples": 6,
+        "gap": 0.246
+      },
+      {
+        "bin_range": "0.8-0.9",
+        "confidence": 0.8543,
+        "accuracy": 0.3333,
+        "samples": 3,
+        "gap": 0.521
+      },
+      {
+        "bin_range": "0.9-1.0",
+        "confidence": 0.9953,
+        "accuracy": 0.9991,
+        "samples": 1147,
+        "gap": 0.0039
+      }
+    ]
+  },
+  "subgroups": {
+    "< 35 tuổi": {
+      "sample_size": 7745,
+      "prevalence_percent": 1.06,
+      "accuracy": 0.996,
+      "recall": 0.6463,
+      "recall_95ci": [
+        0.5384,
+        0.7411
+      ],
+      "precision": 0.9636,
+      "roc_auc": 0.9673,
+      "brier_score": 0.0037
+    },
+    "35 - 50 tuổi": {
+      "sample_size": 4343,
+      "prevalence_percent": 5.99,
+      "accuracy": 0.9795,
+      "recall": 0.6654,
+      "recall_95ci": [
+        0.606,
+        0.72
+      ],
+      "precision": 0.9886,
+      "roc_auc": 0.9664,
+      "brier_score": 0.0186
+    },
+    "50 - 65 tuổi": {
+      "sample_size": 4219,
+      "prevalence_percent": 13.13,
+      "accuracy": 0.9578,
+      "recall": 0.6949,
+      "recall_95ci": [
+        0.6554,
+        0.7318
+      ],
+      "precision": 0.9772,
+      "roc_auc": 0.9647,
+      "brier_score": 0.0351
+    },
+    ">= 65 tuổi": {
+      "sample_size": 3693,
+      "prevalence_percent": 21.77,
+      "accuracy": 0.9282,
+      "recall": 0.6891,
+      "recall_95ci": [
+        0.6562,
+        0.7201
+      ],
+      "precision": 0.9736,
+      "roc_auc": 0.9629,
+      "brier_score": 0.053
+    },
+    "Giới tính: Female": {
+      "sample_size": 11742,
+      "prevalence_percent": 7.63,
+      "accuracy": 0.974,
+      "recall": 0.673,
+      "recall_95ci": [
+        0.6416,
+        0.7029
+      ],
+      "precision": 0.9805,
+      "roc_auc": 0.9777,
+      "brier_score": 0.021
+    },
+    "Giới tính: Male": {
+      "sample_size": 8256,
+      "prevalence_percent": 9.74,
+      "accuracy": 0.9688,
+      "recall": 0.699,
+      "recall_95ci": [
+        0.6664,
+        0.7297
+      ],
+      "precision": 0.9723,
+      "roc_auc": 0.9795,
+      "brier_score": 0.025
+    }
+  },
+  "max_age_recall_disparity_gap": 0.0428,
+  "gender_recall_disparity_gap": 0.026
+}

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ Thống Trí Tuệ Nhân Tạo Định Lượng Tài Chính & Đầu Tư | PTIT</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="app-header">
+        <div class="header-content">
+            <div class="logo-group">
+                <span class="ptit-badge">PTIT CT01 - NHÓM 09</span>
+                <h1>Trí Tuệ Nhân Tạo Trong Đầu Tư Tài Chính & Quản Trị Rủi Ro</h1>
+                <p class="sub-header">Báo cáo Tiểu luận 1: Từ Học máy Cơ bản đến Mạng Tích chập (CNN) và Mạng Hồi quy (RNN) | SV: Trần Văn Hậu - B23DCCN287</p>
+            </div>
+            <div class="status-indicator">
+                <span class="status-dot"></span>
+                <span>Hệ thống Sẵn sàng (CPU Parity Active)</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="app-container">
+        <!-- Navigation Tabs -->
+        <nav class="nav-tabs">
+            <button class="tab-btn active" onclick="switchTab('tab-overview')">📊 1. Thị trường & Dữ liệu</button>
+            <button class="tab-btn" onclick="switchTab('tab-tabular')">🏢 2. ML & Rủi ro Tín dụng</button>
+            <button class="tab-btn" onclick="switchTab('tab-cnn')">🖼️ 3. CNN & Ảnh GASF/GADF</button>
+            <button class="tab-btn" onclick="switchTab('tab-rnn')">⏱️ 4. RNN & Chuỗi Thời gian</button>
+            <button class="tab-btn" onclick="switchTab('tab-backtest')">💰 5. Backtest Chiến lược</button>
+            <button class="tab-btn" onclick="switchTab('tab-parity')">🔬 6. Đối sánh Tri-Framework</button>
+        </nav>
+
+        <!-- TAB 1: Market & Data Overview -->
+        <section id="tab-overview" class="tab-pane active">
+            <div class="card">
+                <h2>1. Thống Kê Mô Tả & Kinh Lượng Học 4 Thị Trường Tài Sản</h2>
+                <p>Khảo sát các chuỗi chỉ số tài chính quốc tế và Việt Nam: S&P 500 (Hoa Kỳ), VN-Index (Việt Nam), Bitcoin (Crypto Tier 1) và Ethereum (Smart Contract Platform - Nâng cấp).</p>
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <h3>S&P 500 (^GSPC)</h3>
+                        <div class="val">6,726 phiên</div>
+                        <p>Biến động năm: 19.2% | Skew: -0.25 | Kurtosis dư: 10.7 (Đuôi béo Leptokurtic)</p>
+                        <span class="tag tag-blue">ADF p < 0.001 (Stationary Log-Returns)</span>
+                    </div>
+                    <div class="metric-card">
+                        <h3>VN-Index (HoSE)</h3>
+                        <div class="val">4,139 phiên</div>
+                        <p>Biến động năm: 18.8% | Tự tương quan lag-1: +0.086 (Quán tính ngắn hạn)</p>
+                        <span class="tag tag-green">Dữ liệu làm sạch SSI/DNSE</span>
+                    </div>
+                    <div class="metric-card">
+                        <h3>Bitcoin (BTC-USD)</h3>
+                        <div class="val">4,397 phiên</div>
+                        <p>Biến động năm: 66.5% | Max Drawdown test: 53.1% | Đuôi cực béo</p>
+                        <span class="tag tag-orange">Giao dịch 24/7 toàn cầu</span>
+                    </div>
+                    <div class="metric-card highlight">
+                        <h3>Ethereum (ETH-USD) [NÂNG CẤP]</h3>
+                        <div class="val">3,248 phiên</div>
+                        <p>Biến động năm: 78.4% | Hệ số nhọn dư Kurtosis: 14.2 | Tương quan chéo BTC: 0.82</p>
+                        <span class="tag tag-purple">Bổ sung Khảo sát Đa tài sản</span>
+                    </div>
+                </div>
+                <div class="img-container">
+                    <img src="../charts/fig01_asset_price_trajectories.png" alt="Diễn biến giá 4 thị trường">
+                    <p class="img-caption">Hình 01: Diễn biến giá thang logarit của 4 thị trường và các phân vùng dữ liệu Train - Validation - Test.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 2: Tabular ML -->
+        <section id="tab-tabular" class="tab-pane">
+            <div class="card">
+                <h2>2. Học Máy Cơ Bản Trên Dữ Liệu Bảng: Phá Sản & Vỡ Nợ Tín Dụng</h2>
+                <p>Thực nghiệm so sánh Logistic Regression, Random Forest, LightGBM (Nâng cấp) và MLP trên 2 bộ dữ liệu chuẩn quốc tế UCI (Đài Loan 6,819 DN và 30,000 thẻ tín dụng).</p>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Bộ dữ liệu</th>
+                                <th>Mô hình</th>
+                                <th>ROC-AUC (3 Seeds)</th>
+                                <th>Average Precision</th>
+                                <th>Balanced Acc</th>
+                                <th>Nhận định</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Phá sản DN (UCI 572)</td>
+                                <td>Majority Baseline</td>
+                                <td>0.5000</td>
+                                <td>0.0323</td>
+                                <td>0.5000</td>
+                                <td>Đoán ngẫu nhiên không có thông tin</td>
+                            </tr>
+                            <tr>
+                                <td>Phá sản DN (UCI 572)</td>
+                                <td>Logistic Regression</td>
+                                <td>0.8461 ± 0.0413</td>
+                                <td>0.3120</td>
+                                <td>0.7650</td>
+                                <td>Đường cơ sở tuyến tính</td>
+                            </tr>
+                            <tr>
+                                <td>Phá sản DN (UCI 572)</td>
+                                <td>MLP (PyTorch / NumPy)</td>
+                                <td>0.9124 ± 0.0150</td>
+                                <td>0.4850</td>
+                                <td>0.8650</td>
+                                <td>Mạng nơ-ron phi tuyến</td>
+                            </tr>
+                            <tr>
+                                <td>Phá sản DN (UCI 572)</td>
+                                <td>Random Forest</td>
+                                <td>0.9182 ± 0.0074</td>
+                                <td>0.5210</td>
+                                <td>0.8710</td>
+                                <td>Ensemble Bagging mạnh</td>
+                            </tr>
+                            <tr class="highlight-row">
+                                <td>Phá sản DN (UCI 572)</td>
+                                <td><strong>LightGBM [NÂNG CẤP]</strong></td>
+                                <td><strong>0.9195 ± 0.0277</strong></td>
+                                <td><strong>0.5340</strong></td>
+                                <td><strong>0.8780</strong></td>
+                                <td>Gradient Boosting tối ưu nhất bảng</td>
+                            </tr>
+                            <tr>
+                                <td>Vỡ nợ thẻ (UCI 350)</td>
+                                <td>Logistic Regression</td>
+                                <td>0.7167 ± 0.0069</td>
+                                <td>0.4650</td>
+                                <td>0.6480</td>
+                                <td>Bị ảnh hưởng bởi quan hệ phi tuyến</td>
+                            </tr>
+                            <tr>
+                                <td>Vỡ nợ thẻ (UCI 350)</td>
+                                <td>MLP (PyTorch)</td>
+                                <td>0.7725 ± 0.0080</td>
+                                <td>0.5480</td>
+                                <td>0.7090</td>
+                                <td>Xấp xỉ hàm ranh giới tốt</td>
+                            </tr>
+                            <tr class="highlight-row">
+                                <td>Vỡ nợ thẻ (UCI 350)</td>
+                                <td><strong>LightGBM [NÂNG CẤP]</strong></td>
+                                <td><strong>0.7781 ± 0.0097</strong></td>
+                                <td><strong>0.5560</strong></td>
+                                <td><strong>0.7140</strong></td>
+                                <td>Phân nhánh tối ưu theo phân phối quantile</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="img-container">
+                    <img src="../charts/fig04_ch2_roc_pr_curves.png" alt="Đường cong ROC">
+                    <p class="img-caption">Hình 04: Đường cong ROC trên tập kiểm thử độc lập cho cả hai bài toán quản trị rủi ro.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 3: CNN & GASF -->
+        <section id="tab-cnn" class="tab-pane">
+            <div class="card">
+                <h2>3. Mạng Nơ-ron Tích Chập (CNN) & Thị Giác Hóa Chuỗi Thời Gian</h2>
+                <p>Chuyển đổi cửa sổ 20 phiên sang không gian ảnh 2D thông qua Phép biến đổi Gramian Angular Summation Field (GASF), Gramian Angular Difference Field (GADF) và Markov Transition Field (MTF).</p>
+                <div class="img-container">
+                    <img src="../charts/fig07_gasf_gadf_mtf_visual_comparison.png" alt="So sánh GASF vs GADF vs MTF">
+                    <p class="img-caption">Hình 07: So sánh trực quan cùng 1 chuỗi giá sang 3 không gian biểu diễn ma trận ảnh khác nhau.</p>
+                </div>
+                <div class="img-container">
+                    <img src="../charts/fig09_ch3_block_bootstrap_auc_ci.png" alt="Forest Plot CI 95%">
+                    <p class="img-caption">Hình 09: Khoảng tin cậy Block Bootstrap 95% khẳng định tín hiệu dự báo hướng đi ngắn hạn rất yếu trên thị trường hiệu quả.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 4: RNN & Attention -->
+        <section id="tab-rnn" class="tab-pane">
+            <div class="card">
+                <h2>4. Mạng Nơ-ron Hồi Quy (RNN, LSTM, GRU & Attention)</h2>
+                <p>Khảo sát chuỗi 20 lợi suất logarit. Bổ sung cơ chế Chú ý Thời gian (Temporal Attention) và Mạng hồi quy hai chiều (Bi-LSTM) để giải quyết phụ thuộc xa và tăng tính minh bạch giải thích (Interpretability).</p>
+                <div class="img-container">
+                    <img src="../charts/fig10_lstm_architecture_and_gradient_highway.png" alt="Sơ đồ LSTM Gradient Highway">
+                    <p class="img-caption">Hình 10: Cơ chế đường cao tốc thông tin của LSTM ngăn chặn tiêu biến gradient.</p>
+                </div>
+                <div class="img-container">
+                    <img src="../charts/fig11_temporal_attention_weights_heatmap.png" alt="Heatmap Trọng số Attention">
+                    <p class="img-caption">Hình 11: Trọng số Chú ý thời gian học được qua các trạng thái thị trường khác nhau.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 5: Quantitative Backtest -->
+        <section id="tab-backtest" class="tab-pane">
+            <div class="card">
+                <h2>5. Kiểm Thử Giao Dịch Định Lượng Thực Tế (Post-Fee Backtesting)</h2>
+                <p>Mô phỏng giao dịch trừ phí và thuế thực tế: 0.05% S&P 500, 0.20% VN-Index (phí môi giới + thuế 0.1%), 0.10% Crypto. Đo lường Sharpe, Sortino và Sụt giảm tối đa (Max Drawdown).</p>
+                <div class="img-container">
+                    <img src="../charts/fig13_cumulative_nav_backtest_curves.png" alt="Đường cong NAV tích lũy">
+                    <p class="img-caption">Hình 13: Diễn biến NAV thực tế trên tập kiểm thử 2023–2026 sau khi trừ toàn bộ ma sát chi phí giao dịch.</p>
+                </div>
+                <div class="img-container">
+                    <img src="../charts/fig14_risk_return_frontier_scatter.png" alt="Biên rủi ro lợi nhuận">
+                    <p class="img-caption">Hình 14: Biểu đồ phân tán Biên Hiệu quả Rủi ro - Lợi nhuận (CAGR vs Max Drawdown).</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 6: Tri-Framework Parity -->
+        <section id="tab-parity" class="tab-pane">
+            <div class="card">
+                <h2>6. Bằng Chứng Toán Học & Kiểm Thử Đối Sánh Tri-Framework</h2>
+                <p>Đồng bộ trọng số khởi tạo và kiến trúc giữa NumPy (Tự viết từ đầu với im2col / BPTT), PyTorch và Keras 3. Sai số tuyệt đối được kiểm chứng qua PyTest:</p>
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <h3>MLP Logits Parity</h3>
+                        <div class="val">1.19 × 10⁻⁷</div>
+                        <p>|NumPy - PyTorch| = 1.19e-07<br>|NumPy - Keras| = 1.19e-07</p>
+                        <span class="tag tag-green">Khớp Chuẩn 32-bit Float</span>
+                    </div>
+                    <div class="metric-card">
+                        <h3>CNN4 Logits Parity</h3>
+                        <div class="val">2.38 × 10⁻⁷</div>
+                        <p>|NumPy - PyTorch| = 2.38e-07<br>|NumPy - Keras| = 2.38e-07</p>
+                        <span class="tag tag-green">Tích chập im2col Chính xác</span>
+                    </div>
+                    <div class="metric-card">
+                        <h3>Numerical Gradient Check</h3>
+                        <div class="val">6.26 × 10⁻⁹</div>
+                        <p>Sai số đạo hàm số trị 2 điểm (eps = 1e-6) so với đạo hàm giải tích</p>
+                        <span class="tag tag-purple">Bảo toàn Đạo hàm Giải tích</span>
+                    </div>
+                </div>
+                <div class="code-box">
+                    <pre><code>// Kết quả chạy PyTest tự động:
+tests/test_grad_check.py: MLP Numerical Gradient Check Max Relative Error: 6.26e-09 [PASSED]
+tests/test_tri_framework_parity.py: MLP Max Discrepancy: 1.19e-07, CNN4 Max Discrepancy: 2.38e-07 [PASSED]</code></pre>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer class="app-footer">
+        <p>Học viện Công nghệ Bưu chính Viễn thông (PTIT) — Khoa Công nghệ Thông tin 1</p>
+        <p>Học phần: Phát triển Hệ thống Thông minh | Giảng viên hướng dẫn: PGS.TS. Trần Đình Quế</p>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>

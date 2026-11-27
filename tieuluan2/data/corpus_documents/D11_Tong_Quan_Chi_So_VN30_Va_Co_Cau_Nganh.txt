@@ -1,0 +1,11 @@
+TỔNG QUAN CHỈ SỐ VN30 VÀ ĐỘNG LỰC DẪN DẮT CỦA CÁC NHÓM NGÀNH TRỤ CỘT
+
+1. Quy tắc chọn lọc và cơ cấu danh mục VN30:
+Chỉ số VN30 tập hợp 30 cổ phiếu niêm yết trên Sở Giao dịch Chứng khoán TP.HCM (HOSE) có giá trị vốn hóa và thanh khoản cao nhất, sau khi sàng lọc tỷ lệ cổ phiếu tự do chuyển nhượng (free-float) và giới hạn tỷ trọng vốn hóa tối đa 10% cho một cổ phiếu đơn lẻ:
+- Nhóm Ngân hàng (chiếm tỷ trọng áp đảo ~ 35 - 45%): Giữ vai trò huyết mạch tín dụng và dẫn dắt thanh khoản toàn thị trường. Đại diện tiêu biểu: VCB, BID, CTG, TCB, MBB.
+- Nhóm Bất động sản và Tiêu dùng (chiếm ~ 20 - 25%): VNM, MSN, VHM, VIC.
+- Nhóm Sản xuất công nghiệp cơ bản và Vật liệu xây dựng (~ 10 - 15%): HPG.
+- Nhóm Công nghệ thông tin và Viễn thông (~ 8 - 12%): FPT là cổ phiếu duy nhất thuộc lĩnh vực này trong rổ VN30.
+
+2. Tính nhạy cảm của rổ VN30 với các cú sốc vĩ mô:
+Chỉ số VN30 có mối tương quan dương cao với cung tiền M2 và tăng trưởng tín dụng, nhưng lại có tương quan nghịch rõ rệt với biến động của tỷ giá USD/VND và lãi suất huy động 12 tháng.

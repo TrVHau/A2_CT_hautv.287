@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hệ thống AI Đa Miền: Knowledge Graph, RAG & Deep Learning | PTIT</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <!-- Cytoscape.js for Knowledge Graph visualization -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.28.1/cytoscape.min.js"></script>
+</head>
+<body>
+  <!-- Header -->
+  <header class="navbar">
+    <div class="nav-brand">
+      <div class="logo-badge">PTIT</div>
+      <div>
+        <div class="brand-title">HỆ THỐNG TRI THỨC & AI ĐA MIỀN</div>
+        <div class="brand-sub">Tiểu luận 2 | SV: Trần Văn Hậu (B23DCCN287) | GVHD: PGS.TS. Trần Đình Quế</div>
+      </div>
+    </div>
+    <div class="nav-pills">
+      <button class="nav-btn active" onclick="switchTab('healthcare')">Y Tế & ĐTĐ</button>
+      <button class="nav-btn" onclick="switchTab('finance')">Tài Chính & BiLSTM</button>
+      <button class="nav-btn" onclick="switchTab('kg_explorer')">Đồ Thị Tri Thức</button>
+      <button class="nav-btn" onclick="switchTab('rag_matrix')">Ma Trận RAG</button>
+      <button class="nav-btn" onclick="switchTab('unified_chat')">Tra Cứu Hợp Nhất</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- TAB 1: HEALTHCARE -->
+    <section id="tab-healthcare" class="tab-pane active">
+      <div class="panel-grid">
+        <!-- Patient Record Form -->
+        <div class="card">
+          <div class="card-header">
+            <h3>Hồ sơ Cận Lâm sàng & Bệnh nhân</h3>
+            <span class="badge badge-emerald">Mô hình MLP PyTorch</span>
+          </div>
+          <div class="card-body">
+            <form id="diabetes-form" onsubmit="handleDiabetesPredict(event)">
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Tuổi (Năm):</label>
+                  <input type="number" id="diab-age" value="54" min="1" max="100" required>
+                </div>
+                <div class="form-group">
+                  <label>Giới tính:</label>
+                  <select id="diab-gender">
+                    <option value="Male" selected>Nam</option>
+                    <option value="Female">Nữ</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Chỉ số BMI (kg/m²):</label>
+                  <input type="number" step="0.1" id="diab-bmi" value="28.4" required>
+                </div>
+                <div class="form-group">
+                  <label>HbA1c (%):</label>
+                  <input type="number" step="0.1" id="diab-hba1c" value="6.8" required>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Đường huyết đói FPG (mg/dL):</label>
+                  <input type="number" id="diab-glucose" value="145" required>
+                </div>
+                <div class="form-group">
+                  <label>Hút thuốc lá:</label>
+                  <select id="diab-smoking">
+                    <option value="never">Chưa từng hút</option>
+                    <option value="current">Đang hút</option>
+                    <option value="former" selected>Đã cai thuốc</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-row checkbox-row">
+                <label><input type="checkbox" id="diab-hyp" checked> Tăng huyết áp</label>
+                <label><input type="checkbox" id="diab-heart"> Tiền sử bệnh tim mạch</label>
+              </div>
+              <button type="submit" class="btn btn-primary btn-block">Đánh giá Nguy cơ với DiabetesMLP</button>
+            </form>
+
+            <div id="diabetes-result" class="result-box hidden"></div>
+          </div>
+        </div>
+
+        <!-- Clinical Guidelines & Nutrition Advisory -->
+        <div class="card">
+          <div class="card-header">
+            <h3>Cảnh báo Tương tác & Khuyến nghị Dinh dưỡng</h3>
+            <span class="badge badge-amber">VietnamDiabetesKG</span>
+          </div>
+          <div class="card-body">
+            <div class="warning-callout">
+              <div class="warning-title">CẢNH BÁO AN TOÀN DƯỢC LÝ: METFORMIN & RƯỢU BIA</div>
+              <p>Ethanol ức chế chuyển hóa lactate ở gan qua tỷ lệ cytosolic NADH/NAD+; phối hợp cùng Metformin (ức chế hô hấp ty thể) làm tăng đột biến nguy cơ <strong>Nhiễm toan Lactic (Lactic Acidosis)</strong> với tỷ lệ tử vong 30% - 50%.</p>
+            </div>
+
+            <div class="plate-box">
+              <div class="plate-title">Mô hình "Đĩa ăn Cân bằng" chuẩn Bộ Y tế:</div>
+              <div class="plate-visual">
+                <div class="plate-sec plate-veg"><strong>50% Rau củ</strong><br>Chất xơ hòa tan (GI &lt; 15)</div>
+                <div class="plate-sec plate-prot"><strong>25% Đạm nạc</strong><br>Thịt ức gà (GI = 0)</div>
+                <div class="plate-sec plate-carb"><strong>25% Tinh bột</strong><br>1 bát gạt (Carb &lt; 50g)</div>
+              </div>
+            </div>
+
+            <div class="quick-question-box">
+              <label>Hỏi nhanh trợ lý y tế:</label>
+              <div class="quick-btns">
+                <button class="btn btn-sm btn-outline" onclick="runHealthcareQuery('Bệnh nhân đang uống Metformin có được uống rượu bia không?')">Metformin & Rượu bia?</button>
+                <button class="btn btn-sm btn-outline" onclick="runHealthcareQuery('Bệnh nhân đái tháo đường típ 2 có ăn được thịt gà và cơm trắng không?')">Thịt gà & Cơm trắng?</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 2: FINANCE -->
+    <section id="tab-finance" class="tab-pane">
+      <div class="panel-grid">
+        <!-- BiLSTM Forecasting Form -->
+        <div class="card">
+          <div class="card-header">
+            <h3>Dự báo Chuỗi Thời gian Tài chính (BiLSTM)</h3>
+            <span class="badge badge-blue">PyTorch SeqForecaster</span>
+          </div>
+          <div class="card-body">
+            <form id="finance-form" onsubmit="handleFinanceForecast(event)">
+              <div class="form-group">
+                <label>Tài sản mục tiêu:</label>
+                <select id="fin-asset">
+                  <option value="FPT" selected>FPT - CTCP FPT (Công nghệ & Chuyển đổi số)</option>
+                  <option value="GOLD_SJC">GOLD_SJC - Vàng miếng SJC</option>
+                  <option value="VCB">VCB - Ngân hàng TMCP Ngoại thương VN</option>
+                  <option value="HPG">HPG - CTCP Tập đoàn Hòa Phát (Thép)</option>
+                  <option value="VNM">VNM - CTCP Sữa Việt Nam (Vinamilk)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Giá tham chiếu hiện tại (VND):</label>
+                <input type="number" id="fin-price" value="145000" step="500" required>
+              </div>
+              <div class="info-note">
+                BiLSTM 2 tầng (64+64), cửa sổ 30 phiên × 7 đặc trưng, tối ưu Huber loss (delta=1.0) và chạy Monte Carlo Dropout 200 lượt forward pass để ước lượng khoảng tin cậy 90%.
+              </div>
+              <button type="submit" class="btn btn-primary btn-block">Chạy Dự báo BiLSTM & MC Dropout</button>
+            </form>
+
+            <div id="finance-result" class="result-box hidden"></div>
+          </div>
+        </div>
+
+        <!-- Macro Causal Paths -->
+        <div class="card">
+          <div class="card-header">
+            <h3>Kênh Truyền dẫn Vĩ mô & Nghị định 24/232</h3>
+            <span class="badge badge-purple">VietnamFinanceKG</span>
+          </div>
+          <div class="card-body">
+            <div class="causal-chain">
+              <div class="chain-step">
+                <div class="node-badge">FED RATE (Mỹ)</div>
+                <div class="chain-arrow">+</div>
+                <div class="node-badge">DXY (Đô la)</div>
+                <div class="chain-arrow">+</div>
+                <div class="node-badge">USD/VND (Tỷ giá)</div>
+              </div>
+              <div class="chain-impacts">
+                <div class="impact-item impact-pos">
+                  <strong>+ FPT (Hưởng lợi):</strong> Doanh thu xuất khẩu phần mềm bằng USD/JPY, phòng vệ tự nhiên.
+                </div>
+                <div class="impact-item impact-neg">
+                  <strong>- HPG (Áp lực):</strong> Lỗ tỷ giá trên nợ vay ngoại tệ USD cho dự án Dung Quất.
+                </div>
+                <div class="impact-item impact-gold">
+                  <strong>+ Vàng SJC (Tăng kép):</strong> Giá thế giới quy đổi tăng + phần bù khan hiếm độc quyền.
+                </div>
+              </div>
+            </div>
+
+            <div class="quick-question-box">
+              <label>Hỏi nhanh trợ lý tài chính:</label>
+              <div class="quick-btns">
+                <button class="btn btn-sm btn-outline" onclick="runFinanceQuery('Lãi suất Fed tăng truyền dẫn như thế nào tới tỷ giá USD/VND và cổ phiếu FPT?')">Fed -> USD/VND -> FPT?</button>
+                <button class="btn btn-sm btn-outline" onclick="runFinanceQuery('Nghị định 232 sửa đổi ảnh hưởng thế nào tới chênh lệch giá vàng SJC?')">Cải cách Nghị định 24 & Vàng SJC?</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 3: KNOWLEDGE GRAPH EXPLORER -->
+    <section id="tab-kg_explorer" class="tab-pane">
+      <div class="card">
+        <div class="card-header">
+          <h3>Khám phá Trực quan Đồ thị Tri thức Đa Miền</h3>
+          <div class="kg-legend">
+            <span class="legend-dot dot-health"></span> Y tế (VietnamDiabetesKG)
+            <span class="legend-dot dot-fin"></span> Tài chính (VietnamFinanceKG)
+            <span class="legend-dot dot-danger"></span> Tương tác cảnh báo / Cú sốc ngược
+          </div>
+        </div>
+        <div class="card-body">
+          <div id="cy" class="cy-container"></div>
+          <div class="kg-stats-bar">
+            <span>Tổng số thực thể: <strong>39 thực thể</strong></span>
+            <span>Tổng số cạnh & quan hệ: <strong>52 bộ ba</strong></span>
+            <span>Cộng đồng Louvain: <strong>4 cụm tri thức chính</strong></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 4: RAG BENCHMARK MATRIX -->
+    <section id="tab-rag_matrix" class="tab-pane">
+      <div class="card">
+        <div class="card-header">
+          <h3>Ma trận Đối chuẩn 25 Tổ hợp RAG (5 Chiến lược Chunking × 5 Bộ Truy xuất)</h3>
+          <span class="badge badge-emerald">Thực nghiệm Chuẩn hóa</span>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="benchmark-table" id="benchmark-table">
+              <thead>
+                <tr>
+                  <th>Chiến lược Phân mảnh (Chunking)</th>
+                  <th>Bộ Truy xuất (Retriever)</th>
+                  <th>Hit@1</th>
+                  <th>Hit@5</th>
+                  <th>MRR</th>
+                  <th>nDCG@10</th>
+                  <th>Độ trễ</th>
+                </tr>
+              </thead>
+              <tbody id="benchmark-tbody">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 5: UNIFIED CHAT & GROUNDED REASONING -->
+    <section id="tab-unified_chat" class="tab-pane">
+      <div class="card">
+        <div class="card-header">
+          <h3>Cổng Tra cứu Hợp nhất & Vết Suy luận ReAct có Kiểm chứng</h3>
+          <span class="badge badge-blue">Grounded Verifier</span>
+        </div>
+        <div class="card-body">
+          <div class="chat-input-row">
+            <input type="text" id="unified-query" placeholder="Nhập câu hỏi y tế hoặc tài chính vĩ mô... (VD: Metformin có dùng chung với bia được không?)" class="form-input">
+            <button class="btn btn-primary" onclick="handleUnifiedQuery()">Truy vấn ReAct</button>
+          </div>
+
+          <div id="chat-loading" class="loading-spinner hidden">Đang thực thi chuỗi công cụ ReAct và kiểm chứng trích dẫn...</div>
+
+          <div id="chat-result-area" class="chat-output hidden">
+            <!-- Trace -->
+            <div class="trace-box">
+              <h4>Vết Suy luận ReAct (Thought -> Action -> Observation)</h4>
+              <div id="trace-steps" class="trace-steps"></div>
+            </div>
+
+            <!-- Evidence -->
+            <div class="evidence-box">
+              <h4>Bằng chứng Thu thập được (Grounded Evidence)</h4>
+              <div id="evidence-list" class="evidence-list"></div>
+            </div>
+
+            <!-- Final Answer -->
+            <div class="answer-box">
+              <h4>Câu trả lời Tổng hợp Có căn cứ</h4>
+              <div id="final-answer-content" class="answer-content"></div>
+              <div id="verifier-badge" class="verifier-badge"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    Hệ thống Phát triển Hệ thống Thông minh | PTIT 2026 | Sinh viên: Trần Văn Hậu - B23DCCN287 - Lớp D23CTPM01
+  </footer>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

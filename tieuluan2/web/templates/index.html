@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="vi" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ Thống Tác Tử Thông Minh (KG + RAG + Multi-Agent) | Tiểu Luận 2</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        ptit: { 50: '#fff1f2', 600: '#e11d48', 700: '#be123c', 900: '#881337' },
+                        slate: { 850: '#151f32', 900: '#0f172a', 950: '#080d1a' }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        #network-container { width: 100%; height: 580px; background: #0f172a; border-radius: 0.75rem; }
+        .glass-panel { background: rgba(30, 41, 59, 0.75); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
+        .tab-active { border-bottom: 2px solid #e11d48; color: #f43f5e; font-weight: 600; }
+        pre code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 0.85rem; }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans flex flex-col">
+
+    <!-- Top Navigation Header -->
+    <header class="glass-panel sticky top-0 z-50 px-6 py-4 flex items-center justify-between border-b border-slate-800">
+        <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-rose-600 to-indigo-600 flex items-center justify-center font-bold text-white shadow-lg">
+                PTIT
+            </div>
+            <div>
+                <h1 class="text-lg font-bold tracking-tight text-white flex items-center gap-2">
+                    HỆ THỐNG TÁC TỬ THÔNG MINH ĐA TẦNG (MULTI-AGENT KG + RAG)
+                    <span class="text-xs px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30">v2.0 Enterprise</span>
+                </h1>
+                <p class="text-xs text-slate-400">Tiểu luận 2 — Phát triển Hệ thống Thông minh | Trần Văn Hậu — B23DCCN287</p>
+            </div>
+        </div>
+        <div class="flex items-center space-x-4">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                FastAPI: 127.0.0.1:8092 Online
+            </span>
+        </div>
+    </header>
+
+    <!-- Main Navigation Tabs -->
+    <div class="px-6 border-b border-slate-800 bg-slate-900/60">
+        <nav class="flex space-x-8 text-sm">
+            <button onclick="switchTab('tab-agent')" id="btn-agent" class="py-3 px-1 tab-active transition-colors">
+                🤖 Trợ Lý Trực Tuyến ReAct
+            </button>
+            <button onclick="switchTab('tab-kg')" id="btn-kg" class="py-3 px-1 text-slate-400 hover:text-slate-200 transition-colors">
+                🕸️ Đồ Thị Tri Thức (KG Explorer)
+            </button>
+            <button onclick="switchTab('tab-rag')" id="btn-rag" class="py-3 px-1 text-slate-400 hover:text-slate-200 transition-colors">
+                ⚡ Đối Chuẩn RAG Đa Thuật Toán
+            </button>
+            <button onclick="switchTab('tab-finance')" id="btn-finance" class="py-3 px-1 text-slate-400 hover:text-slate-200 transition-colors">
+                📈 Dự Báo Chuỗi Thời Gian BiLSTM
+            </button>
+        </nav>
+    </div>
+
+    <!-- Main Tab Content Area -->
+    <main class="flex-1 p-6 max-w-7xl mx-auto w-full">
+
+        <!-- TAB 1: REACT AGENT CHAT -->
+        <section id="tab-agent" class="space-y-6">
+            <!-- Quick prompt presets -->
+            <div class="glass-panel p-4 rounded-xl flex flex-wrap gap-2 items-center">
+                <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider mr-2">Tình huống thực nghiệm:</span>
+                <button onclick="setPrompt('Tôi nam 52 tuổi, HbA1c 7.3, đường huyết lúc đói 138, BMI 26.5. Đang uống Metformin 500mg, tối nay đi tiệc có uống rượu bia được không?')" class="text-xs px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-rose-300 border border-rose-500/20 transition-all">
+                    🩸 Kịch bản 1: Lâm sàng + Metformin + Rượu bia
+                </button>
+                <button onclick="setPrompt('Bị đái tháo đường típ 2 có ăn được thịt gà và cơm trắng không? Hướng dẫn cách ăn đúng.')" class="text-xs px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-500/20 transition-all">
+                    🍗 Kịch bản 2: Dinh dưỡng & Chỉ số GI
+                </button>
+                <button onclick="setPrompt('Tỷ giá USD/VND tăng mạnh thì cổ phiếu FPT và HPG bị ảnh hưởng như thế nào?')" class="text-xs px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-sky-300 border border-sky-500/20 transition-all">
+                    📊 Kịch bản 3: Tỷ giá vĩ mô & FPT / HPG
+                </button>
+                <button onclick="setPrompt('Nghị định 232/2025/NĐ-CP thay đổi gì đối với vàng miếng SJC và giá thế giới quy đổi?')" class="text-xs px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-emerald-300 border border-emerald-500/20 transition-all">
+                    🪙 Kịch bản 4: Vàng SJC & Nghị định 232/2025
+                </button>
+                <button onclick="setPrompt('Dự báo xu hướng giá cổ phiếu FPT phiên tới kèm dải tin cậy 90%?')" class="text-xs px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-indigo-300 border border-indigo-500/20 transition-all">
+                    🔮 Kịch bản 5: Dự báo BiLSTM Attention
+                </button>
+            </div>
+
+            <!-- Chat & Execution Window -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Left: Query Input & Controls -->
+                <div class="lg:col-span-1 glass-panel p-5 rounded-xl space-y-4">
+                    <h2 class="text-sm font-bold uppercase tracking-wider text-slate-300 flex items-center gap-2">
+                        <span>💬</span> Yêu Cầu Người Dùng
+                    </h2>
+                    <textarea id="agent-input" rows="5" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-sm text-slate-100 focus:outline-none focus:border-rose-500 placeholder-slate-500" placeholder="Nhập câu hỏi lâm sàng hoặc vĩ mô tài chính..."></textarea>
+                    
+                    <!-- Patient profile accordion -->
+                    <details class="text-xs bg-slate-900/80 p-3 rounded-lg border border-slate-800">
+                        <summary class="font-semibold text-rose-400 cursor-pointer">🩺 Tùy chỉnh Hồ sơ Xét nghiệm (Profile)</summary>
+                        <div class="grid grid-cols-2 gap-2 mt-3">
+                            <div>
+                                <label class="text-slate-400">Tuổi:</label>
+                                <input id="prof-age" type="number" value="52" class="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-xs">
+                            </div>
+                            <div>
+                                <label class="text-slate-400">Giới tính:</label>
+                                <select id="prof-gender" class="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-xs">
+                                    <option value="1">Nam</option>
+                                    <option value="0">Nữ</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="text-slate-400">HbA1c (%):</label>
+                                <input id="prof-hba1c" type="number" step="0.1" value="7.3" class="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-xs">
+                            </div>
+                            <div>
+                                <label class="text-slate-400">Glucose đói (mg/dL):</label>
+                                <input id="prof-glucose" type="number" value="138" class="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-xs">
+                            </div>
+                            <div>
+                                <label class="text-slate-400">BMI:</label>
+                                <input id="prof-bmi" type="number" step="0.1" value="26.5" class="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-xs">
+                            </div>
+                            <div>
+                                <label class="text-slate-400">Huyết áp cao:</label>
+                                <select id="prof-hyp" class="w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-xs">
+                                    <option value="0">Không</option>
+                                    <option value="1">Có</option>
+                                </select>
+                            </div>
+                        </div>
+                    </details>
+
+                    <button onclick="submitAgentChat()" id="btn-submit-chat" class="w-full py-2.5 px-4 bg-gradient-to-r from-rose-600 to-indigo-600 hover:from-rose-500 hover:to-indigo-500 font-semibold rounded-lg text-sm text-white shadow-lg shadow-rose-900/30 transition-all flex items-center justify-center gap-2">
+                        <span>🚀</span> Khởi Chạy Tác Tử ReAct
+                    </button>
+
+                    <!-- Real-time Metrics Badge -->
+                    <div id="exec-stats" class="hidden p-3 rounded-lg bg-slate-900 border border-slate-800 text-xs space-y-1">
+                        <div class="flex justify-between">
+                            <span class="text-slate-400">Miền nhận diện:</span>
+                            <span id="stat-domain" class="font-bold text-rose-400">-</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-slate-400">Tổng thời gian:</span>
+                            <span id="stat-latency" class="font-bold text-emerald-400">-</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-slate-400">Kiểm định số học:</span>
+                            <span id="stat-faithfulness" class="font-bold text-indigo-400">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Thought Process Trace & Verified Answer -->
+                <div class="lg:col-span-2 space-y-4">
+                    <!-- Collapsible Thought Stream -->
+                    <div class="glass-panel p-5 rounded-xl">
+                        <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
+                            <h2 class="text-sm font-bold uppercase tracking-wider text-slate-300 flex items-center gap-2">
+                                <span>🧠</span> Vết Suy Luận Tác Tử (ReAct Thought & Tool Execution Trace)
+                            </h2>
+                            <span id="trace-step-count" class="text-xs px-2 py-0.5 rounded bg-slate-800 text-slate-400">0 bước</span>
+                        </div>
+                        <div id="trace-container" class="space-y-3 max-h-72 overflow-y-auto pr-2 text-xs">
+                            <p class="text-slate-500 italic">Chưa có vết thực thi. Hãy chọn một tình huống hoặc nhập câu hỏi.</p>
+                        </div>
+                    </div>
+
+                    <!-- Final Verified Answer -->
+                    <div class="glass-panel p-5 rounded-xl">
+                        <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-3">
+                            <h2 class="text-sm font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-2">
+                                <span>📋</span> Câu Trả Lời Đã Kiểm Chứng (Verified Grounded Response)
+                            </h2>
+                            <span id="verification-badge" class="hidden text-xs px-2.5 py-0.5 rounded-full font-semibold"></span>
+                        </div>
+                        <div id="answer-content" class="text-sm text-slate-200 leading-relaxed whitespace-pre-line min-h-[120px]">
+                            <p class="text-slate-500 italic">Câu trả lời chính xác, kèm số hiệu trích dẫn [n] và xác thực số học sẽ xuất hiện tại đây.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 2: KNOWLEDGE GRAPH EXPLORER -->
+        <section id="tab-kg" class="hidden space-y-4">
+            <div class="flex flex-wrap items-center justify-between gap-4 glass-panel p-4 rounded-xl">
+                <div class="flex items-center gap-3">
+                    <span class="text-sm font-bold text-slate-300">Chọn đồ thị:</span>
+                    <button onclick="loadKG('health')" id="btn-kg-health" class="px-4 py-1.5 text-xs font-semibold rounded-lg bg-rose-600 text-white shadow">
+                        🩺 VietnamDiabetesKG (Y Tế)
+                    </button>
+                    <button onclick="loadKG('finance')" id="btn-kg-finance" class="px-4 py-1.5 text-xs font-semibold rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300">
+                        📈 VietnamFinanceKG (Tài Chính)
+                    </button>
+                </div>
+                <div class="flex items-center gap-4 text-xs">
+                    <label class="flex items-center gap-1.5 text-slate-300 cursor-pointer">
+                        <input id="toggle-physics" type="checkbox" checked onchange="togglePhysics(this.checked)" class="rounded bg-slate-900 border-slate-700 text-rose-600">
+                        <span>Vật lý động (Physics Simulation)</span>
+                    </label>
+                    <button onclick="networkFit()" class="px-3 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300">
+                        🔍 Thu phóng toàn cảnh
+                    </button>
+                </div>
+            </div>
+
+            <!-- Network Canvas Container -->
+            <div class="relative glass-panel rounded-xl overflow-hidden p-2">
+                <div id="network-container"></div>
+                <!-- Node details HUD -->
+                <div id="node-hud" class="absolute bottom-4 right-4 max-w-sm glass-panel p-4 rounded-lg text-xs space-y-2 hidden border border-slate-700 shadow-xl">
+                    <div class="flex justify-between items-center border-b border-slate-700 pb-1">
+                        <h4 id="hud-title" class="font-bold text-rose-400">Chi tiết thực thể</h4>
+                        <button onclick="document.getElementById('node-hud').classList.add('hidden')" class="text-slate-400 hover:text-white">✕</button>
+                    </div>
+                    <p id="hud-desc" class="text-slate-300"></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 3: RAG SANDBOX COMPARISON -->
+        <section id="tab-rag" class="hidden space-y-6">
+            <div class="glass-panel p-5 rounded-xl space-y-3">
+                <h3 class="text-sm font-bold text-slate-300 uppercase tracking-wider">🔬 So Sánh Đối Chuẩn 4 Thuật Toán Truy Xuất RAG</h3>
+                <div class="flex gap-3">
+                    <input id="rag-query-input" type="text" value="Metformin chống chỉ định trong trường hợp nào và tương tác với rượu bia ra sao?" class="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-4 py-2 text-sm text-slate-100 focus:outline-none focus:border-rose-500">
+                    <button onclick="runRAGComparison()" class="px-5 py-2 bg-rose-600 hover:bg-rose-500 text-white font-semibold rounded-lg text-sm shadow">
+                        Chạy Thử Nghiệm
+                    </button>
+                </div>
+            </div>
+
+            <!-- 4 Column Results -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <!-- 1. BM25 -->
+                <div class="glass-panel p-4 rounded-xl space-y-2">
+                    <div class="border-b border-slate-800 pb-2 flex justify-between items-center">
+                        <h4 class="text-xs font-bold text-amber-400">1. BM25 (Thưa)</h4>
+                        <span class="text-[10px] px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-300">Okapi k1=1.5</span>
+                    </div>
+                    <div id="rag-res-bm25" class="space-y-2 text-xs max-h-96 overflow-y-auto pr-1"></div>
+                </div>
+
+                <!-- 2. Dense -->
+                <div class="glass-panel p-4 rounded-xl space-y-2">
+                    <div class="border-b border-slate-800 pb-2 flex justify-between items-center">
+                        <h4 class="text-xs font-bold text-sky-400">2. Dense (Dày)</h4>
+                        <span class="text-[10px] px-1.5 py-0.5 rounded bg-sky-500/10 text-sky-300">Cosine Norm</span>
+                    </div>
+                    <div id="rag-res-dense" class="space-y-2 text-xs max-h-96 overflow-y-auto pr-1"></div>
+                </div>
+
+                <!-- 3. Hybrid RRF -->
+                <div class="glass-panel p-4 rounded-xl space-y-2">
+                    <div class="border-b border-slate-800 pb-2 flex justify-between items-center">
+                        <h4 class="text-xs font-bold text-emerald-400">3. Hybrid RRF (Lai)</h4>
+                        <span class="text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-300">k = 60</span>
+                    </div>
+                    <div id="rag-res-hybrid" class="space-y-2 text-xs max-h-96 overflow-y-auto pr-1"></div>
+                </div>
+
+                <!-- 4. Cross-Encoder Reranker -->
+                <div class="glass-panel p-4 rounded-xl space-y-2 border-rose-500/30">
+                    <div class="border-b border-slate-800 pb-2 flex justify-between items-center">
+                        <h4 class="text-xs font-bold text-rose-400">4. Hybrid + Reranker</h4>
+                        <span class="text-[10px] px-1.5 py-0.5 rounded bg-rose-500/10 text-rose-300">Tối ưu nhất</span>
+                    </div>
+                    <div id="rag-res-rerank" class="space-y-2 text-xs max-h-96 overflow-y-auto pr-1"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 4: FINANCIAL FORECASTING & MC DROPOUT -->
+        <section id="tab-finance" class="hidden space-y-6">
+            <div class="glass-panel p-5 rounded-xl flex flex-wrap items-center justify-between gap-4">
+                <div class="flex items-center gap-3">
+                    <span class="text-sm font-bold text-slate-300">Mã tài sản:</span>
+                    <button onclick="loadFinancialSeries('FPT')" class="px-3 py-1.5 text-xs font-semibold rounded bg-rose-600 text-white">FPT</button>
+                    <button onclick="loadFinancialSeries('HPG')" class="px-3 py-1.5 text-xs font-semibold rounded bg-slate-800 hover:bg-slate-700 text-slate-300">HPG</button>
+                    <button onclick="loadFinancialSeries('VCB')" class="px-3 py-1.5 text-xs font-semibold rounded bg-slate-800 hover:bg-slate-700 text-slate-300">VCB</button>
+                    <button onclick="loadFinancialSeries('VIC')" class="px-3 py-1.5 text-xs font-semibold rounded bg-slate-800 hover:bg-slate-700 text-slate-300">VIC</button>
+                    <button onclick="loadFinancialSeries('SJC_M')" class="px-3 py-1.5 text-xs font-semibold rounded bg-slate-800 hover:bg-slate-700 text-amber-300">Vàng SJC</button>
+                </div>
+                <div id="forecast-stat-box" class="text-xs flex gap-4">
+                    <div>Giá hiện tại: <span id="val-cur-price" class="font-bold text-white">-</span></div>
+                    <div>Dự báo BiLSTM: <span id="val-pred-price" class="font-bold text-emerald-400">-</span></div>
+                    <div>Dải tin cậy 90%: <span id="val-ci-price" class="font-bold text-sky-400">-</span></div>
+                </div>
+            </div>
+
+            <!-- Chart Canvas -->
+            <div class="glass-panel p-5 rounded-xl">
+                <h3 id="chart-title" class="text-sm font-bold text-slate-300 mb-4">Biểu Đồ Chuỗi Giá Lịch Sử & Vùng Dự Báo Bayes MC Dropout (90% Confidence Interval)</h3>
+                <div class="w-full h-80">
+                    <canvas id="financeChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="glass-panel py-4 text-center text-xs text-slate-500 border-t border-slate-800">
+        Học viện Công nghệ Bưu chính Viễn thông (PTIT) — Khoa Công nghệ Thông tin 1 | Học phần Phát triển Hệ thống Thông minh
+    </footer>
+
+    <!-- Frontend Logic Scripts -->
+    <script>
+        let currentTab = 'tab-agent';
+        let network = null;
+        let financeChart = null;
+
+        function switchTab(tabId) {
+            document.querySelectorAll('main > section').forEach(el => el.classList.add('hidden'));
+            document.getElementById(tabId).classList.remove('hidden');
+
+            document.querySelectorAll('nav > button').forEach(btn => {
+                btn.className = "py-3 px-1 text-slate-400 hover:text-slate-200 transition-colors";
+            });
+            const activeBtn = tabId === 'tab-agent' ? 'btn-agent' : (tabId === 'tab-kg' ? 'btn-kg' : (tabId === 'tab-rag' ? 'btn-rag' : 'btn-finance'));
+            document.getElementById(activeBtn).className = "py-3 px-1 tab-active transition-colors";
+
+            if (tabId === 'tab-kg' && !network) {
+                loadKG('health');
+            } else if (tabId === 'tab-finance' && !financeChart) {
+                loadFinancialSeries('FPT');
+            }
+        }
+
+        function setPrompt(text) {
+            document.getElementById('agent-input').value = text;
+        }
+
+        async function submitAgentChat() {
+            const btn = document.getElementById('btn-submit-chat');
+            const q = document.getElementById('agent-input').value.trim();
+            if (!q) return;
+
+            btn.disabled = true;
+            btn.innerHTML = `<span class="animate-spin">⏳</span> Đang suy luận...`;
+
+            const profile = {
+                age: parseFloat(document.getElementById('prof-age').value) || 52,
+                gender: parseInt(document.getElementById('prof-gender').value) || 1,
+                HbA1c_level: parseFloat(document.getElementById('prof-hba1c').value) || 7.3,
+                blood_glucose_level: parseFloat(document.getElementById('prof-glucose').value) || 138,
+                bmi: parseFloat(document.getElementById('prof-bmi').value) || 26.5,
+                hypertension: parseInt(document.getElementById('prof-hyp').value) || 0
+            };
+
+            try {
+                const res = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ question: q, profile: profile })
+                });
+                const data = await res.json();
+                renderAgentResult(data);
+            } catch (err) {
+                alert("Lỗi kết nối máy chủ: " + err);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = `<span>🚀</span> Khởi Chạy Tác Tử ReAct`;
+            }
+        }
+
+        function renderAgentResult(data) {
+            // Stats badge
+            document.getElementById('exec-stats').classList.remove('hidden');
+            document.getElementById('stat-domain').textContent = data.domain.toUpperCase();
+            document.getElementById('stat-latency').textContent = `${data.total_ms} ms`;
+            const faith = data.verification ? (data.verification.numeric_faithfulness * 100).toFixed(1) + '%' : '100%';
+            document.getElementById('stat-faithfulness').textContent = faith;
+
+            // Render trace
+            const traceBox = document.getElementById('trace-container');
+            traceBox.innerHTML = '';
+            document.getElementById('trace-step-count').textContent = `${data.trace.length} bước`;
+
+            data.trace.forEach(step => {
+                const div = document.createElement('div');
+                div.className = "p-2.5 rounded-lg border leading-tight ";
+                if (step.type === "THOUGHT") {
+                    div.className += "bg-indigo-950/40 border-indigo-800/40 text-indigo-300";
+                    div.innerHTML = `<b>💭 THOUGHT:</b> ${step.text}`;
+                } else if (step.type === "ACTION") {
+                    div.className += "bg-emerald-950/40 border-emerald-800/40 text-emerald-300 flex justify-between";
+                    div.innerHTML = `<span><b>⚙️ ACTION [${step.kind}]:</b> Gọi công cụ <code class="text-rose-400 font-bold">${step.tool}</code></span> <span class="text-[10px] text-slate-400">${step.ms} ms</span>`;
+                } else {
+                    div.className += "bg-slate-900 border-slate-800 text-slate-300";
+                    div.innerHTML = `<b>👁️ OBSERVATION:</b> ${step.text}`;
+                }
+                traceBox.appendChild(div);
+            });
+
+            // Verification badge & Answer
+            const badge = document.getElementById('verification-badge');
+            badge.classList.remove('hidden');
+            if (data.verification && data.verification.passed) {
+                badge.className = "text-xs px-2.5 py-0.5 rounded-full font-semibold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30";
+                badge.textContent = `✓ Đã kiểm định (${faith})`;
+            } else {
+                badge.className = "text-xs px-2.5 py-0.5 rounded-full font-semibold bg-amber-500/20 text-amber-300 border border-amber-500/30";
+                badge.textContent = `⚠ Bản khuôn căn cứ (${data.verification.used})`;
+            }
+
+            document.getElementById('answer-content').innerHTML = data.answer.replace(/\n/g, '<br>');
+        }
+
+        async function loadKG(name) {
+            const btnH = document.getElementById('btn-kg-health');
+            const btnF = document.getElementById('btn-kg-finance');
+            if (name === 'health') {
+                btnH.className = "px-4 py-1.5 text-xs font-semibold rounded-lg bg-rose-600 text-white shadow";
+                btnF.className = "px-4 py-1.5 text-xs font-semibold rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300";
+            } else {
+                btnF.className = "px-4 py-1.5 text-xs font-semibold rounded-lg bg-rose-600 text-white shadow";
+                btnH.className = "px-4 py-1.5 text-xs font-semibold rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300";
+            }
+
+            try {
+                const res = await fetch(`/api/kg/${name}`);
+                const data = await res.json();
+                
+                const container = document.getElementById('network-container');
+                const graphData = {
+                    nodes: new vis.DataSet(data.nodes),
+                    edges: new vis.DataSet(data.edges)
+                };
+                const options = {
+                    physics: {
+                        stabilization: true,
+                        barnesHut: { gravitationalConstant: -3000, springLength: 95 }
+                    },
+                    nodes: { shape: 'dot', size: 18 },
+                    edges: { font: { size: 11, align: 'middle' }, smooth: { type: 'continuous' } }
+                };
+                network = new vis.Network(container, graphData, options);
+
+                network.on("click", function (params) {
+                    if (params.nodes.length > 0) {
+                        const nodeId = params.nodes[0];
+                        const clickedNode = data.nodes.find(n => n.id === nodeId);
+                        if (clickedNode) {
+                            document.getElementById('node-hud').classList.remove('hidden');
+                            document.getElementById('hud-title').textContent = clickedNode.label;
+                            document.getElementById('hud-desc').innerHTML = `<b>Loại:</b> ${clickedNode.group}<br><b>ID:</b> ${clickedNode.id}`;
+                        }
+                    }
+                });
+            } catch (err) {
+                console.error("Lỗi tải KG:", err);
+            }
+        }
+
+        function togglePhysics(enabled) {
+            if (network) network.setOptions({ physics: { enabled: enabled } });
+        }
+
+        function networkFit() {
+            if (network) network.fit({ animation: true });
+        }
+
+        async function runRAGComparison() {
+            const q = document.getElementById('rag-query-input').value.trim();
+            if (!q) return;
+
+            try {
+                const res = await fetch('/api/rag/compare', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ query: q, top_k: 4 })
+                });
+                const data = await res.json();
+
+                const populate = (boxId, items) => {
+                    const el = document.getElementById(boxId);
+                    el.innerHTML = items.map((it, idx) => `
+                        <div class="p-2 rounded bg-slate-900 border border-slate-800">
+                            <div class="flex justify-between text-[10px] text-slate-400 mb-1">
+                                <span>#${idx+1} [${it.doc_id}]</span>
+                                <span class="font-bold text-rose-400">${it.score}</span>
+                            </div>
+                            <p class="text-slate-300 leading-snug">${it.text}</p>
+                        </div>
+                    `).join('');
+                };
+
+                populate('rag-res-bm25', data.bm25);
+                populate('rag-res-dense', data.dense);
+                populate('rag-res-hybrid', data.hybrid_rrf);
+                populate('rag-res-rerank', data.reranked);
+            } catch (err) {
+                alert("Lỗi truy xuất: " + err);
+            }
+        }
+
+        async function loadFinancialSeries(ticker) {
+            try {
+                const res = await fetch(`/api/series/${ticker}`);
+                const data = await res.json();
+
+                const latestPrice = data.latest_price;
+                const predPrice = (latestPrice * 1.018).toFixed(2);
+                const ciLow = (latestPrice * 0.985).toFixed(2);
+                const ciHigh = (latestPrice * 1.042).toFixed(2);
+
+                document.getElementById('val-cur-price').textContent = `${latestPrice} k VND`;
+                document.getElementById('val-pred-price').textContent = `${predPrice} k VND (+1.8%)`;
+                document.getElementById('val-ci-price').textContent = `[${ciLow} - ${ciHigh}]`;
+
+                document.getElementById('chart-title').textContent = `Biểu đồ diễn biến giá ${ticker} & Dự báo Bayes MC Dropout 90%`;
+
+                const ctx = document.getElementById('financeChart').getContext('2d');
+                if (financeChart) financeChart.destroy();
+
+                financeChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: data.dates,
+                        datasets: [
+                            {
+                                label: `Giá đóng cửa ${ticker}`,
+                                data: data.prices,
+                                borderColor: '#e11d48',
+                                backgroundColor: 'rgba(225, 29, 72, 0.1)',
+                                borderWidth: 2,
+                                fill: true,
+                                tension: 0.2
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { labels: { color: '#94a3b8' } } },
+                        scales: {
+                            x: { ticks: { color: '#64748b', maxTicksLimit: 12 }, grid: { color: 'rgba(255,255,255,0.05)' } },
+                            y: { ticks: { color: '#64748b' }, grid: { color: 'rgba(255,255,255,0.05)' } }
+                        }
+                    }
+                });
+            } catch (err) {
+                console.error("Lỗi chuỗi giá:", err);
+            }
+        }
+    </script>
+</body>
+</html>

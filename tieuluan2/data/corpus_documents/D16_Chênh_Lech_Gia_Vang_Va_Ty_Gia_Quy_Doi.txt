@@ -1,0 +1,15 @@
+CẤU TRÚC ĐỊNH GIÁ VÀ CÁC THÀNH PHẦN CHÊNH LỆCH GIÁ VÀNG TẠI VIỆT NAM
+
+1. Công thức quy đổi giá vàng quốc tế sang VND:
+Giá vàng quốc tế giao dịch trên sàn COMEX/London tính bằng USD trên 1 troy ounce (1 oz = 31.1034768 gram).
+Theo quy chuẩn Việt Nam, 1 cây vàng (lượng vàng) = 37.5 gram = 1.20565 troy ounce.
+Công thức xác định giá vàng thế giới quy đổi (chưa tính thuế và chi phí nhập khẩu):
+P_quy_doi (VND/lượng) = [P_the_gioi (USD/oz) * 1.20565 * Ty_gia_USD_VND] + Thue_phi_nhap_khau
+
+2. Các tầng phân tách chênh lệch giá vàng miếng SJC:
+Giá vàng miếng SJC niêm yết trong nước bao gồm 3 thành phần chính:
+- Thành phần 1: Giá vàng thế giới quy đổi theo tỷ giá USD/VND thực tế.
+- Thành phần 2: Chi phí gia công, kiểm định, vận chuyển, bảo hiểm và biên lợi nhuận của doanh nghiệp kinh doanh (dao động từ 1.0 - 2.5 triệu đồng/lượng).
+- Thành phần 3: Phần bù khan hiếm độc quyền thương hiệu (SJC Scarcity Premium). Đây là thành phần biến động mạnh nhất tùy thuộc vào cung - cầu nội địa và kỳ vọng lạm phát của người dân.
+
+Khi Fed hạ lãi suất, giá vàng thế giới thường tăng mạnh do chi phí cơ hội nắm giữ tài sản không sinh lãi giảm. Đồng thời, nếu tỷ giá USD/VND trong nước neo ở mức cao, giá vàng quy đổi trong nước sẽ nhận "cú hích kép" từ cả hai kênh.

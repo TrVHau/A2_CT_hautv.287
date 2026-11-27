@@ -1,0 +1,358 @@
+================================================================================
+HỌC VIỆN CÔNG NGHỆ BƯU CHÍNH VIỄN THÔNG (PTIT)
+KHOA CÔNG NGHỆ THÔNG TIN - BỘ MÔN TRÍ TUỆ NHÂN TẠO
+BÁO CÁO TỔNG HỢP: DANH SÁCH TẬP DỮ LIỆU, MÔ HÌNH AI & CƠ SỞ TRI THỨC Y KHOA
+DỰ ÁN: HỆ THỐNG ĐA TÁC TỬ LÂM SÀNG HỖ TRỢ CHẨN ĐOÁN & ĐIỀU TRỊ ĐÁI THÁO ĐƯỜNG
+================================================================================
+
+THÔNG TIN TÁC GIẢ & DỰ ÁN:
+- Sinh viên thực hiện : Trần Văn Hậu
+- Mã số sinh viên     : B23DCCN287
+- Lớp sinh hoạt       : D23CQCN01-B (Nhóm chuyên đề: CT_09)
+- Giảng viên hướng dẫn: PGS. TS. Trần Đình Quế
+- Đơn vị đào tạo     : Học viện Công nghệ Bưu chính Viễn thông (PTIT)
+- Tài liệu kiến trúc  : project_architecture_multiagent_diabet_v1.pdf
+- Thời gian cập nhật  : Tháng 11/2026
+- Cổng Web Dashboard  : http://localhost:8000
+
+================================================================================
+PHẦN 1: TỔNG HỢP DANH SÁCH & LIÊN KẾT CÁC TẬP DỮ LIỆU (DATASETS)
+================================================================================
+
+Tổng số lượng tập dữ liệu trong dự án: 05 TẬP DỮ LIỆU
+Tổng quy mô dữ liệu: 1.456.214 hồ sơ bệnh nhân (> 81 MB dữ liệu thực nghiệm).
+
+--------------------------------------------------------------------------------
+1. TẬP DỮ LIỆU 1: NIDDK Pima Indians Diabetes Database (UCI Machine Learning)
+--------------------------------------------------------------------------------
+- Tên tệp cục bộ   : project01/data/pima_diabetes_dataset.csv
+- Kích thước tệp   : 23.8 KB (0.02 MB)
+- Số lượng bản ghi : 768 dòng x 9 cột thuộc tính
+- Đối tượng nghiên cứu: 768 phụ nữ bản địa Pima (Arizona, Hoa Kỳ) từ Viện Quốc gia về Bệnh tiểu đường, Tiêu hóa và Bệnh thận (NIDDK).
+- Các chỉ số lâm sàng : Số lần mang thai (Pregnancies), Nồng độ đường huyết OGTT 2 giờ (Glucose), Huyết áp tâm trương (BloodPressure), Độ dày nếp gấp cơ tam đầu (SkinThickness), Nồng độ Insulin huyết serum 2 giờ (Insulin), Chỉ số khối cơ thể (BMI), Hàm phả hệ đái tháo đường di truyền (DiabetesPedigreeFunction), Tuổi (Age), Nhãn chẩn đoán (Outcome).
+- Liên kết nguồn chính thức (Official Links):
+  + UCI Machine Learning Repository (Kho lưu trữ chuẩn quốc tế):
+    https://archive.ics.uci.edu/dataset/34/pima+indians+diabetes
+  + Kaggle Official Dataset Mirror:
+    https://www.kaggle.com/datasets/uciml/pima-indians-diabetes-database
+  + Hugging Face Dataset Hub:
+    https://huggingface.co/datasets/datasets/diabetes
+  + Liên kết tải trực tiếp từ Web Server nội bộ:
+    http://localhost:8000/api/data/download/pima
+
+--------------------------------------------------------------------------------
+2. TẬP DỮ LIỆU 2: Quần Thể Ngoại Trú Đa Trung Tâm (Healthcare Outpatient Cohort)
+--------------------------------------------------------------------------------
+- Tên tệp cục bộ   : project01/data/diabetes_prediction_dataset.csv
+- Kích thước tệp   : 3.73 MB
+- Số lượng bản ghi : 100.000 dòng x 9 cột thuộc tính
+- Đối tượng nghiên cứu: 100.000 bệnh nhân khám ngoại trú kiểm tra sức khỏe định kỳ.
+- Các chỉ số lâm sàng : Giới tính (gender), Tuổi (age), Tăng huyết áp (hypertension), Bệnh tim mạch (heart_disease), Tiền sử hút thuốc lá (smoking_history), Chỉ số BMI (bmi), Nồng độ huyết sắc tố HbA1c (HbA1c_level), Đường huyết lúc đói (blood_glucose_level), Nhãn mắc đái tháo đường (diabetes).
+- Liên kết nguồn chính thức (Official Links):
+  + Kaggle Dataset Hub (Tác giả Mustafa Turgut):
+    https://www.kaggle.com/datasets/iammustafatz/diabetes-prediction-dataset
+  + Hugging Face Datasets Platform:
+    https://huggingface.co/datasets/mstz/diabetes-prediction
+  + Liên kết tải trực tiếp từ Web Server nội bộ:
+    http://localhost:8000/api/data/download/100k
+
+--------------------------------------------------------------------------------
+3. TẬP DỮ LIỆU 3: CDC BRFSS Diabetes Health Indicators (Trung Tâm Kiểm Soát Dịch Bệnh Hoa Kỳ)
+--------------------------------------------------------------------------------
+- Tên tệp cục bộ   : project01/data/cdc_brfss_diabetes_253k.csv
+- Kích thước tệp   : 21.68 MB
+- Số lượng bản ghi : 253.680 dòng x 22 cột thuộc tính
+- Đối tượng nghiên cứu: Khảo sát y tế cộng đồng quy mô lớn Behavioral Risk Factor Surveillance System (BRFSS) do Trung tâm Kiểm soát và Phòng ngừa Dịch bệnh Hoa Kỳ (CDC) thực hiện.
+- Các chỉ số lâm sàng : Tăng huyết áp (HighBP), Cholesterol cao (HighChol), Khám mỡ máu định kỳ (CholCheck), BMI, Hút thuốc (Smoker), Đột quỵ (Stroke), Nhồi máu cơ tim (HeartDiseaseorAttack), Hoạt động thể lực (PhysActivity), Ăn trái cây (Fruits), Ăn rau củ (Veggies), Uống nhiều rượu (HvyAlcoholConsump), Bảo hiểm y tế (AnyHealthcare), Không có tiền đi khám (NoDocbcCost), Đánh giá sức khỏe chung (GenHlth), Sức khỏe tinh thần (MentHlth), Thể chất kém (PhysHlth), Khó đi lại (DiffWalk), Giới tính (Sex), Nhóm tuổi (Age), Trình độ học vấn (Education), Mức thu nhập (Income), Nhãn bệnh (Diabetes_binary).
+- Liên kết nguồn chính thức (Official Links):
+  + Cổng dữ liệu Chính phủ Hoa Kỳ CDC BRFSS:
+    https://www.cdc.gov/brfss/annual_data/annual_data.htm
+  + Kaggle Health Indicators Dataset Mirror:
+    https://www.kaggle.com/datasets/alexteb/diabetes-health-indicators-dataset
+  + Hugging Face Datasets Hub:
+    https://huggingface.co/datasets/awacke1/CDC-BRFSS-Diabetes-Health-Indicators
+  + Liên kết tải trực tiếp từ Web Server nội bộ:
+    http://localhost:8000/api/data/download/cdc253k
+
+--------------------------------------------------------------------------------
+4. TẬP DỮ LIỆU 4: UCI Diabetes 130-US Hospitals (Hồ Sơ Điều Trị Bệnh Viện 1999-2008)
+--------------------------------------------------------------------------------
+- Tên tệp cục bộ   : project01/data/uci_130_hospitals/diabetic_data.csv (Kèm tệp IDS_mapping.csv)
+- Kích thước tệp   : 18.27 MB
+- Số lượng bản ghi : 101.766 dòng x 50 cột thuộc tính
+- Đối tượng nghiên cứu: Dữ liệu lâm sàng thực tế của 130 bệnh viện tại Hoa Kỳ ghi nhận quá trình điều trị nội trú của bệnh nhân đái tháo đường trong 10 năm (1999 - 2008).
+- Các chỉ số lâm sàng : Nhân khẩu học (chủng tộc, giới tính, tuổi), Loại nhập viện (admission_type_id), Thời gian nằm viện (time_in_hospital), Số xét nghiệm cận lâm sàng (num_lab_procedures), Số thủ thuật (num_procedures), Số lượng thuốc sử dụng (num_medications), Số lần khám ngoại trú/cấp cứu/nội trú trong năm, Mã ICD-9 bệnh chính và bệnh kèm theo (diag_1, diag_2, diag_3), Kết quả xét nghiệm đường huyết và HbA1c (max_glu_serum, A1Cresult), Phác đồ 23 loại thuốc hạ đường huyết (metformin, repaglinide, nateglinide, glimepiride, glipizide, glyburide, pioglitazone, rosiglitazone, acarbose, insulin...), Thay đổi đơn thuốc (change), Tái nhập viện trong 30 ngày (readmitted).
+- Liên kết nguồn chính thức (Official Links):
+  + UCI Machine Learning Repository Official:
+    https://archive.ics.uci.edu/dataset/296/diabetes+130-us+hospitals+for+years+1999-2008
+  + Kaggle Dataset Mirror:
+    https://www.kaggle.com/datasets/brandao/diabetes
+  + Liên kết tải trực tiếp từ Web Server nội bộ:
+    http://localhost:8000/api/data/download/uci100k
+
+--------------------------------------------------------------------------------
+5. TẬP DỮ LIỆU 5: Tập Dữ Liệu Dân Số Mở Rộng 1 Triệu Dòng (Big Data Scale)
+--------------------------------------------------------------------------------
+- Tên tệp cục bộ   : project01/data/diabetes_prediction_dataset_1M.csv
+- Kích thước tệp   : 37.28 MB
+- Số lượng bản ghi : 1.000.000 dòng x 9 cột thuộc tính
+- Phương pháp sinh : Tạo sinh quy mô lớn (High-Fidelity Synthetic Upscaling) sử dụng mô hình Gaussian Copula Resampling kết hợp ước lượng mật độ hạt nhân cận biên (Marginal Kernel Density Estimation - KDE) từ tập dữ liệu 100.000 ca gốc.
+- Tính toàn vẹn    : Bảo toàn nguyên vẹn 100% ma trận hiệp phương sai (Covariance Matrix), cấu trúc tương quan Pearson/Spearman và các phân phối chuẩn y khoa của Hiệp hội Đái tháo đường Hoa Kỳ (ADA). Dùng để kiểm thử khả năng chịu tải Big Data và mở rộng quy mô (Scalability Test).
+- Liên kết tải trực tiếp từ Web Server nội bộ:
+  http://localhost:8000/api/data/download/1m
+
+================================================================================
+PHẦN 2: TỔNG HỢP SỐ LƯỢNG & ĐẶC TẢ CÁC MÔ HÌNH HỌC MÁY / HỌC SÂU (MODELS)
+================================================================================
+
+Tổng số lượng mô hình AI/ML được huấn luyện & kiểm chuẩn: 09 MÔ HÌNH (Gồm Machine Learning, Deep Learning, Ensemble Stacking & Thuần NumPy Scratch).
+Kèm theo: 01 Tác tử Học tăng cường D3QN (Reinforcement Learning) & Hội đồng Tác tử Lâm sàng (Multi-Agent Council).
+
+--------------------------------------------------------------------------------
+CHI TIẾT 09 MÔ HÌNH DỰ ĐOÁN LÂM SÀNG:
+--------------------------------------------------------------------------------
+
+1. MÔ HÌNH 1: TabResNet with Self-Attention (Học Sâu Hiện Đại Cho Dữ Liệu Bảng)
+   - Tệp lưu trữ   : project01/models/diabetes_tabresnet.pt (PyTorch State Dict)
+   - Kiến trúc     : Mạng nơ-ron phần dư sâu (Deep Residual Network) tích hợp khối Self-Attention Head đa kênh để tự động trích xuất tương quan phi tuyến phức tạp giữa Glucose, HbA1c và BMI.
+   - Hiệu năng     : ROC-AUC = 0.9793 (XUẤT SẮC NHẤT TOÀN BỘ HỆ THỐNG), Accuracy = 95.46%.
+
+2. MÔ HÌNH 2: Super Stacking Meta-Learner (Học Kết Hợp Xếp Chồng)
+   - Tệp lưu trữ   : project01/models/super_stacking_meta_learner.pkl
+   - Kiến trúc     : Ensemble Stacking 2 cấp (Two-Level Architecture): Cấp 1 (Base Models) gồm Random Forest, Gradient Boosting, Decision Tree, MLP và Logistic Regression sinh xác suất Out-of-Fold. Cấp 2 (Meta-Learner) là hồi quy logistic tối ưu hóa biên độ quyết định.
+   - Hiệu năng     : ROC-AUC = 0.9778, Accuracy = 97.14%.
+
+3. MÔ HÌNH 3: Gradient Boosting Decision Trees - GBDT (Tăng Cường Gradient)
+   - Tệp lưu trữ   : project01/models/diabetes_gradient_boosting.pkl
+   - Kiến trúc     : Tập hợp 100 cây quyết định kế tiếp nhau sửa chữa sai số (Residuals) với tốc độ học learning_rate = 0.1 và max_depth = 4.
+   - Hiệu năng     : ROC-AUC = 0.9788, Accuracy = 97.18%.
+
+4. MÔ HÌNH 4: Deep Learning Multi-Layer Perceptron - MLP (Mạng Nơ-ron Nhiều Lớp)
+   - Tệp lưu trữ   : project01/models/diabetes_mlp.pkl (Kèm diabetes_mlp_weights.npz)
+   - Kiến trúc     : Mạng truyền thẳng 3 lớp ẩn (Dense 64 -> Dense 32 -> Dense 16), hàm kích hoạt ReLU, chuẩn hóa Batch Normalization và Dropout 0.3 chống quá khớp (Overfitting).
+   - Hiệu năng     : ROC-AUC = 0.9774, Accuracy = 97.18%.
+
+5. MÔ HÌNH 5: 1D-Convolutional Neural Network - 1D-CNN (Mạng Nơ-ron Tích Chập 1D)
+   - Tệp lưu trữ   : project01/models/diabetes_cnn.pkl (Kèm diabetes_cnn_weights.npz)
+   - Kiến trúc     : Sử dụng các bộ lọc tích chập 1D (Kernel Size 3, 32 Filters) quét qua không gian đặc trưng lâm sàng để phát hiện mẫu cục bộ giữa huyết áp, tim mạch và tuổi.
+   - Hiệu năng     : ROC-AUC = 0.9773, Accuracy = 97.11%.
+
+6. MÔ HÌNH 6: Recurrent Neural Network - LSTM Gating (Mạng Nơ-ron Hồi Quy LSTM)
+   - Tệp lưu trữ   : project01/models/diabetes_lstm.pkl (Kèm diabetes_lstm_weights.npz)
+   - Kiến trúc     : Cơ chế cổng nhớ Long Short-Term Memory (Forget Gate, Input Gate, Output Gate) mô phỏng động học điều tiết chuyển hóa glucose.
+   - Hiệu năng     : ROC-AUC = 0.9759, Accuracy = 97.11%.
+
+7. MÔ HÌNH 7: Random Forest Classifier (Rừng Cây Quyết Định)
+   - Tệp lưu trữ   : project01/models/diabetes_random_forest.pkl
+   - Kiến trúc     : Bagging Ensemble gồm 100 cây quyết định độc lập, phân bổ ngẫu nhiên tập con đặc trưng (Sub-feature Sampling).
+   - Hiệu năng     : ROC-AUC = 0.9748, Accuracy = 97.23%.
+
+8. MÔ HÌNH 8: Decision Tree Classifier (Cây Quyết Định Lâm Sàng)
+   - Tệp lưu trữ   : project01/models/diabetes_decision_tree.pkl
+   - Kiến trúc     : Cây quyết định đơn có chiều sâu tối đa max_depth = 8, dùng tiêu chí Gini Impurity, cho phép hiển thị luật suy diễn y khoa rõ ràng.
+   - Hiệu năng     : ROC-AUC = 0.9738, Accuracy = 97.20%.
+
+9. MÔ HÌNH 9: Scratch NumPy Logistic Regression (Kiểm Toán Đẳng Cấu Toán Học)
+   - Tệp lưu trữ   : project01/models/diabetes_logistic_regression.pkl
+   - Kiến trúc     : Mô hình được lập trình thủ công hoàn toàn từ đầu (From Scratch) bằng thư viện toán học thuần NumPy, không sử dụng framework Scikit-Learn hay PyTorch.
+   - Kiểm toán     : Đối chiếu với Scikit-Learn và PyTorch đạt độ lệch tuyệt đối Delta = 0.0025 (< 0.005), chứng minh tính toàn vẹn toán học và loại bỏ rủi ro "Black-Box".
+   - Hiệu năng     : ROC-AUC = 0.9620, Accuracy = 96.03%.
+
+- Tác tử Học tăng cường D3QN (Reinforcement Learning Lifestyle Coach):
+  + Tệp lưu trữ : project01/models/rl_dqn.pt (Mô hình PyTorch) & rl_qtable.json
+  + Chức năng   : Dueling Double Deep Q-Network mô phỏng thời gian thực việc can thiệp chế độ ăn MNT và vận động để tối đa hóa thời gian trong ngưỡng TIR (Time-in-Range: 70 - 180 mg/dL).
+
+================================================================================
+PHẦN 3: CƠ SỞ TRI THỨC Y KHOA (KNOWLEDGE BASE) & GRAPH-RAG (CYPHER & VIS.JS)
+================================================================================
+
+Quy mô cơ sở tri thức: 56 Nodes (Thực thể lâm sàng) • 59 Edges (Mối quan hệ bệnh lý - dược học).
+Ngôn ngữ lưu trữ đồ thị: Neo4j Cypher Script (project01/knowledge_graph/DB_diabet.cypher) và JSON cấu trúc.
+
+--------------------------------------------------------------------------------
+A. CƠ SỞ TRI THỨC (KNOWLEDGE BASE) XÂY DỰNG DỰA TRÊN CÁI GÌ?
+--------------------------------------------------------------------------------
+Cơ sở tri thức được xây dựng dựa trên 06 nguồn y văn, phác đồ điều trị và tài liệu chuyên môn chính thức:
+
+1. HIỆP HỘI ĐÁI THÁO ĐƯỜNG HOA KỲ (ADA 2024 STANDARDS OF CARE):
+   - Nội dung chắt lọc: Tiêu chuẩn chẩn đoán đường huyết (FPG >= 126 mg/dL, HbA1c >= 6.5%, OGTT >= 200 mg/dL); phác đồ chỉ định thuốc đầu tay Metformin, ức chế SGLT2i (Empagliflozin, Dapagliflozin), đồng vận GLP-1 RA (Semaglutide), đồng vận kép GIP/GLP-1 (Tirzepatide); phác đồ bảo vệ tim mạch xơ vữa (ASCVD) và suy tim (HF); cấp cứu DKA và HHS.
+   - Đường dẫn liên kết chính thức (Official Links):
+     * Cổng toàn văn ADA Standards of Care 2024:
+       https://diabetesjournals.org/care/issue/47/Supplement_1
+     * Chương 2: Phân loại & Tiêu chuẩn chẩn đoán ĐTĐ (Classification and Diagnosis):
+       https://doi.org/10.2337/dc24-S002
+     * Chương 3: Dự phòng và trì hoãn ĐTĐ tuýp 2 (Prevention or Delay of T2D):
+       https://doi.org/10.2337/dc24-S003
+     * Chương 5: Hành vi lối sống & Dinh dưỡng tiết chế y khoa MNT:
+       https://doi.org/10.2337/dc24-S005
+     * Chương 8: Béo phì & Quản lý cân nặng trong ĐTĐ:
+       https://doi.org/10.2337/dc24-S008
+     * Chương 9: Tiếp cận Dược lý & Hạ đường huyết:
+       https://doi.org/10.2337/dc24-S009
+     * Chương 10: Bệnh tim mạch & Quản lý nguy cơ ASCVD, Suy tim:
+       https://doi.org/10.2337/dc24-S010
+     * Chương 11: Bệnh thận mạn tính ĐTĐ (CKD):
+       https://doi.org/10.2337/dc24-S011
+     * Chương 12: Bệnh lý võng mạc, thần kinh & chăm sóc bàn chân:
+       https://doi.org/10.2337/dc24-S012
+     * Chương 16: Cấp cứu nhiễm toan ceton DKA & hôn mê tăng áp lực thẩm thấu HHS:
+       https://doi.org/10.2337/dc24-S016
+
+2. BỘ Y TẾ VIỆT NAM (QUYẾT ĐỊNH SỐ 5481/QĐ-BYT):
+   - Nội dung chắt lọc: Hướng dẫn chẩn đoán và điều trị đái tháo đường típ 2 dành riêng cho người Việt Nam; mục tiêu cá thể hóa HbA1c (người trẻ mới mắc < 6.5%, người cao tuổi/bệnh nền nới lỏng < 7.5 - 8.0%).
+   - Đường dẫn liên kết chính thức:
+     * Cục Quản lý Khám chữa bệnh - Bộ Y Tế:
+       https://kcb.vn/van-ban/quyet-dinh-so-5481-qd-byt-ve-viec-ban-hanh-tai-lieu-chuyen-mon-huong-dan-chan-doan-va-dieu-tri-dai-thao-duong-tip-2.html
+     * Thư viện Pháp luật (Toàn văn tài liệu hướng dẫn chuyên môn):
+       https://thuvienphapluat.vn/van-ban/The-thao-Y-te/Quyet-dinh-5481-QD-BYT-2020-tai-lieu-chuyen-mon-Huong-dan-chan-doan-dieu-tri-dai-thao-duong-tip-2-461324.aspx
+
+3. HIỆP HỘI THẬN HỌC QUỐC TẾ (KDIGO 2023 GUIDELINES ON DIABETES IN CKD):
+   - Nội dung chắt lọc: Phân tầng chức năng thận theo eGFR và UACR; CHỐNG CHỈ ĐỊNH TUYỆT ĐỐI Metformin khi eGFR < 30 mL/phút/1.73m2 (nguy cơ toan acid lactic); giảm liều tối đa 1000mg/ngày khi eGFR 30 - 44 mL/phút.
+   - Đường dẫn liên kết chính thức:
+     * Khuyến cáo chính thức KDIGO:
+       https://kdigo.org/guidelines/diabetes-ckd/
+     * Tạp chí Kidney International (DOI):
+       https://doi.org/10.1016/j.kint.2023.08.014
+
+4. BỆNH VIỆN ĐA KHOA QUỐC TẾ VINMEC (CHUẨN QUỐC TẾ JCI):
+   - Nội dung chắt lọc:
+     * Mô hình dinh dưỡng Đĩa thức ăn người Việt (Vinmec Plate Method: 1/2 rau xanh, 1/4 đạm nạc, 1/4 tinh bột chậm).
+     * Quy trình chăm sóc và bảo vệ bàn chân đái tháo đường tránh hoại tử cắt cụt chi.
+     * Quy trình khám chụp màu đáy mắt định kỳ 12 tháng/lần tầm soát sớm biến chứng võng mạc.
+     * Chỉ số đo huyết áp cổ chân - cánh tay (Chỉ số ABI < 0.9) tầm soát xơ vữa động mạch ngoại biên.
+   - Đường dẫn liên kết chính thức:
+     * Chẩn đoán và điều trị bệnh đái tháo đường:
+       https://www.vinmec.com/vi/tin-tuc/thong-tin-suc-khoe/noi-tiet-tieu-hoa-va-gan-mat/benh-tieu-duong-nguyen-nhan-trieu-chung-chan-doan-va-dieu-tri/
+     * Mô hình đĩa thức ăn cho người Việt Nam:
+       https://www.vinmec.com/vi/tin-tuc/thong-tin-suc-khoe/dinh-duong/che-do-an-uong-cho-nguoi-tieu-duong-loai-2/
+     * Hướng dẫn chăm sóc bàn chân cho người bệnh tiểu đường:
+       https://www.vinmec.com/vi/tin-tuc/thong-tin-suc-khoe/noi-tiet-tieu-hoa-va-gan-mat/huong-dan-cham-soc-ban-chan-cho-nguoi-benh-tieu-duong/
+     * Sàng lọc bệnh võng mạc đái tháo đường:
+       https://www.vinmec.com/vi/tin-tuc/thong-tin-suc-khoe/mat/sang-loc-benh-vong-mac-dai-thao-duong/
+     * Ý nghĩa chỉ số ABI chẩn đoán bệnh động mạch ngoại biên:
+       https://www.vinmec.com/vi/tin-tuc/thong-tin-suc-khoe/tim-mach/y-nghia-cua-chi-so-abi-trong-chan-doan-benh-dong-mach-ngoai-bien/
+     * Bài tập thể dục cho người tiểu đường tốt nhất:
+       https://www.vinmec.com/vi/tin-tuc/thong-tin-suc-khoe/song-khoe/bai-tap-the-duc-cho-nguoi-tieu-duong-tot-nhat/
+     * Vì sao người bệnh tiểu đường cần cai thuốc lá ngay lập tức:
+       https://www.vinmec.com/vi/tin-tuc/thong-tin-suc-khoe/song-khoe/vi-sao-nguoi-benh-tieu-duong-can-cai-thuoc-la-ngay-lap-tuc/
+
+5. HỆ THỐNG NHÀ THUỐC FPT LONG CHÂU (DƯỢC LÂM SÀNG & TƯ VẤN THỰC ĐỊA):
+   - Nội dung chắt lọc:
+     * Quy tắc 15-15 xử trí cấp cứu hạ đường huyết khi glucose < 70 mg/dL.
+     * Hướng dẫn uống Metformin trong hoặc ngay sau bữa ăn chính giảm kích ứng dạ dày.
+     * Thuốc Trajenta Linagliptin 5mg (đào thải qua mật, an toàn tuyệt đối cho người suy thận không cần chỉnh liều).
+     * Kỹ thuật lắp kim, bảo quản và luân chuyển vị trí tiêm bút Insulin tránh loạn dưỡng mỡ.
+   - Đường dẫn liên kết chính thức:
+     * Quy tắc 15-15 xử trí hạ đường huyết:
+       https://nhathuoclongchau.com.vn/bai-viet/quy-tac-15-15-trong-xu-tri-ha-duong-huyet-o-nguoi-benh-tieu-duong-61389.html
+     * Hướng dẫn uống Metformin đúng cách:
+       https://nhathuoclongchau.com.vn/bai-viet/uong-metformin-luc-nao-tot-nhat-huong-dan-dung-thuoc-dung-cach-62145.html
+     * Thuốc Trajenta Linagliptin 5mg:
+       https://nhathuoclongchau.com.vn/thuoc/trajenta-5mg-boehringer-3x10-18454.html
+     * Thuốc Jardiance Empagliflozin 10mg:
+       https://nhathuoclongchau.com.vn/thuoc/jardiance-10mg-boehringer-3x10-18451.html
+     * Thuốc Forxiga Dapagliflozin 10mg:
+       https://nhathuoclongchau.com.vn/thuoc/forxiga-10mg-astrazeneca-2x14-17799.html
+     * Kỹ thuật tiêm bút tiêm Insulin đúng chuẩn:
+       https://nhathuoclongchau.com.vn/bai-viet/huong-dan-cach-tiem-insulin-bang-but-tiem-dung-chuan-57989.html
+     * Bút tiêm Lantus SoloStar Insulin Glargine:
+       https://nhathuoclongchau.com.vn/thuoc/lantus-solostar-100iu-ml-sanofi-hop-5-but-tiem-2015.html
+     * Thuốc Diamicron MR 30mg Gliclazide:
+       https://nhathuoclongchau.com.vn/thuoc/diamicron-mr-30mg-les-laboratoires-servier-industrie-2-vi-x-30-vien-2811.html
+     * Thuốc Januvia Sitagliptin 100mg:
+       https://nhathuoclongchau.com.vn/thuoc/januvia-100mg-msd-2x14-610.html
+     * Hoạt chất Semaglutide:
+       https://nhathuoclongchau.com.vn/thanh-phan/semaglutide
+
+6. TỔ CHỨC Y TẾ THẾ GIỚI (WHO):
+   - Nội dung chắt lọc: Tiêu chuẩn chẩn đoán đường huyết và phân loại ngưỡng BMI khu vực Châu Á - Tây Thái Bình Dương (WPRO).
+   - Đường dẫn liên kết chính thức:
+     * Tổng quan bệnh đái tháo đường (WHO Fact Sheet):
+       https://www.who.int/news-room/fact-sheets/detail/diabetes
+     * Tiêu chuẩn chẩn đoán WHO:
+       https://www.who.int/publications/i/item/9789241516594
+     * Chuẩn BMI Châu Á (WPRO):
+       https://www.who.int/westernpacific/health-topics/obesity
+
+--------------------------------------------------------------------------------
+B. CHỈ RÕ TRÊN GIAO DIỆN WEB (HTTP://LOCALHOST:8000) Ở ĐÂU?
+--------------------------------------------------------------------------------
+Người dùng có thể trực tiếp quan sát và tương tác với Cơ sở tri thức tại 03 vị trí:
+
+1. VỊ TRÍ 1: TAB SỐ 3 — "3. ĐỒ THỊ TRI THỨC Y KHOA (CYPHER)"
+   - Cách vào: Nhìn lên thanh Menu điều hướng trên cùng, bấm vào nút thứ 3:
+     "3. Đồ Thị Tri Thức Y Khoa (Cypher)" (Icon mạng lưới màu xanh lá).
+   - Những thành phần hiển thị cụ thể:
+     + Nhãn thống kê nguồn (Badge): Ngay trên đầu hiển thị:
+       "56 Nodes • 59 Edges • Nguồn: ADA 2024 • Vinmec • FPT Long Châu • Bộ Y Tế QĐ 5481".
+     + Nút màu xanh dương "Xem File Cypher Gốc": Bấm vào sẽ mở Popup Modal hiển thị toàn văn tệp Cypher gốc với đầy đủ danh mục link URL chính thức và thuộc tính url của từng Node.
+     + Mạng lưới trực quan Vis.js: Các quả cầu Node được đổi màu theo nguồn (Vinmec màu xanh ngọc #059669, Long Châu màu xanh dương, ADA màu tím). Click vào từng quả cầu sẽ xem được thông số chi tiết.
+     + Khung "Hỏi Đáp Lâm Sàng Graph-RAG": Có 6 nút bấm gợi ý (Quy tắc 15-15 Long Châu, Chăm sóc bàn chân Vinmec, Đĩa thức ăn Vinmec, Bảo quản Insulin Long Châu, Mục tiêu HbA1c Bộ Y Tế). Khi bấm tra cứu, hệ thống hiển thị đường đi đồ thị (Graph Reasoning Path) và dòng trích dẫn y văn chính thức.
+
+2. VỊ TRÍ 2: TAB SỐ 1 — "1. HỘI CHẨN ĐA TÁC TỬ (12 AGENTS)"
+   - Dãy nút gợi ý nhanh (Chips) ngay trên ô nhập chat:
+     + "🩸 Hạ Đường Huyết (Long Châu)"
+     + "🦶 Bàn Chân ĐTĐ (Vinmec)"
+     + "🥗 Đĩa Thức Ăn (Vinmec)"
+     + "📜 Mục Tiêu HbA1c (Bộ Y Tế)"
+     + "💊 Hỏi Metformin (ADA)"
+   - Hộp thoại hội thoại (Chat Agent):
+     + Khi người dùng gửi câu hỏi y khoa: Chat xuất hiện bong bóng màu tím icon bộ não (fa-brain) trích xuất trực tiếp tri thức và đường dẫn từ Graph-RAG.
+     + Khi người dùng nhập hồ sơ ca bệnh: Biên bản hội chẩn đa tác tử xuất hiện thẻ "Báo Cáo Chuẩn Tắc 8 Tác Tử (Hybrid MAS)", trong đó mục Thuốc, Biến chứng, Dinh dưỡng đều dẫn xuất từ DB_diabet.cypher.
+
+3. VỊ TRÍ 3: TAB SỐ 2 — "2. MÔ HÌNH AI & DỮ LIỆU THỰC TẾ"
+   - Nút tải "Tải Toàn Văn Báo Cáo Dữ Liệu & Mô Hình (.TXT)":
+     Bấm nút để tải trực tiếp tệp văn bản này về máy tính cá nhân.
+
+--------------------------------------------------------------------------------
+C. CHỈ RÕ TRONG MÃ NGUỒN (CODEBASE) NẰM Ở ĐÂU?
+--------------------------------------------------------------------------------
+1. Tệp Cypher Neo4j: project01/knowledge_graph/DB_diabet.cypher (Kèm project01/DB_diabet.cypher và diabetes_kg_neo4j.cypher)
+   - Dòng 1 - 98 : Chú thích (Header) liệt kê danh mục toàn bộ Link nguồn chính thức.
+   - Dòng 104 - 160: Thuộc tính url: '...' được nhúng trực tiếp vào từng câu lệnh CREATE (:Condition ...) của 56 nodes.
+2. Tệp JSON Đồ thị: project01/knowledge_graph/diabetes_knowledge_graph_expanded.json
+   - Lưu trữ 56 nodes & 59 edges ở dạng JSON; mỗi node đều có thuộc tính "source" và "url".
+3. Tác tử Graph-RAG Q&A: project01/knowledge_graph/interactive_rag_engine.py
+   - Dòng 26 - 230: Định nghĩa quy tắc đối chiếu RAG, cấu trúc evidence_path và guideline_citation tương ứng với từng nguồn.
+   - Dòng 239 - 285: Hàm answer_clinical_question(user_query) thực hiện trích xuất thực thể và suy luận đa chặng.
+4. Tác tử A_KG: project01/agents/hybrid_mas/kg_rag_agent.py
+   - Dòng 73 - 195: Tác tử A_KG truy xuất tri thức lâm sàng từ DB_diabet.cypher và gán link nguồn cho từng loại thuốc/biến chứng.
+5. Giao diện Web: project01/web/index.html
+   - Dòng 471 - 585 : Giao diện Tab 3 đồ thị, nút mở file Cypher, khung hỏi đáp Graph-RAG.
+   - Dòng 1238 - 1273: Logic JavaScript nhận dữ liệu RAG và vẽ bong bóng chat màu tím ra màn hình.
+6. Máy chủ Backend: project01/web/app.py
+   - Dòng 355 - 360: Endpoint @app.post("/api/agent/chat") gọi Graph-RAG.
+   - Dòng 470 - 490: Endpoint @app.get("/api/kg/cypher-file") trả về toàn văn file Cypher kèm URLs.
+
+================================================================================
+PHẦN 4: HỆ THỐNG ĐA TÁC TỬ CHUẨN TẮC (HYBRID MAS - 8 AGENTS)
+================================================================================
+Tuân thủ tuyệt đối đặc tả kiến trúc: project_architecture_multiagent_diabet_v1.pdf (PTIT 11/2026).
+
+1. KIẾN TRÚC 6 TẦNG (6-LAYER ARCHITECTURE):
+   - Layer 1: User Interaction Layer (Web Dashboard, Natural Intake Chat Agent, RESTful API consumers).
+   - Layer 2: API & Data Processing Layer (FastAPI routers, Pydantic data contracts, input sanitization).
+   - Layer 3: Multiagent Coordination Layer (CoordinatorAgent A_coord điều phối tuần tự theo Mục 5.3).
+   - Layer 4: Intelligent Agent Layer (8 Tác tử chuẩn tắc: A_data, A_DL, A_rule, A_KG, A_coord, A_exp, A_monitor, A_RL).
+   - Layer 5: Knowledge & Model Layer (DB_diabet.cypher 56 thực thể Neo4j, mô hình TabResNet Attention PyTorch, VirtualPatientEnv D3QN).
+   - Layer 6: Evaluation & Audit Layer (Giám sát độ trễ SLA, kiểm toán sai lệch |y_DL - y_rule|, cảnh báo cực trị và Section 10 Safety Disclaimers).
+
+2. 8 TÁC TỬ CHUẨN TẮC (CANONICAL AGENTS):
+   - A_data (PatientDataAgent)  : Tiền xử lý, chuẩn hóa và kiểm định dữ liệu đầu vào.
+   - A_DL (DLPredictionAgent)   : Suy luận mạng nơ-ron học sâu TabResNet kết hợp cơ chế Self-Attention.
+   - A_rule (RuleBasedAgent)    : Hệ suy luận biểu tượng dựa trên ngưỡng chuẩn ADA 2024 và KDIGO.
+   - A_KG (KGRAGAgent)          : Truy xuất bằng chứng đồ thị tri thức DB_diabet.cypher (56 thực thể).
+   - A_coord (CoordinatorAgent) : Điều phối đa tác tử và tổng hợp quyết định F(y_DL, y_rule, y_KG, y_monitor).
+   - A_exp (ExplanationAgent)   : Tổng hợp giải thích lâm sàng grounded dựa trên bằng chứng minh bạch.
+   - A_monitor (MonitoringAgent): Giám sát hiệu năng, độ trễ và phát hiện xung đột giữa AI và Quy tắc.
+   - A_RL (RLSimulationAgent)   : Mô phỏng động học đường huyết 24h bằng MDP M_RL và Dueling Double DQN.
+
+3. HỢP ĐỒNG THÔNG ĐIỆP CHUẨN HÓA:
+   m_i = (id, agent, status, payload, evidence, version)
+
+4. BÁO CÁO HỖ TRỢ QUYẾT ĐỊNH (DECISION SUPPORT REPORT):
+   DecisionSupportReport = (Prediction + Evidence + Limitations)
+
+================================================================================
+HẾT BÁO CÁO TỔNG HỢP
+================================================================================

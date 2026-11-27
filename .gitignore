@@ -1,0 +1,90 @@
+# ==============================================================================
+# .gitignore - A2_CT_hautv.287 (PTIT Intelligent Systems Development)
+# ==============================================================================
+
+# --- Python bytecode, caches & packaging ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# --- Virtual environments & environment secrets ---
+.venv/
+venv/
+env/
+ENV/
+.conda/
+.python-version
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# --- Jupyter Notebook & testing caches ---
+.ipynb_checkpoints/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# --- IDE, Editor, OS & Office temporary/lock files ---
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+desktop.ini
+~$*
+*.~lock.*
+*.log
+*.tmp
+*.bak
+test_one_fig.docx
+
+# --- Raw downloadable vision datasets, caches & archives ---
+assignment4/MNIST/
+assignment4/dogandcat/train/
+assignment4/dogandcat/test/
+assignment4/dogandcat/train_split/
+assignment5/data/mnist_raw/
+assignment5/data/fashion_raw/
+assignment5/data/*_cache.npz
+*.gz
+*.rar
+*.7z
+*-idx*-ubyte
+
+# --- Large synthetic 1M-row generated datasets ---
+*1M*.csv
+*1m*.csv
+clinical_records_1m.csv
+
+# --- Local LLM weights & heavy model binaries ---
+**/llm_weights/
+*.gguf
+*.safetensors
+*.onnx
+*.h5
+
+# --- Auto-downloaded external guideline PDFs (>50 MB, fetched by download_3_guideline_pdfs.py) ---
+project01/knowledge_graph/documents/*.pdf

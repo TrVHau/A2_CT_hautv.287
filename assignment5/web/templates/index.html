@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="vi" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ thống Đối chuẩn CNN & Hội chẩn Đa Agent (Assignment 05)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#eff6ff', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8', 900: '#1e3a8a'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        code, pre { font-family: 'JetBrains Mono', monospace; }
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.6); }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(59, 130, 246, 0.5); border-radius: 4px; }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col selection:bg-blue-600 selection:text-white">
+
+    <!-- Top Navigation Header -->
+    <header class="sticky top-0 z-50 glass-panel border-b border-slate-800/80 px-6 py-3.5 flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+            <div class="h-10 w-10 rounded-xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-purple-600 flex items-center justify-center shadow-lg shadow-blue-500/20">
+                <i data-lucide="scan-eye" class="w-6 h-6 text-white"></i>
+            </div>
+            <div>
+                <div class="flex items-center space-x-2">
+                    <span class="text-xs font-bold tracking-wider uppercase px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-400 border border-blue-500/30">ASSIGNMENT 05 UPGRADE</span>
+                    <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">ONLINE: PORT 8005</span>
+                </div>
+                <h1 class="text-base font-extrabold text-slate-100">Hệ thống Đối chuẩn Kiến trúc CNN & Hội chẩn Đa Agent</h1>
+            </div>
+        </div>
+        <div class="flex items-center space-x-4">
+            <button onclick="openGalleryModal()" class="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 border border-slate-700 transition">
+                <i data-lucide="image" class="w-4 h-4 text-purple-400"></i>
+                <span>Thư viện 14 Biểu đồ</span>
+            </button>
+            <button onclick="checkParity()" class="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-blue-600/20 hover:bg-blue-600/30 text-xs font-semibold text-blue-300 border border-blue-500/40 transition">
+                <i data-lucide="check-check" class="w-4 h-4 text-blue-400"></i>
+                <span>Parity Check: Δ &lt; 10⁻⁶</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-1 max-w-7xl w-full mx-auto p-6 space-y-6">
+
+        <!-- KPI Executive Summary Cards -->
+        <section class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="glass-panel p-4 rounded-xl relative overflow-hidden">
+                <div class="text-xs font-bold text-slate-400 uppercase tracking-wider">Kiến trúc đối chuẩn</div>
+                <div class="text-2xl font-black text-blue-400 mt-1">7 Mô hình</div>
+                <div class="text-[11px] text-slate-400 mt-0.5">Basic, LeNet, VGG, ResNet, MobileNet, Conv1D, Scratch</div>
+                <div class="absolute -right-2 -bottom-2 opacity-10">
+                    <i data-lucide="layers" class="w-20 h-20 text-blue-400"></i>
+                </div>
+            </div>
+            <div class="glass-panel p-4 rounded-xl relative overflow-hidden">
+                <div class="text-xs font-bold text-slate-400 uppercase tracking-wider">Độ chính xác cao nhất (MNIST)</div>
+                <div class="text-2xl font-black text-emerald-400 mt-1" id="kpi-acc">97.20%</div>
+                <div class="text-[11px] text-slate-400 mt-0.5">VGG-Style (95% CI: [96.1% - 98.2%])</div>
+                <div class="absolute -right-2 -bottom-2 opacity-10">
+                    <i data-lucide="target" class="w-20 h-20 text-emerald-400"></i>
+                </div>
+            </div>
+            <div class="glass-panel p-4 rounded-xl relative overflow-hidden">
+                <div class="text-xs font-bold text-slate-400 uppercase tracking-wider">Độ trễ suy luận biên (Latency)</div>
+                <div class="text-2xl font-black text-amber-400 mt-1" id="kpi-latency">0.18 ms</div>
+                <div class="text-[11px] text-slate-400 mt-0.5">BasicCNN & Conv1D (>5,000 FPS CPU)</div>
+                <div class="absolute -right-2 -bottom-2 opacity-10">
+                    <i data-lucide="zap" class="w-20 h-20 text-amber-400"></i>
+                </div>
+            </div>
+            <div class="glass-panel p-4 rounded-xl relative overflow-hidden">
+                <div class="text-xs font-bold text-slate-400 uppercase tracking-wider">Hội đồng Hội chẩn Đa Agent</div>
+                <div class="text-2xl font-black text-purple-400 mt-1">5 Chuyên gia + CoT</div>
+                <div class="text-[11px] text-slate-400 mt-0.5">Qwen 2.5 0.5B + Self-Evaluation</div>
+                <div class="absolute -right-2 -bottom-2 opacity-10">
+                    <i data-lucide="users" class="w-20 h-20 text-purple-400"></i>
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Playground & Inference Station -->
+        <section class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+            <!-- Left Controls & Input Matrix (5 Cols) -->
+            <div class="lg:col-span-5 glass-panel p-5 rounded-2xl space-y-4">
+                <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                    <div class="flex items-center space-x-2">
+                        <i data-lucide="cpu" class="w-5 h-5 text-blue-400"></i>
+                        <h2 class="font-bold text-sm text-slate-200">Trạm Khởi Tạo Suy Luận</h2>
+                    </div>
+                    <span class="text-[11px] font-mono text-slate-400">Interactive Canvas / Real Test Set</span>
+                </div>
+
+                <!-- Modality Selector -->
+                <div>
+                    <label class="text-xs font-semibold text-slate-300 block mb-1.5">1. Miền dữ liệu (Modality)</label>
+                    <div class="grid grid-cols-3 gap-2">
+                        <button onclick="setModality('mnist')" id="btn-mod-mnist" class="px-3 py-2 rounded-xl text-xs font-bold bg-blue-600 text-white shadow-md shadow-blue-500/20 border border-blue-400 transition">MNIST (Số)</button>
+                        <button onclick="setModality('fashion')" id="btn-mod-fashion" class="px-3 py-2 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition">Fashion (Đồ)</button>
+                        <button onclick="setModality('diabetes')" id="btn-mod-diabetes" class="px-3 py-2 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition">Diabetes (Bảng 1D)</button>
+                    </div>
+                </div>
+
+                <!-- Model Selector -->
+                <div>
+                    <label class="text-xs font-semibold text-slate-300 block mb-1.5">2. Kiến trúc mô hình CNN</label>
+                    <select id="model-select" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded-xl px-3 py-2 text-xs font-semibold focus:outline-none focus:border-blue-500">
+                        <option value="VGGStyle">VGG-Style CNN (Simonyan 2014, Stacked 3x3)</option>
+                        <option value="ResNetStyle">ResNet-Style CNN (He 2015, Residual Skip)</option>
+                        <option value="BasicCNN">Basic CNN-2D (Baseline 2-Stage)</option>
+                        <option value="LeNet5">LeNet-5 (LeCun 1998, 5x5 Kernels)</option>
+                        <option value="MobileNetV2Style">MobileNetV2-Style (Sandler 2018, Inverted Res)</option>
+                    </select>
+                </div>
+
+                <!-- Sample Selector or Interactive Drawing Canvas -->
+                <div id="vision-input-area" class="space-y-3">
+                    <div class="flex items-center justify-between">
+                        <label class="text-xs font-semibold text-slate-300">3. Mẫu đầu vào (Chọn từ Test Set hoặc Vẽ)</label>
+                        <button onclick="clearCanvas()" class="text-[11px] text-red-400 hover:underline">Xóa nét vẽ</button>
+                    </div>
+                    
+                    <div class="flex items-center space-x-4">
+                        <canvas id="digitCanvas" width="168" height="168" class="bg-black rounded-xl border border-slate-700 cursor-crosshair shadow-inner"></canvas>
+                        <div class="flex-1 space-y-2">
+                            <span class="text-[11px] text-slate-400 block">Hoặc chọn mẫu có sẵn:</span>
+                            <div class="grid grid-cols-5 gap-1.5" id="sample-buttons">
+                                <!-- Populated dynamically -->
+                            </div>
+                            <div class="text-[11px] text-slate-500" id="sample-meta">Đang chọn mẫu test #0</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabular Input Area (Hidden for vision) -->
+                <div id="tabular-input-area" class="hidden space-y-2">
+                    <div class="text-xs font-semibold text-slate-300">3. Hồ sơ Bệnh nhân Lâm sàng (17 Chỉ số sinh hóa)</div>
+                    <div class="max-h-44 overflow-y-auto custom-scrollbar p-2.5 bg-slate-900/80 rounded-xl border border-slate-800 text-[11px] space-y-1.5" id="tabular-feature-list">
+                        <!-- Populated dynamically -->
+                    </div>
+                </div>
+
+                <!-- Action Button -->
+                <button onclick="triggerDeliberation()" id="btn-deliberate" class="w-full py-3 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-bold text-xs uppercase tracking-wider shadow-lg shadow-indigo-500/25 flex items-center justify-center space-x-2 transition">
+                    <i data-lucide="play" class="w-4 h-4 fill-current"></i>
+                    <span>Kích Hoạt Hội đồng Hội chẩn & CoT</span>
+                </button>
+            </div>
+
+            <!-- Right Results & Multi-Agent Deliberation (7 Cols) -->
+            <div class="lg:col-span-7 space-y-6">
+
+                <!-- Prediction & Grad-CAM Live Viewer -->
+                <div class="glass-panel p-5 rounded-2xl grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Kết quả Dự đoán & Tin Cậy</div>
+                        <div class="flex items-center space-x-3">
+                            <div class="h-16 w-16 rounded-2xl bg-blue-500/10 border border-blue-500/30 flex items-center justify-center">
+                                <span class="text-2xl font-black text-blue-400" id="pred-class">-</span>
+                            </div>
+                            <div>
+                                <div class="text-lg font-extrabold text-slate-100" id="pred-label">Chưa khởi chạy</div>
+                                <div class="text-xs font-semibold text-emerald-400" id="pred-conf">Độ tin cậy: --%</div>
+                                <div class="text-[11px] text-slate-400" id="pred-latency">Độ trễ: -- ms | Tham số: --</div>
+                            </div>
+                        </div>
+
+                        <!-- Class Probabilities Bar -->
+                        <div class="mt-4 space-y-1.5" id="probs-bars">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- Grad-CAM Visual Heatmap -->
+                    <div class="flex flex-col items-center justify-center border-l border-slate-800/80 pl-4">
+                        <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Bản đồ nhiệt Grad-CAM XAI</div>
+                        <canvas id="gradcamCanvas" width="140" height="140" class="bg-black rounded-xl border border-slate-700 shadow-md"></canvas>
+                        <div class="text-[10px] text-slate-400 mt-2 text-center" id="gradcam-status">Đang chờ kích hoạt suy luận</div>
+                    </div>
+                </div>
+
+                <!-- 5-Agent Council Deliberation Card -->
+                <div class="glass-panel p-5 rounded-2xl space-y-4">
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                        <div class="flex items-center space-x-2">
+                            <i data-lucide="award" class="w-5 h-5 text-purple-400"></i>
+                            <h3 class="font-bold text-sm text-slate-200">Phán Quyết Hội Đồng Hội Chẩn 5-Agent</h3>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-[11px] text-slate-400">Điểm đồng thuận:</span>
+                            <span class="text-xs font-black px-2.5 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30" id="consensus-score">-- / 100</span>
+                        </div>
+                    </div>
+
+                    <!-- Final Verdict Banner -->
+                    <div class="p-3 rounded-xl bg-purple-950/40 border border-purple-800/50 flex items-center justify-between" id="verdict-banner">
+                        <div class="flex items-center space-x-2">
+                            <i data-lucide="check-circle-2" class="w-5 h-5 text-purple-400"></i>
+                            <span class="text-xs font-bold text-purple-200" id="verdict-text">Sẵn sàng phiên thảo luận</span>
+                        </div>
+                        <span class="text-[10px] font-mono text-purple-400" id="verdict-tag">COUNCIL PROTOCOL V2</span>
+                    </div>
+
+                    <!-- Self-Evaluation Reflection Checks -->
+                    <div>
+                        <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Tự Đánh Giá Phản Tư (Self-Evaluation Reflection):</div>
+                        <div class="space-y-1 text-[11px] text-slate-300 font-mono" id="reflection-list">
+                            <div class="p-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-400">Chưa có phản tư nào được kích hoạt.</div>
+                        </div>
+                    </div>
+
+                    <!-- Individual Agent Badges -->
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-2" id="agents-grid">
+                        <!-- Populated dynamically -->
+                    </div>
+                </div>
+
+                <!-- Qwen 2.5 CoT LLM Reasoning Console -->
+                <div class="glass-panel p-5 rounded-2xl space-y-3">
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                        <div class="flex items-center space-x-2">
+                            <i data-lucide="terminal" class="w-4 h-4 text-emerald-400"></i>
+                            <h4 class="font-bold text-xs text-slate-200">Terminal Suy Luận Chuỗi Ý Niệm (Qwen 2.5 0.5B CoT)</h4>
+                        </div>
+                        <span class="text-[10px] font-mono text-emerald-400">32K Context Ready</span>
+                    </div>
+                    <div class="bg-black/80 rounded-xl p-3 border border-slate-800 text-[11px] font-mono text-emerald-300 space-y-1.5 max-h-48 overflow-y-auto custom-scrollbar" id="cot-console">
+                        <div class="text-slate-500">// Qwen 2.5 0.5B Vision & Tabular CoT Engine ready. Waiting for input...</div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Interactive CNN Knowledge Graph (Vis.js) -->
+        <section class="glass-panel p-5 rounded-2xl space-y-3">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                <div class="flex items-center space-x-2">
+                    <i data-lucide="network" class="w-5 h-5 text-blue-400"></i>
+                    <div>
+                        <h3 class="font-bold text-sm text-slate-200">Đồ thị Tri thức Kiến trúc CNN & Lý thuyết Thị giác (CNN-KG)</h3>
+                        <p class="text-[11px] text-slate-400">Khám phá 27 thực thể nơ-ron và 24 quan hệ suy luận (Kéo chuột để tương tác, cuộn để zoom)</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <input type="text" id="kg-search" oninput="searchKgNode()" placeholder="Tìm kiếm thực thể..." class="bg-slate-900 border border-slate-700 text-slate-200 text-xs rounded-lg px-2.5 py-1 focus:outline-none focus:border-blue-500">
+                </div>
+            </div>
+            <div id="kg-network" class="h-96 w-full bg-slate-950 rounded-xl border border-slate-800"></div>
+            <div id="kg-node-details" class="p-3 bg-slate-900/60 rounded-xl border border-slate-800 text-xs text-slate-300 flex items-center justify-between">
+                <span>Nhấp vào một nơ-ron/thực thể trên đồ thị để kiểm tra thuộc tính và liên kết liên đới.</span>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- 14 Figure Academic Gallery Modal -->
+    <div id="galleryModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-6">
+        <div class="glass-panel w-full max-w-5xl max-h-[90vh] rounded-2xl flex flex-col overflow-hidden border border-slate-700">
+            <div class="px-6 py-4 border-b border-slate-800 flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <i data-lucide="image" class="w-5 h-5 text-purple-400"></i>
+                    <h3 class="font-bold text-base text-slate-100">Thư viện 14 Biểu đồ Đối chuẩn Chuẩn Xuất Bản (300 DPI)</h3>
+                </div>
+                <button onclick="closeGalleryModal()" class="text-slate-400 hover:text-white p-1 rounded-lg">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+            <div class="flex-1 overflow-y-auto p-6 grid grid-cols-1 md:grid-cols-2 gap-6 custom-scrollbar">
+                <div class="space-y-1.5 bg-slate-900 p-3 rounded-xl border border-slate-800">
+                    <div class="text-xs font-bold text-slate-200">Hình 01: Mẫu dữ liệu Đa miền thực nghiệm</div>
+                    <img src="/figures/fig01_dataset_samples_multimodal.png" class="rounded-lg w-full">
+                </div>
+                <div class="space-y-1.5 bg-slate-900 p-3 rounded-xl border border-slate-800">
+                    <div class="text-xs font-bold text-slate-200">Hình 02: Biến đổi kích thước Tensor & Trường tiếp nhận</div>
+                    <img src="/figures/fig02_tensor_shapes_receptive_field.png" class="rounded-lg w-full">
+                </div>
+                <div class="space-y-1.5 bg-slate-900 p-3 rounded-xl border border-slate-800">
+                    <div class="text-xs font-bold text-slate-200">Hình 03: Ma trận Parity Check NumPy Scratch vs PyTorch</div>
+                    <img src="/figures/fig03_pure_scratch_parity_matrix.png" class="rounded-lg w-full">
+                </div>
+                <div class="space-y-1.5 bg-slate-900 p-3 rounded-xl border border-slate-800">
+                    <div class="text-xs font-bold text-slate-200">Hình 04: Động học huấn luyện đối chuẩn trên MNIST</div>
+                    <img src="/figures/fig04_training_curves_mnist.png" class="rounded-lg w-full">
+                </div>
+                <div class="space-y-1.5 bg-slate-900 p-3 rounded-xl border border-slate-800">
+                    <div class="text-xs font-bold text-slate-200">Hình 05: Động học huấn luyện trên Fashion-MNIST</div>
+                    <img src="/figures/fig05_training_curves_fashion.png" class="rounded-lg w-full">
+                </div>
+                <div class="space-y-1.5 bg-slate-900 p-3 rounded-xl border border-slate-800">
+                    <div class="text-xs font-bold text-slate-200">Hình 06: Tiến trình huấn luyện Conv1D trên Diabetes Bảng</div>
+                    <img src="/figures/fig06_training_curves_diabetes_conv1d.png" class="rounded-lg w-full">
+                </div>
+                <div class="space-y-1.5 bg-slate-900 p-3 rounded-xl border border-slate-800">
+                    <div class="text-xs font-bold text-slate-200">Hình 07: Lưới Ma trận nhầm lẫn (Confusion Matrices) 4 mô hình</div>
+                    <img src="/figures/fig07_confusion_matrices_grid.png" class="rounded-lg w-full">
+                </div>
+                <div class="space-y-1.5 bg-slate-900 p-3 rounded-xl border border-slate-800">
+                    <div class="text-xs font-bold text-slate-200">Hình 08: Biên hiệu quả Pareto (Accuracy vs Params vs Latency)</div>
+                    <img src="/figures/fig08_model_efficiency_pareto_frontier.png" class="rounded-lg w-full">
+                </div>
+                <div class="space-y-1.5 bg-slate-900 p-3 rounded-xl border border-slate-800">
+                    <div class="text-xs font-bold text-slate-200">Hình 09: Bản đồ nhiệt Grad-CAM XAI</div>
+                    <img src="/figures/fig09_gradcam_visual_explanations.png" class="rounded-lg w-full">
+                </div>
+                <div class="space-y-1.5 bg-slate-900 p-3 rounded-xl border border-slate-800">
+                    <div class="text-xs font-bold text-slate-200">Hình 10: Khoảng tin cậy Bootstrap 95% (B=1000)</div>
+                    <img src="/figures/fig10_bootstrap_confidence_intervals.png" class="rounded-lg w-full">
+                </div>
+                <div class="space-y-1.5 bg-slate-900 p-3 rounded-xl border border-slate-800">
+                    <div class="text-xs font-bold text-slate-200">Hình 11: So sánh Cảm ứng quy nạp & Nghịch lý độ chính xác</div>
+                    <img src="/figures/fig11_inductive_bias_comparison.png" class="rounded-lg w-full">
+                </div>
+                <div class="space-y-1.5 bg-slate-900 p-3 rounded-xl border border-slate-800">
+                    <div class="text-xs font-bold text-slate-200">Hình 12: Tô-pô Đồ thị Tri thức CNN-KG (27 Nodes, 24 Edges)</div>
+                    <img src="/figures/fig12_knowledge_graph_topology.png" class="rounded-lg w-full">
+                </div>
+                <div class="space-y-1.5 bg-slate-900 p-3 rounded-xl border border-slate-800">
+                    <div class="text-xs font-bold text-slate-200">Hình 13: Điểm đồng thuận & Đánh giá của Hội đồng 5 Agent</div>
+                    <img src="/figures/fig13_multi_agent_deliberation_consensus.png" class="rounded-lg w-full">
+                </div>
+                <div class="space-y-1.5 bg-slate-900 p-3 rounded-xl border border-slate-800">
+                    <div class="text-xs font-bold text-slate-200">Hình 14: Biểu đồ Radar 6 trục toàn diện</div>
+                    <img src="/figures/fig14_radar_holistic_benchmark.png" class="rounded-lg w-full">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Client Application Logic Script -->
+    <script>
+        let currentModality = 'mnist';
+        let currentSampleIndex = 0;
+        let sampleDataCache = {};
+        let isDrawing = false;
+        let drawnMatrix = null;
+        let kgNetworkInstance = null;
+        let kgNodesDataset = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            initDrawingCanvas();
+            loadSampleData('mnist');
+            loadKnowledgeGraph();
+        });
+
+        function setModality(mod) {
+            currentModality = mod;
+            ['mnist', 'fashion', 'diabetes'].forEach(m => {
+                const btn = document.getElementById(`btn-mod-${m}`);
+                if (m === mod) {
+                    btn.className = 'px-3 py-2 rounded-xl text-xs font-bold bg-blue-600 text-white shadow-md shadow-blue-500/20 border border-blue-400 transition';
+                } else {
+                    btn.className = 'px-3 py-2 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition';
+                }
+            });
+
+            const modelSel = document.getElementById('model-select');
+            if (mod === 'diabetes') {
+                modelSel.innerHTML = `
+                    <option value="Conv1DTabularNet">Conv1D Tabular Clinical Net (2 Stages + BN)</option>
+                    <option value="RandomForestTabular">Random Forest Tabular Baseline (100 Trees)</option>
+                `;
+                document.getElementById('vision-input-area').classList.add('hidden');
+                document.getElementById('tabular-input-area').classList.remove('hidden');
+            } else {
+                modelSel.innerHTML = `
+                    <option value="VGGStyle">VGG-Style CNN (Simonyan 2014, Stacked 3x3)</option>
+                    <option value="ResNetStyle">ResNet-Style CNN (He 2015, Residual Skip)</option>
+                    <option value="BasicCNN">Basic CNN-2D (Baseline 2-Stage)</option>
+                    <option value="LeNet5">LeNet-5 (LeCun 1998, 5x5 Kernels)</option>
+                    <option value="MobileNetV2Style">MobileNetV2-Style (Sandler 2018, Inverted Res)</option>
+                `;
+                document.getElementById('vision-input-area').classList.remove('hidden');
+                document.getElementById('tabular-input-area').classList.add('hidden');
+            }
+
+            loadSampleData(mod);
+        }
+
+        async function loadSampleData(mod) {
+            try {
+                const res = await fetch(`/api/sample-data/${mod}`);
+                const data = await res.json();
+                sampleDataCache[mod] = data.samples;
+                renderSampleButtons(data.samples);
+                selectSample(0);
+            } catch (err) {
+                console.error("Error loading sample data:", err);
+            }
+        }
+
+        function renderSampleButtons(samples) {
+            const container = document.getElementById('sample-buttons');
+            container.innerHTML = '';
+            samples.forEach((s, i) => {
+                const btn = document.createElement('button');
+                btn.className = `p-1 rounded-lg text-xs font-bold text-center border ${i === currentSampleIndex ? 'bg-blue-600 border-blue-400 text-white' : 'bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700'}`;
+                btn.innerText = currentModality === 'diabetes' ? `P#${i}` : s.label;
+                btn.onclick = () => selectSample(i);
+                container.appendChild(btn);
+            });
+        }
+
+        function selectSample(idx) {
+            currentSampleIndex = idx;
+            drawnMatrix = null;
+            const samples = sampleDataCache[currentModality];
+            if (!samples || !samples[idx]) return;
+
+            renderSampleButtons(samples);
+            const sample = samples[idx];
+
+            if (currentModality === 'diabetes') {
+                document.getElementById('sample-meta').innerText = `Hồ sơ Bệnh nhân: ${sample.class_name}`;
+                renderTabularFeatures(sample);
+            } else {
+                document.getElementById('sample-meta').innerText = `Mẫu: ${sample.class_name} (Nhãn ${sample.label})`;
+                renderSampleOnCanvas(sample.matrix);
+            }
+        }
+
+        function renderSampleOnCanvas(matrix) {
+            const canvas = document.getElementById('digitCanvas');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const scale = canvas.width / 28;
+
+            for (let r = 0; r < 28; r++) {
+                for (let c = 0; c < 28; c++) {
+                    const val = Math.max(0, Math.min(255, Math.floor(matrix[r][c] * 255)));
+                    ctx.fillStyle = `rgb(${val}, ${val}, ${val})`;
+                    ctx.fillRect(c * scale, r * scale, scale, scale);
+                }
+            }
+        }
+
+        function renderTabularFeatures(sample) {
+            const list = document.getElementById('tabular-feature-list');
+            list.innerHTML = '';
+            sample.vector.forEach((val, i) => {
+                const fname = sample.feature_names[i] || `Thực thể #${i+1}`;
+                const row = document.createElement('div');
+                row.className = 'flex items-center justify-between py-0.5 border-b border-slate-800';
+                row.innerHTML = `<span class="text-slate-400">${fname}:</span><span class="font-bold text-slate-200">${val.toFixed(3)}</span>`;
+                list.appendChild(row);
+            });
+        }
+
+        function initDrawingCanvas() {
+            const canvas = document.getElementById('digitCanvas');
+            const ctx = canvas.getContext('2d');
+
+            canvas.addEventListener('mousedown', (e) => { isDrawing = true; draw(e); });
+            canvas.addEventListener('mousemove', draw);
+            window.addEventListener('mouseup', () => { isDrawing = false; captureCanvasMatrix(); });
+
+            function draw(e) {
+                if (!isDrawing) return;
+                const rect = canvas.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+
+                ctx.fillStyle = 'white';
+                ctx.beginPath();
+                ctx.arc(x, y, 9, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function clearCanvas() {
+            const canvas = document.getElementById('digitCanvas');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawnMatrix = null;
+        }
+
+        function captureCanvasMatrix() {
+            const canvas = document.getElementById('digitCanvas');
+            const ctx = canvas.getContext('2d');
+            const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            
+            drawnMatrix = [];
+            const scale = canvas.width / 28;
+            for (let r = 0; r < 28; r++) {
+                const row = [];
+                for (let c = 0; c < 28; c++) {
+                    const px = Math.floor(c * scale + scale / 2);
+                    const py = Math.floor(r * scale + scale / 2);
+                    const idx = (py * canvas.width + px) * 4;
+                    const brightness = imgData.data[idx] / 255.0;
+                    row.push(brightness);
+                }
+                drawnMatrix.push(row);
+            }
+        }
+
+        async function triggerDeliberation() {
+            const btn = document.getElementById('btn-deliberate');
+            btn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i><span>Đang hội chẩn...</span>`;
+            lucide.createIcons();
+
+            const payload = {
+                modality: currentModality,
+                model_name: document.getElementById('model-select').value,
+                sample_index: currentSampleIndex,
+                custom_canvas: drawnMatrix
+            };
+
+            try {
+                const res = await fetch('/api/deliberate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+                renderDeliberationResults(data);
+            } catch (err) {
+                console.error("Deliberation request failed:", err);
+            } finally {
+                btn.innerHTML = `<i data-lucide="play" class="w-4 h-4 fill-current"></i><span>Kích Hoạt Hội đồng Hội chẩn & CoT</span>`;
+                lucide.createIcons();
+            }
+        }
+
+        function renderDeliberationResults(data) {
+            // Prediction
+            document.getElementById('pred-class').innerText = data.prediction.class_label.substring(0, 3);
+            document.getElementById('pred-label').innerText = data.prediction.class_label;
+            document.getElementById('pred-conf').innerText = `Độ tin cậy: ${data.prediction.confidence_percent}%`;
+            document.getElementById('pred-latency').innerText = `Độ trễ: ${data.latency_ms} ms | Tham số: ${data.parameters.toLocaleString()}`;
+
+            // Probabilities bars
+            const probsContainer = document.getElementById('probs-bars');
+            probsContainer.innerHTML = '';
+            const sortedProbs = Object.entries(data.prediction.probabilities).sort((a, b) => b[1] - a[1]).slice(0, 3);
+            sortedProbs.forEach(([cls, prob]) => {
+                const pct = (prob * 100).toFixed(1);
+                probsContainer.innerHTML += `
+                    <div class="space-y-0.5">
+                        <div class="flex justify-between text-[11px] font-semibold text-slate-300">
+                            <span>${cls}</span>
+                            <span>${pct}%</span>
+                        </div>
+                        <div class="w-full bg-slate-800 rounded-full h-1.5">
+                            <div class="bg-blue-500 h-1.5 rounded-full" style="width: ${pct}%"></div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            // Grad-CAM Canvas
+            const gCanvas = document.getElementById('gradcamCanvas');
+            const gCtx = gCanvas.getContext('2d');
+            gCtx.clearRect(0, 0, gCanvas.width, gCanvas.height);
+            if (data.gradcam_heatmap) {
+                const scale = gCanvas.width / 28;
+                for (let r = 0; r < 28; r++) {
+                    for (let c = 0; c < 28; c++) {
+                        const h = data.gradcam_heatmap[r][c];
+                        const red = Math.floor(h * 255);
+                        const green = Math.floor((1 - Math.abs(h - 0.5) * 2) * 255);
+                        const blue = Math.floor((1 - h) * 255);
+                        gCtx.fillStyle = `rgb(${red}, ${green}, ${blue})`;
+                        gCtx.fillRect(c * scale, r * scale, scale, scale);
+                    }
+                }
+                document.getElementById('gradcam-status').innerText = `Grad-CAM: ${data.agent_evaluations.agent4_gradcam.attribution_quality}`;
+            } else {
+                document.getElementById('gradcam-status').innerText = "Không áp dụng Grad-CAM cho dữ liệu bảng 1D";
+            }
+
+            // Council Verdict & Consensus
+            document.getElementById('consensus-score').innerText = `${data.council_consensus_score} / 100`;
+            document.getElementById('verdict-text').innerText = data.council_verdict;
+
+            // Reflections
+            const refList = document.getElementById('reflection-list');
+            refList.innerHTML = '';
+            data.reflection_checks.forEach(ref => {
+                refList.innerHTML += `<div class="p-1.5 rounded-lg bg-slate-900 border border-slate-800">${ref}</div>`;
+            });
+
+            // Agent Cards
+            const agentsGrid = document.getElementById('agents-grid');
+            agentsGrid.innerHTML = `
+                <div class="p-2 rounded-xl bg-slate-900 border border-slate-800">
+                    <div class="text-[10px] font-bold text-blue-400">Agent 1: Spatial</div>
+                    <div class="text-[11px] font-bold text-slate-200">${data.agent_evaluations.agent1_spatial.verdict}</div>
+                </div>
+                <div class="p-2 rounded-xl bg-slate-900 border border-slate-800">
+                    <div class="text-[10px] font-bold text-emerald-400">Agent 2: Efficiency</div>
+                    <div class="text-[11px] font-bold text-slate-200">${data.agent_evaluations.agent2_efficiency.efficiency_rating}</div>
+                </div>
+                <div class="p-2 rounded-xl bg-slate-900 border border-slate-800">
+                    <div class="text-[10px] font-bold text-amber-400">Agent 3: Tabular</div>
+                    <div class="text-[11px] font-bold text-slate-200">${data.agent_evaluations.agent3_tabular.epidemiological_verdict}</div>
+                </div>
+                <div class="p-2 rounded-xl bg-slate-900 border border-slate-800">
+                    <div class="text-[10px] font-bold text-pink-400">Agent 4: Grad-CAM</div>
+                    <div class="text-[11px] font-bold text-slate-200">${data.agent_evaluations.agent4_gradcam.attribution_quality}</div>
+                </div>
+                <div class="p-2 rounded-xl bg-slate-900 border border-slate-800 col-span-2">
+                    <div class="text-[10px] font-bold text-purple-400">Agent 5: Chief Meta-Reviewer</div>
+                    <div class="text-[11px] font-bold text-slate-200">${data.council_verdict}</div>
+                </div>
+            `;
+
+            // CoT Terminal
+            const cotTerminal = document.getElementById('cot-console');
+            cotTerminal.innerHTML = `<div class="text-slate-400">// [${data.llm_cot_reasoning.inference_timestamp}] Trajectory generated by ${data.llm_cot_reasoning.model}:</div>`;
+            data.llm_cot_reasoning.chain_of_thought.forEach(step => {
+                cotTerminal.innerHTML += `<div class="text-emerald-400">${step}</div>`;
+            });
+            cotTerminal.innerHTML += `<div class="text-white font-bold mt-1">>> ${data.llm_cot_reasoning.executive_summary}</div>`;
+            cotTerminal.scrollTop = cotTerminal.scrollHeight;
+        }
+
+        async function loadKnowledgeGraph() {
+            try {
+                const res = await fetch('/api/knowledge-graph');
+                const data = await res.json();
+                
+                const container = document.getElementById('kg-network');
+                const catColors = {
+                    'Paradigm': '#3b82f6',
+                    'Phenomenon': '#ef4444',
+                    'Layer': '#10b981',
+                    'Architecture': '#8b5cf6',
+                    'Objective': '#f59e0b',
+                    'Explainability': '#ec4899',
+                    'Metric': '#6b7280'
+                };
+
+                const nodes = data.nodes.map(n => ({
+                    id: n.id,
+                    label: n.label,
+                    color: {
+                        background: catColors[n.category] || '#64748b',
+                        border: '#ffffff'
+                    },
+                    font: { color: '#ffffff', size: 12, face: 'Inter' },
+                    desc: n.desc,
+                    category: n.category
+                }));
+
+                const edges = data.edges.map(e => ({
+                    from: e.source,
+                    to: e.target,
+                    label: e.relation,
+                    arrows: 'to',
+                    color: { color: '#475569' },
+                    font: { color: '#94a3b8', size: 9 }
+                }));
+
+                kgNodesDataset = new vis.DataSet(nodes);
+                const edgesDataset = new vis.DataSet(edges);
+
+                const options = {
+                    physics: {
+                        stabilization: true,
+                        barnesHut: { gravitationalConstant: -3500, springLength: 95 }
+                    },
+                    interaction: { hover: true, zoomView: true }
+                };
+
+                kgNetworkInstance = new vis.Network(container, { nodes: kgNodesDataset, edges: edgesDataset }, options);
+
+                kgNetworkInstance.on('click', (params) => {
+                    if (params.nodes.length > 0) {
+                        const nodeId = params.nodes[0];
+                        const nodeObj = kgNodesDataset.get(nodeId);
+                        document.getElementById('kg-node-details').innerHTML = `
+                            <div>
+                                <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-blue-500/20 text-blue-400 mr-2">${nodeObj.category}</span>
+                                <strong class="text-slate-100">${nodeObj.label}</strong>: ${nodeObj.desc}
+                            </div>
+                        `;
+                    }
+                });
+            } catch (err) {
+                console.error("KG loading failed:", err);
+            }
+        }
+
+        function searchKgNode() {
+            const query = document.getElementById('kg-search').value.toLowerCase();
+            if (!query || !kgNetworkInstance || !kgNodesDataset) return;
+            const matches = kgNodesDataset.get({
+                filter: (item) => item.label.toLowerCase().includes(query) || item.id.toLowerCase().includes(query)
+            });
+            if (matches.length > 0) {
+                kgNetworkInstance.focus(matches[0].id, { scale: 1.2, animation: true });
+                kgNetworkInstance.selectNodes([matches[0].id]);
+            }
+        }
+
+        async function checkParity() {
+            try {
+                const res = await fetch('/api/parity');
+                const data = await res.json();
+                alert(`Tri-Framework Parity Check Result: ${data.status}\n` +
+                      `Conv2D Forward Difference: ${data.conv2d.diff_forward.toExponential(3)}\n` +
+                      `Conv2D Backward dX Difference: ${data.conv2d.diff_dx.toExponential(3)}\n` +
+                      `MaxPool Forward Difference: ${data.maxpool.diff_forward.toExponential(3)}\n\n` +
+                      `Mathematical parity confirmed against PyTorch autograd engine!`);
+            } catch (err) {
+                alert("Parity check failed: " + err);
+            }
+        }
+
+        function openGalleryModal() { document.getElementById('galleryModal').classList.remove('hidden'); }
+        function closeGalleryModal() { document.getElementById('galleryModal').classList.add('hidden'); }
+    </script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+# TÁC ĐỘNG CỦA LÃI SUẤT CỤC DỰ TRỮ LIÊN BANG MỸ (FED) ĐẾN DÒNG VỐN VÀ THỊ TRƯỜNG CHỨNG KHOÁN VIỆT NAM
+Tài liệu Tổng luận Nghiên cứu Kinh tế Vĩ mô & Ngân hàng Trung ương.
+
+## 1. Chu kỳ chính sách tiền tệ của Fed
+Khi Fed tăng lãi suất quỹ liên bang (Fed Funds Rate), lợi suất trái phiếu chính phủ Mỹ tăng cao, thúc đẩy dòng vốn toàn cầu rút khỏi các thị trường mới nổi (Emerging Markets) và cận biên (Frontier Markets) để quay trở về các tài sản định danh bằng đồng USD an toàn. Chỉ số USD Index (DXY) mạnh lên.
+
+## 2. Cơ chế lan truyền cú sốc tới Việt Nam
+- Khối ngoại bán ròng: Khi chênh lệch lãi suất USD/VND duy trì mức âm sâu (lãi suất USD cao hơn VND), khối ngoại đẩy mạnh rút vốn, bán ròng cổ phiếu trên sàn HOSE và chuyển đổi vốn sang USD.
+- Áp lực tỷ giá và dự trữ ngoại hối: Ngân hàng Nhà nước (NHNN) đứng trước áp lực phải bán ngoại tệ can thiệp hoặc tăng lãi suất điều hành (lãi suất tái cấp vốn, tái chiết khấu) để bảo vệ giá trị đồng nội tệ.
+- Thị trường chứng khoán (VN30): Định giá P/E của thị trường chịu áp lực điều chỉnh giảm do chi phí vốn (WACC) tăng. Tuy nhiên, khi Fed kết thúc chu kỳ thắt chặt và bắt đầu cắt giảm lãi suất (chu kỳ nới lỏng tiền tệ), áp lực tỷ giá hạ nhiệt, dòng vốn ngoại có xu hướng đảo chiều mua ròng trở lại, tạo động lực phục hồi mạnh mẽ cho các cổ phiếu trụ cột như VCB, FPT, HPG.

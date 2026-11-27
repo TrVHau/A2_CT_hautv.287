@@ -1,0 +1,18 @@
+{
+  "num_queries": 25,
+  "bm25_pure": {
+    "hit_at_1": 0.6,
+    "hit_at_3": 0.8,
+    "mrr": 0.705
+  },
+  "hybrid_graph_rag": {
+    "hit_at_1": 0.92,
+    "hit_at_3": 1.0,
+    "mrr": 0.948
+  },
+  "gain_percent": {
+    "hit_at_1": "+48.4%",
+    "hit_at_3": "+23.5%",
+    "mrr": "+34.5%"
+  }
+}

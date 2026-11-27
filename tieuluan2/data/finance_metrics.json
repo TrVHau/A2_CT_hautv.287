@@ -1,0 +1,9 @@
+{
+  "target_asset": "FPT",
+  "rmse_model": 0.013767985627055168,
+  "rmse_naive": 0.013753050938248634,
+  "rmse_ratio": 1.001085877418518,
+  "directional_accuracy": 0.48753462603878117,
+  "residual_std": 0.01458398625254631,
+  "parameters_count": 140865
+}

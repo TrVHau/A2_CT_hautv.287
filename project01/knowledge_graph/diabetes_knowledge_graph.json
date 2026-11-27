@@ -1,0 +1,359 @@
+{
+  "directed": true,
+  "multigraph": false,
+  "graph": {
+    "name": "Diabetes_Clinical_Knowledge_Graph"
+  },
+  "nodes": [
+    {
+      "name": "Bình Thường (Không Đái Tháo Đường)",
+      "type": "Disease",
+      "icd10": "Z00",
+      "desc": "Chỉ số chuyển hóa glucose và HbA1c hoàn toàn trong giới hạn sinh lý.",
+      "id": "DIS_NORMAL"
+    },
+    {
+      "name": "Tiền Đái Tháo Đường (Prediabetes)",
+      "type": "Disease",
+      "icd10": "R73.03",
+      "desc": "Rối loạn đường huyết đói (IFG) hoặc rối loạn dung nạp glucose (IGT), nguy cơ tiến triển thành ĐTĐ tuýp 2.",
+      "id": "DIS_PREDIABETES"
+    },
+    {
+      "name": "Đái Tháo Đường Tuýp 2 (Type 2 Diabetes)",
+      "type": "Disease",
+      "icd10": "E11",
+      "desc": "Bệnh lý chuyển hóa mạn tính do giảm tiết insulin tương đối kết hợp đề kháng insulin.",
+      "id": "DIS_DIABETES_T2"
+    },
+    {
+      "name": "ĐTĐ Kèm Nguy Cơ Tim Mạch Cao (Diabetes + CVD)",
+      "type": "Disease",
+      "icd10": "E11.5",
+      "desc": "Bệnh nhân ĐTĐ có kèm tiền sử bệnh mạch vành, tăng huyết áp hoặc hút thuốc lá nặng.",
+      "id": "DIS_DIABETES_CVD"
+    },
+    {
+      "name": "HbA1c < 5.7%",
+      "type": "Biomarker",
+      "cutoff": "<5.7",
+      "desc": "Mức HbA1c bình thường (ADA 2024).",
+      "id": "FEAT_HBA1C_NORMAL"
+    },
+    {
+      "name": "HbA1c 5.7% - 6.4%",
+      "type": "Biomarker",
+      "cutoff": "5.7-6.4",
+      "desc": "Ngưỡng chẩn đoán Tiền đái tháo đường.",
+      "id": "FEAT_HBA1C_PRE"
+    },
+    {
+      "name": "HbA1c >= 6.5%",
+      "type": "Biomarker",
+      "cutoff": ">=6.5",
+      "desc": "Tiêu chuẩn vàng xác định mắc Đái tháo đường.",
+      "id": "FEAT_HBA1C_DIAB"
+    },
+    {
+      "name": "HbA1c >= 9.0%",
+      "type": "Biomarker",
+      "cutoff": ">=9.0",
+      "desc": "Đường huyết kiểm soát rất kém, cần phối hợp thuốc sớm hoặc Insulin.",
+      "id": "FEAT_HBA1C_VERY_HIGH"
+    },
+    {
+      "name": "Đường huyết < 100 mg/dL",
+      "type": "Biomarker",
+      "cutoff": "<100",
+      "desc": "Đường huyết đói bình thường.",
+      "id": "FEAT_GLUCOSE_NORMAL"
+    },
+    {
+      "name": "Đường huyết 100 - 125 mg/dL",
+      "type": "Biomarker",
+      "cutoff": "100-125",
+      "desc": "Rối loạn đường huyết đói (Impaired Fasting Glucose).",
+      "id": "FEAT_GLUCOSE_PRE"
+    },
+    {
+      "name": "Đường huyết >= 126 mg/dL",
+      "type": "Biomarker",
+      "cutoff": ">=126",
+      "desc": "Ngưỡng chẩn đoán Đái tháo đường khi nhịn đói >= 8h.",
+      "id": "FEAT_GLUCOSE_DIAB"
+    },
+    {
+      "name": "Đường huyết >= 200 mg/dL",
+      "type": "Biomarker",
+      "cutoff": ">=200",
+      "desc": "Tăng áp lực thẩm thấu, nguy cơ biến chứng cấp tính.",
+      "id": "FEAT_GLUCOSE_SEVERE"
+    },
+    {
+      "name": "BMI >= 25.0 kg/m² (Thừa cân / Béo phì)",
+      "type": "Biomarker",
+      "cutoff": ">=25",
+      "desc": "Mô mỡ nội tạng gia tăng phóng thích acid béo tự do gây đề kháng insulin.",
+      "id": "FEAT_BMI_OBESE"
+    },
+    {
+      "name": "Tăng Huyết Áp (Hypertension = 1)",
+      "type": "Comorbidity",
+      "desc": "Tăng áp lực thành mạch, thúc đẩy tổn thương nội mạc và suy thận.",
+      "id": "FEAT_HYPERTENSION"
+    },
+    {
+      "name": "Bệnh Tim Mạch (Heart Disease = 1)",
+      "type": "Comorbidity",
+      "desc": "Bệnh động mạch vành / xơ vữa, ưu tiên thuốc có lợi ích bảo vệ tim.",
+      "id": "FEAT_HEART_DISEASE"
+    },
+    {
+      "name": "Hút Thuốc Lá (Smoking History = Current)",
+      "type": "RiskFactor",
+      "desc": "Nicotine và chất oxy hóa làm co thắt vi mạch và tăng độc tính tế bào beta tụy.",
+      "id": "FEAT_SMOKING"
+    },
+    {
+      "name": "Metformin (Glucophage 500-1000mg)",
+      "type": "Medication",
+      "class": "Biguanide",
+      "desc": "Thuốc đầu tay: Giảm tân tạo glucose tại gan, tăng nhạy cảm insulin mô cơ.",
+      "id": "MED_METFORMIN"
+    },
+    {
+      "name": "Empagliflozin / Dapagliflozin (10mg)",
+      "type": "Medication",
+      "class": "SGLT2 Inhibitor",
+      "desc": "Thải đường qua nước tiểu, hạ huyết áp, bảo vệ tim mạch và giảm nhập viện do suy tim.",
+      "id": "MED_SGLT2I"
+    },
+    {
+      "name": "Semaglutide / Liraglutide",
+      "type": "Medication",
+      "class": "GLP-1 RA",
+      "desc": "Đồng vận GLP-1: Kích thích tiết insulin phụ thuộc glucose, giảm cân mạnh mẽ và bảo vệ biến cố tim mạch.",
+      "id": "MED_GLP1RA"
+    },
+    {
+      "name": "Gliclazide MR (30-60mg)",
+      "type": "Medication",
+      "class": "Sulfonylurea",
+      "desc": "Kích thích tế bào beta tụy tiết insulin, nguy cơ hạ đường huyết nhẹ.",
+      "id": "MED_SU"
+    },
+    {
+      "name": "Insulin Nền (Glargine / Degludec)",
+      "type": "Medication",
+      "class": "Basal Insulin",
+      "desc": "Bù đắp insulin sinh lý khi tế bào beta tụy suy kiệt hoặc HbA1c > 9-10%.",
+      "id": "MED_INSULIN"
+    },
+    {
+      "name": "Chế độ ăn Low-GI (Kiểm soát Carbohydrate)",
+      "type": "Lifestyle",
+      "desc": "Tăng chất xơ hòa tan, rau xanh, ngũ cốc nguyên cám, giảm đường tinh luyện.",
+      "id": "LIFE_LOW_GI"
+    },
+    {
+      "name": "Vận động thể lực 150 phút/tuần",
+      "type": "Lifestyle",
+      "desc": "Đi bộ nhanh, đạp xe 30p x 5 ngày/tuần tăng nhạy cảm thụ thể GLUT4 ở cơ bắp.",
+      "id": "LIFE_EXERCISE"
+    },
+    {
+      "name": "Giảm 5% - 7% Trọng Lượng Cơ Thể",
+      "type": "Lifestyle",
+      "desc": "Đảo ngược đề kháng insulin tại gan và cơ quan nội tạng.",
+      "id": "LIFE_WEIGHT_LOSS"
+    },
+    {
+      "name": "Cai Thuốc Lá Tuyệt Đối",
+      "type": "Lifestyle",
+      "desc": "Ngăn ngừa xơ vữa động mạch và bảo tồn chức năng vi mạch.",
+      "id": "LIFE_STOP_SMOKING"
+    },
+    {
+      "name": "Bệnh Thận ĐTĐ (Diabetic Nephropathy)",
+      "type": "Complication",
+      "desc": "Tổn thương vi mạch cầu thận dẫn đến tiểu đạm và suy giảm chức năng lọc.",
+      "id": "COMP_NEPHROPATHY"
+    },
+    {
+      "name": "Bệnh Võng Mạc ĐTĐ (Retinopathy)",
+      "type": "Complication",
+      "desc": "Xuất huyết mao mạch võng mạc, phù hoàng điểm làm suy giảm thị lực.",
+      "id": "COMP_RETINOPATHY"
+    },
+    {
+      "name": "Bệnh Thần Kinh Ngoại Biên (Neuropathy)",
+      "type": "Complication",
+      "desc": "Tê bì, mất cảm giác hoặc cảm giác châm chích kiểu đi găng đi tất.",
+      "id": "COMP_NEUROPATHY"
+    },
+    {
+      "name": "Bệnh Động Mạch Vành & Nhồi Máu Cơ Tim",
+      "type": "Complication",
+      "desc": "Biến chứng mạch máu lớn gây thiếu máu cơ tim và suy tim.",
+      "id": "COMP_CAD"
+    }
+  ],
+  "edges": [
+    {
+      "relation": "MAINTAINS",
+      "desc": "Duy trì lối sống lành mạnh",
+      "source": "DIS_NORMAL",
+      "target": "LIFE_EXERCISE"
+    },
+    {
+      "relation": "FIRST_LINE_MANAGEMENT",
+      "desc": "Can thiệp lối sống tích cực",
+      "source": "DIS_PREDIABETES",
+      "target": "LIFE_LOW_GI"
+    },
+    {
+      "relation": "CRUCIAL_INTERVENTION",
+      "desc": "Giảm 7% cân nặng giúp ngừa 58% tiến triển ĐTĐ",
+      "source": "DIS_PREDIABETES",
+      "target": "LIFE_WEIGHT_LOSS"
+    },
+    {
+      "relation": "CAN_PROGRESS_TO",
+      "risk": "10% mỗi năm nếu không can thiệp",
+      "source": "DIS_PREDIABETES",
+      "target": "DIS_DIABETES_T2"
+    },
+    {
+      "relation": "FIRST_LINE_DRUG",
+      "evidence": "ADA Class A",
+      "source": "DIS_DIABETES_T2",
+      "target": "MED_METFORMIN"
+    },
+    {
+      "relation": "MANDATORY_NUTRITION",
+      "desc": "Giảm tải đường huyết sau ăn",
+      "source": "DIS_DIABETES_T2",
+      "target": "LIFE_LOW_GI"
+    },
+    {
+      "relation": "CAN_CAUSE",
+      "pathway": "Microvascular",
+      "source": "DIS_DIABETES_T2",
+      "target": "COMP_NEPHROPATHY"
+    },
+    {
+      "relation": "CAN_CAUSE",
+      "pathway": "Microvascular",
+      "source": "DIS_DIABETES_T2",
+      "target": "COMP_RETINOPATHY"
+    },
+    {
+      "relation": "CAN_CAUSE",
+      "pathway": "Microvascular",
+      "source": "DIS_DIABETES_T2",
+      "target": "COMP_NEUROPATHY"
+    },
+    {
+      "relation": "MANDATORY_CARDIOPROTECTIVE",
+      "evidence": "EMPA-REG / DAPA-HF",
+      "source": "DIS_DIABETES_CVD",
+      "target": "MED_SGLT2I"
+    },
+    {
+      "relation": "MANDATORY_CARDIOPROTECTIVE",
+      "evidence": "LEADER / SUSTAIN-6",
+      "source": "DIS_DIABETES_CVD",
+      "target": "MED_GLP1RA"
+    },
+    {
+      "relation": "URGENT_INTERVENTION",
+      "desc": "Giảm ngay 50% nguy cơ nhồi máu tái phát",
+      "source": "DIS_DIABETES_CVD",
+      "target": "LIFE_STOP_SMOKING"
+    },
+    {
+      "relation": "HIGH_COMPLICATION_RISK",
+      "severity": "Life-Threatening",
+      "source": "DIS_DIABETES_CVD",
+      "target": "COMP_CAD"
+    },
+    {
+      "relation": "INDICATES",
+      "strength": "Definitive",
+      "source": "FEAT_HBA1C_NORMAL",
+      "target": "DIS_NORMAL"
+    },
+    {
+      "relation": "DIAGNOSED_BY",
+      "evidence": "ADA 2024",
+      "source": "FEAT_HBA1C_PRE",
+      "target": "DIS_PREDIABETES"
+    },
+    {
+      "relation": "CONFIRMED_BY",
+      "evidence": "ADA 2024",
+      "source": "FEAT_HBA1C_DIAB",
+      "target": "DIS_DIABETES_T2"
+    },
+    {
+      "relation": "REQUIRES_EARLY_INITIATION",
+      "evidence": "ADA 2024",
+      "source": "FEAT_HBA1C_VERY_HIGH",
+      "target": "MED_INSULIN"
+    },
+    {
+      "relation": "INDICATES",
+      "strength": "Definitive",
+      "source": "FEAT_GLUCOSE_NORMAL",
+      "target": "DIS_NORMAL"
+    },
+    {
+      "relation": "DIAGNOSED_BY",
+      "evidence": "ADA 2024",
+      "source": "FEAT_GLUCOSE_PRE",
+      "target": "DIS_PREDIABETES"
+    },
+    {
+      "relation": "CONFIRMED_BY",
+      "evidence": "ADA 2024",
+      "source": "FEAT_GLUCOSE_DIAB",
+      "target": "DIS_DIABETES_T2"
+    },
+    {
+      "relation": "REQUIRES_INSULIN_THERAPY",
+      "desc": "Khắc phục ngộ độc đường cấp",
+      "source": "FEAT_GLUCOSE_SEVERE",
+      "target": "MED_INSULIN"
+    },
+    {
+      "relation": "MAJOR_RISK_FACTOR",
+      "mechanism": "Insulin Resistance",
+      "source": "FEAT_BMI_OBESE",
+      "target": "DIS_DIABETES_T2"
+    },
+    {
+      "relation": "SYNERGISTIC_RISK",
+      "desc": "Gấp đôi nguy cơ tim mạch",
+      "source": "FEAT_HYPERTENSION",
+      "target": "DIS_DIABETES_CVD"
+    },
+    {
+      "relation": "TRIGGERS_RISK_TIER",
+      "risk": "Very High",
+      "source": "FEAT_HEART_DISEASE",
+      "target": "DIS_DIABETES_CVD"
+    },
+    {
+      "relation": "PRECAUTION",
+      "desc": "Tránh hạ đường huyết gây khởi phát cơn thiếu máu cơ tim ở bệnh nhân tim mạch.",
+      "source": "FEAT_HEART_DISEASE",
+      "target": "MED_SU"
+    },
+    {
+      "relation": "ACCELERATES",
+      "desc": "Thúc đẩy xơ vữa",
+      "source": "FEAT_SMOKING",
+      "target": "DIS_DIABETES_CVD"
+    }
+  ]
+}

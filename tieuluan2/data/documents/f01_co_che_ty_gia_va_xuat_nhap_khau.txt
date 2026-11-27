@@ -1,0 +1,19 @@
+# CƠ CHẾ TRUYỀN DẪN TỶ GIÁ USD/VND VÀ TÁC ĐỘNG ĐẾN CÁC NGÀNH TRÊN THỊ TRƯỜNG CHỨNG KHOÁN
+Báo cáo Phân tích Chiến lược Vĩ mô Thị trường Tài chính Việt Nam.
+
+## 1. Kênh truyền dẫn vĩ mô của tỷ giá USD/VND
+Khi chỉ số USD Index (DXY) hoặc lãi suất điều hành của Cục Dự trữ Liên bang Mỹ (Fed) duy trì ở mức cao, chênh lệch lãi suất USD-VND nới rộng gây áp lực làm tỷ giá USD/VND tăng giá (tiền đồng Việt Nam mất giá so với đô la Mỹ).
+
+## 2. Tác động phân hóa theo từng nhóm doanh nghiệp niêm yết
+- Doanh nghiệp Xuất khẩu ròng (Hưởng lợi - Tác động TÍCH CỰC (+)):
+  + Tiêu biểu: CTCP FPT (Mã: FPT). Doanh thu mảng xuất khẩu phần mềm sang các thị trường quốc tế (Mỹ, Nhật, châu Âu) thu về bằng ngoại tệ USD/JPY/EUR, trong khi phần lớn chi phí nhân sự và vận hành hạch toán bằng VND. Khi tỷ giá USD/VND tăng, doanh thu quy đổi sang VND tăng trưởng mạnh hơn tốc độ tăng chi phí, biên lợi nhuận ròng được mở rộng rõ rệt.
+  + Doanh nghiệp dệt may, thủy sản có tỷ trọng xuất khẩu cao.
+
+- Doanh nghiệp Nhập khẩu nguyên vật liệu & Nợ vay USD lớn (Bất lợi - Tác động TIÊU CỰC (-)):
+  + Tiêu biểu: CTCP Tập đoàn Hòa Phát (Mã: HPG). Hòa Phát phải nhập khẩu lượng lớn quặng sắt và than cốc luyện thép từ thị trường quốc tế với hóa đơn thanh toán định giá bằng USD. Đồng thời công ty duy trì dư nợ vay bằng USD để tài trợ cho các dự án mở rộng như Dung Quất 2. Khi tỷ giá USD/VND tăng, chi phí nguyên liệu đầu vào tăng cao và doanh nghiệp phải ghi nhận khoản lỗ chênh lệch tỷ giá tài chính lớn, bào mòn lợi nhuận.
+
+- Nhóm Bất động sản và Tiêu dùng (VIC):
+  + Tiêu biểu: Tập đoàn Vingroup (Mã: VIC). Tỷ giá tăng gây áp lực lên chi phí lãi vay trái phiếu quốc tế định danh USD, đồng thời Ngân hàng Nhà nước có thể phải thắt chặt thanh khoản để ổn định tỷ giá, làm tăng mặt bằng lãi suất trong nước và gây trở ngại cho thị trường bất động sản.
+
+- Nhóm Ngân hàng (VCB):
+  + Tiêu biểu: Vietcombank (Mã: VCB). VCB có vị thế ngoại hối mạnh và nguồn tiền gửi kiều hối dồi dào, thu nhập từ kinh doanh ngoại hối tăng khi tỷ giá biến động, tuy nhiên rủi ro nợ xấu có thể gia tăng ở các khách hàng vay có cơ cấu tài chính nhạy cảm với tỷ giá.

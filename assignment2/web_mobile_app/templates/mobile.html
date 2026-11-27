@@ -1,0 +1,503 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#1a56db" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>Giá nhà · Mobile</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blue:   #1a56db;
+      --blue-d: #1245b8;
+      --green:  #057a55;
+      --green-l:#ecfdf5;
+      --red:    #b91c1c;
+      --red-l:  #fef2f2;
+      --bg:     #f0f4ff;
+      --card:   #ffffff;
+      --border: #dde3f0;
+      --text:   #1e293b;
+      --muted:  #64748b;
+      --r:      16px;
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 15px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* ── Top app bar ── */
+    .app-bar {
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      background: var(--blue);
+      color: #fff;
+      padding: 14px 18px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 10px rgba(0,0,0,.2);
+    }
+
+    .app-bar-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 17px;
+      font-weight: 700;
+    }
+
+    .app-bar-sub {
+      font-size: 11px;
+      opacity: .75;
+      margin-top: 1px;
+    }
+
+    .switch-btn {
+      background: rgba(255,255,255,.18);
+      border: 1px solid rgba(255,255,255,.3);
+      color: #fff;
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 11px;
+      font-weight: 600;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    /* ── Scrollable body ── */
+    .scroll-body {
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding: 16px 14px 120px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    /* ── Result pill (top, attention-grabbing) ── */
+    .result-pill {
+      background: var(--green-l);
+      border: 2px solid #6ee7b7;
+      border-radius: var(--r);
+      padding: 20px 18px;
+      text-align: center;
+      animation: pop .35s cubic-bezier(.34,1.56,.64,1);
+    }
+
+    @keyframes pop {
+      from { opacity: 0; transform: scale(.92); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+
+    .result-pill .rp-label {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .6px;
+      color: var(--green);
+    }
+
+    .result-pill .rp-price {
+      font-size: 44px;
+      font-weight: 800;
+      color: var(--green);
+      letter-spacing: -2px;
+      line-height: 1.1;
+      margin: 4px 0 2px;
+    }
+
+    .result-pill .rp-unit {
+      font-size: 18px;
+      font-weight: 500;
+      color: #059669;
+    }
+
+    .result-pill .rp-note {
+      font-size: 11px;
+      color: #065f46;
+      opacity: .7;
+      margin-top: 6px;
+    }
+
+    .error-pill {
+      background: var(--red-l);
+      border: 2px solid #fca5a5;
+      border-radius: var(--r);
+      padding: 14px 16px;
+      color: var(--red);
+      font-size: 13px;
+    }
+
+    /* ── Card ── */
+    .card {
+      background: var(--card);
+      border-radius: var(--r);
+      box-shadow: 0 2px 10px rgba(0,0,0,.06);
+      overflow: hidden;
+    }
+
+    .card-header {
+      padding: 14px 16px 0;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .6px;
+      color: var(--blue);
+    }
+
+    .card-body { padding: 12px 16px 16px; }
+
+    /* ── Form fields ── */
+    .field { display: flex; flex-direction: column; gap: 5px; margin-bottom: 12px; }
+    .field:last-child { margin-bottom: 0; }
+
+    label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .opt-tag {
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--muted);
+      background: #f1f5f9;
+      border-radius: 4px;
+      padding: 1px 5px;
+    }
+
+    input, select {
+      padding: 13px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      font-size: 15px;
+      color: var(--text);
+      background: white;
+      width: 100%;
+      transition: border-color .2s;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24'%3E%3Cpath fill='%2364748b' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 36px;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(26,86,219,.12);
+    }
+
+    .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+    /* ── Mini stats ── */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6px;
+    }
+
+    .stat-chip {
+      background: var(--card);
+      border-radius: 10px;
+      box-shadow: 0 1px 6px rgba(0,0,0,.06);
+      padding: 10px 4px;
+      text-align: center;
+    }
+
+    .sc-label {
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .4px;
+      color: var(--muted);
+    }
+
+    .sc-val {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--blue);
+      margin-top: 2px;
+    }
+
+    /* ── Comparison table (horizontal scroll) ── */
+    .tbl-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+    .cmp-table {
+      width: 100%;
+      min-width: 460px;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+
+    .cmp-table th {
+      background: #f8fafc;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .4px;
+      color: var(--muted);
+      padding: 9px 10px;
+      text-align: left;
+      border-bottom: 2px solid var(--border);
+      white-space: nowrap;
+    }
+
+    .cmp-table td {
+      padding: 9px 10px;
+      border-bottom: 1px solid var(--border);
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .cmp-table tr.best td {
+      color: var(--green);
+      font-weight: 700;
+      background: #f0fdf4;
+    }
+
+    .cmp-table tr:last-child td { border-bottom: none; }
+
+    .badge {
+      display: inline-block;
+      background: #dcfce7;
+      color: var(--green);
+      font-size: 8px;
+      font-weight: 800;
+      padding: 1px 5px;
+      border-radius: 20px;
+      letter-spacing: .3px;
+      margin-left: 3px;
+      vertical-align: middle;
+    }
+
+    /* ── Fixed bottom predict button ── */
+    .bottom-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 300;
+      background: white;
+      border-top: 1px solid var(--border);
+      padding: 10px 14px max(10px, env(safe-area-inset-bottom));
+      box-shadow: 0 -4px 16px rgba(0,0,0,.08);
+    }
+
+    .btn-predict {
+      display: block;
+      width: 100%;
+      padding: 16px;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--blue), var(--blue-d));
+      color: white;
+      font-size: 17px;
+      font-weight: 800;
+      letter-spacing: .2px;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(26,86,219,.35);
+      transition: opacity .15s, transform .1s;
+      touch-action: manipulation;
+    }
+
+    .btn-predict:active { opacity: .9; transform: scale(.99); }
+  </style>
+</head>
+<body>
+
+<!-- App bar -->
+<div class="app-bar">
+  <div>
+    <div class="app-bar-title">🏠 Giá nhà VN 2024</div>
+    <div class="app-bar-sub">{{ metrics.name }}</div>
+  </div>
+  <a href="/" class="switch-btn">🖥 Desktop</a>
+</div>
+
+<!-- Scrollable content -->
+<form method="POST" action="/mobile">
+<div class="scroll-body">
+
+  <!-- Result / error at top -->
+  {% if prediction is not none %}
+  <div class="result-pill">
+    <div class="rp-label">💰 Giá nhà dự đoán</div>
+    <div class="rp-price">{{ "%.2f"|format(prediction) }}<span class="rp-unit"> tỉ</span></div>
+    <div class="rp-note">Kết quả tham khảo · thị trường thực tế có thể khác</div>
+  </div>
+  {% endif %}
+
+  {% if error %}
+  <div class="error-pill">❌ {{ error }}</div>
+  {% endif %}
+
+  <!-- Card 1: Thông số chính -->
+  <div class="card">
+    <div class="card-header">📐 Thông số cơ bản</div>
+    <div class="card-body">
+      <div class="row-2">
+        <div class="field">
+          <label>Diện tích (m²)</label>
+          <input type="number" name="area" min="1" step="0.5" placeholder="80" required
+                 value="{{ request.form.area if request.form.area else '' }}" />
+        </div>
+        <div class="field">
+          <label>Số tầng</label>
+          <input type="number" name="floors" min="1" max="30" step="1" placeholder="3"
+                 value="{{ request.form.floors if request.form.floors else '' }}" />
+        </div>
+        <div class="field">
+          <label>Phòng ngủ</label>
+          <input type="number" name="bedrooms" min="1" max="20" step="1" placeholder="3"
+                 value="{{ request.form.bedrooms if request.form.bedrooms else '' }}" />
+        </div>
+        <div class="field">
+          <label>Phòng tắm</label>
+          <input type="number" name="bathrooms" min="1" max="20" step="1" placeholder="2"
+                 value="{{ request.form.bathrooms if request.form.bathrooms else '' }}" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Card 2: Mặt tiền / đường -->
+  <div class="card">
+    <div class="card-header">📏 Mặt tiền & đường <span class="opt-tag" style="font-size:10px;margin-left:4px;">tuỳ chọn</span></div>
+    <div class="card-body">
+      <div class="row-2">
+        <div class="field">
+          <label>Mặt tiền (m)</label>
+          <input type="number" name="frontage" step="0.1" placeholder="5"
+                 value="{{ request.form.frontage if request.form.frontage else '' }}" />
+        </div>
+        <div class="field">
+          <label>Đường vào (m)</label>
+          <input type="number" name="access_road" step="0.1" placeholder="6"
+                 value="{{ request.form.access_road if request.form.access_road else '' }}" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Card 3: Hướng + pháp lý -->
+  <div class="card">
+    <div class="card-header">🧭 Hướng & pháp lý</div>
+    <div class="card-body">
+      <div class="row-2">
+        <div class="field">
+          <label>Hướng nhà</label>
+          <select name="house_direction">
+            <option value="">Không xác định</option>
+            {% for d in directions %}
+            <option {% if request.form.house_direction == d %}selected{% endif %}>{{ d }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="field">
+          <label>Hướng ban công</label>
+          <select name="balcony_direction">
+            <option value="">Không xác định</option>
+            {% for d in directions %}
+            <option {% if request.form.balcony_direction == d %}selected{% endif %}>{{ d }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="field">
+          <label>Pháp lý</label>
+          <select name="legal_status">
+            <option value="">Không xác định</option>
+            {% for l in legal %}
+            <option {% if request.form.legal_status == l %}selected{% endif %}>{{ l }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="field">
+          <label>Nội thất</label>
+          <select name="furniture_state">
+            <option value="">Không xác định</option>
+            {% for f in furniture %}
+            <option {% if request.form.furniture_state == f %}selected{% endif %}>{{ f }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Card 4: 5 metrics chips -->
+  <div>
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:8px;padding-left:2px;">
+      📊 Hiệu năng · {{ metrics.name }}
+    </div>
+    <div class="stats-row">
+      <div class="stat-chip"><div class="sc-label">MAE</div><div class="sc-val">{{ metrics.mae }}</div></div>
+      <div class="stat-chip"><div class="sc-label">MSE</div><div class="sc-val">{{ metrics.mse }}</div></div>
+      <div class="stat-chip"><div class="sc-label">RMSE</div><div class="sc-val">{{ metrics.rmse }}</div></div>
+      <div class="stat-chip"><div class="sc-label">R²</div><div class="sc-val">{{ metrics.r2 }}</div></div>
+      <div class="stat-chip"><div class="sc-label">MAPE</div><div class="sc-val">{{ metrics.mape }}%</div></div>
+    </div>
+  </div>
+
+  <!-- Card 5: Comparison table -->
+  <div class="card">
+    <div class="card-header">🤖 So sánh 5 mô hình</div>
+    <div class="card-body" style="padding-top:10px;">
+      <div class="tbl-wrap">
+        <table class="cmp-table">
+          <thead>
+            <tr>
+              <th>Mô hình</th>
+              <th>MAE</th>
+              <th>RMSE</th>
+              <th>R²</th>
+              <th>MAPE%</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in metrics.comparison %}
+            <tr {% if row.best %}class="best"{% endif %}>
+              <td>{{ row.model }}{% if row.best %}<span class="badge">★</span>{% endif %}</td>
+              <td>{{ row.mae }}</td>
+              <td>{{ row.rmse }}</td>
+              <td>{{ row.r2 }}</td>
+              <td>{{ row.mape }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /scroll-body -->
+
+<!-- Fixed bottom button -->
+<div class="bottom-bar">
+  <button class="btn-predict" type="submit">🔮 Dự đoán giá nhà</button>
+</div>
+
+</form>
+
+</body>
+</html>

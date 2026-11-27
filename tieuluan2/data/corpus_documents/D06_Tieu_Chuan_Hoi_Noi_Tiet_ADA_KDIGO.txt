@@ -1,0 +1,9 @@
+CẬP NHẬT ĐỒNG THUẬN QUỐC TẾ ADA 2024 VÀ KDIGO 2024
+
+1. Lựa chọn thuốc hạ đường huyết theo kiểu hình bệnh đồng mắc:
+- Bệnh nhân có bệnh tim mạch xơ vữa (ASCVD) hoặc nguy cơ cao: Bắt buộc chỉ định GLP-1 RA hoặc SGLT2i đã được chứng minh giảm biến cố tim mạch bất kể mức HbA1c nền.
+- Bệnh nhân có suy tim (phân suất tống máu giảm hoặc bảo tồn): SGLT2i (Dapagliflozin hoặc Empagliflozin) là chỉ định ưu tiên nhóm 1.
+- Bệnh nhân có bệnh thận mạn (CKD với eGFR 20-60 mL/phút hoặc UACR > 200 mg/g): Khuyến cáo phối hợp SGLT2i và Non-steroidal MRA (Finerenone) để làm chậm tốc độ suy giảm chức năng thận.
+
+2. Theo dõi liên tục và trí tuệ nhân tạo hỗ trợ lâm sàng:
+Ứng dụng hệ thống máy học tính toán nguy cơ cá thể hóa (MLP/Random Forest) kết hợp đồ thị tri thức lâm sàng (KG) giúp phát hiện sớm các tương tác chống chỉ định tiềm ẩn và đưa ra phác đồ tuân thủ chặt chẽ hướng dẫn chuyên môn.

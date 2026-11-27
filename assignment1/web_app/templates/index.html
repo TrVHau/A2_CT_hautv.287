@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chẩn Đoán Tiểu Đường AI</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- ══════════ HEADER ══════════ -->
+  <header class="site-header">
+    <div class="container">
+      <div class="header-content">
+        <div class="logo">
+          <span class="logo-icon">🩺</span>
+          <div>
+            <h1>DiabetesAI</h1>
+            <p>Hệ thống chẩn đoán thông minh</p>
+          </div>
+        </div>
+        <nav class="header-nav">
+          <a href="#form-section">Chẩn đoán</a>
+          <a href="#about-section">Về hệ thống</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- ══════════ HERO ══════════ -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-text">
+          <h2>Phát Hiện Sớm Nguy Cơ <span class="highlight">Tiểu Đường</span></h2>
+          <p>Hệ thống AI sử dụng Machine Learning với 8 chỉ số y tế để dự đoán nguy cơ mắc bệnh tiểu đường. Nhận kết quả tức thì cùng lời khuyên y tế cá nhân hóa.</p>
+          <div class="hero-stats">
+            <div class="stat">
+              <span class="stat-num">4</span>
+              <span class="stat-label">Mô hình ML</span>
+            </div>
+            <div class="stat">
+              <span class="stat-num">8</span>
+              <span class="stat-label">Chỉ số y tế</span>
+            </div>
+            <div class="stat">
+              <span class="stat-num">768</span>
+              <span class="stat-label">Dữ liệu huấn luyện</span>
+            </div>
+          </div>
+        </div>
+        <div class="hero-visual">
+          <div class="pulse-ring"></div>
+          <div class="hero-icon">🫀</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ MAIN CONTENT ══════════ -->
+  <main class="main-content" id="form-section">
+    <div class="container">
+      <div class="content-grid">
+
+        <!-- ─── INPUT FORM ─── -->
+        <div class="card form-card">
+          <div class="card-header">
+            <h2>📋 Nhập Thông Tin Bệnh Nhân</h2>
+            <p>Điền đầy đủ 8 chỉ số y tế để nhận kết quả chẩn đoán</p>
+          </div>
+
+          {% if not model_loaded %}
+          <div class="alert alert-warning">
+            ⚠️ <strong>Model chưa được tải.</strong> Vui lòng chạy notebook <code>diabetes.ipynb</code> trước để tạo file model.
+          </div>
+          {% endif %}
+
+          <form id="diagnosis-form">
+            <div class="form-grid">
+
+              {% for feature in features %}
+              {% set label = feature_labels[feature] %}
+              {% set ranges = feature_ranges[feature] %}
+              <div class="form-group">
+                <label for="{{ feature }}">
+                  {{ label }}
+                  <span class="field-badge">{{ feature }}</span>
+                </label>
+                <div class="input-wrapper">
+                  <input
+                    type="number"
+                    id="{{ feature }}"
+                    name="{{ feature }}"
+                    min="{{ ranges[0] }}"
+                    max="{{ ranges[1] }}"
+                    value="{{ ranges[2] }}"
+                    step="{{ ranges[3] if ranges[3] != 0 else 'any' }}"
+                    required
+                    class="form-input"
+                    placeholder="{{ ranges[2] }}"
+                  />
+                  <span class="input-unit">{{ feature | get_unit }}</span>
+                </div>
+                <div class="range-hint">
+                  Khoảng: {{ ranges[0] }} – {{ ranges[1] }}
+                </div>
+              </div>
+              {% endfor %}
+
+            </div>
+
+            <div class="form-actions">
+              <button type="button" id="reset-btn" class="btn btn-secondary">
+                🔄 Đặt lại
+              </button>
+              <button type="submit" id="predict-btn" class="btn btn-primary" {% if not model_loaded %}disabled{% endif %}>
+                🔬 Chẩn Đoán Ngay
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- ─── RESULTS ─── -->
+        <div class="card result-card" id="result-card">
+
+          <!-- Placeholder before prediction -->
+          <div id="result-placeholder" class="result-placeholder">
+            <div class="placeholder-icon">🔍</div>
+            <h3>Kết Quả Sẽ Hiện Tại Đây</h3>
+            <p>Nhập thông tin và nhấn <strong>Chẩn Đoán Ngay</strong> để xem kết quả</p>
+          </div>
+
+          <!-- Loading state -->
+          <div id="result-loading" class="result-loading hidden">
+            <div class="spinner"></div>
+            <p>Đang phân tích dữ liệu...</p>
+          </div>
+
+          <!-- Result content -->
+          <div id="result-content" class="hidden">
+
+            <!-- Diagnosis Banner -->
+            <div id="diagnosis-banner" class="diagnosis-banner">
+              <div class="banner-icon" id="banner-icon"></div>
+              <div class="banner-text">
+                <h2 id="diagnosis-title"></h2>
+                <p id="diagnosis-subtitle"></p>
+              </div>
+            </div>
+
+            <!-- Risk Gauge -->
+            <div class="risk-section">
+              <h3>Mức Độ Rủi Ro</h3>
+              <div class="gauge-container">
+                <div class="gauge">
+                  <div class="gauge-track">
+                    <div class="gauge-fill" id="gauge-fill"></div>
+                  </div>
+                  <div class="gauge-labels">
+                    <span>Thấp</span>
+                    <span>Trung bình</span>
+                    <span>Cao</span>
+                  </div>
+                </div>
+                <div class="probability-display">
+                  <span class="prob-value" id="prob-value">0%</span>
+                  <span class="prob-label">Xác suất mắc bệnh</span>
+                </div>
+              </div>
+
+              <!-- Risk Badge -->
+              <div class="risk-badge-container">
+                <div class="risk-badge" id="risk-badge"></div>
+              </div>
+            </div>
+
+            <!-- Advice Tabs -->
+            <div class="advice-section">
+              <h3>💡 Lời Khuyên Y Tế Cá Nhân</h3>
+
+              <!-- Specific Findings -->
+              <div id="specific-findings" class="findings-box hidden">
+                <h4>📊 Phát Hiện Đặc Biệt</h4>
+                <ul id="findings-list"></ul>
+              </div>
+
+              <div class="advice-tabs">
+                <button class="tab-btn active" data-tab="lifestyle">🏃 Lối sống</button>
+                <button class="tab-btn" data-tab="diet">🥗 Dinh dưỡng</button>
+                <button class="tab-btn" data-tab="exercise">💪 Vận động</button>
+                <button class="tab-btn" data-tab="medical">🏥 Y tế</button>
+              </div>
+
+              <div id="tab-lifestyle" class="tab-content active">
+                <ul id="lifestyle-list" class="advice-list"></ul>
+              </div>
+              <div id="tab-diet" class="tab-content">
+                <ul id="diet-list" class="advice-list"></ul>
+              </div>
+              <div id="tab-exercise" class="tab-content">
+                <ul id="exercise-list" class="advice-list"></ul>
+              </div>
+              <div id="tab-medical" class="tab-content">
+                <ul id="medical-list" class="advice-list"></ul>
+              </div>
+
+              <!-- Warnings -->
+              <div id="warnings-box" class="warnings-box hidden">
+                <ul id="warnings-list"></ul>
+              </div>
+            </div>
+
+            <!-- Input Summary -->
+            <div class="input-summary">
+              <details>
+                <summary>📈 Xem lại thông tin đã nhập</summary>
+                <div id="summary-grid" class="summary-grid"></div>
+              </details>
+            </div>
+
+            <!-- Disclaimer -->
+            <div class="disclaimer">
+              <p>⚕️ <strong>Lưu ý:</strong> Kết quả này chỉ mang tính tham khảo và không thay thế cho chẩn đoán y tế chuyên nghiệp. Hãy tham khảo bác sĩ để được tư vấn chính xác.</p>
+            </div>
+
+          </div><!-- /#result-content -->
+        </div><!-- /.result-card -->
+
+      </div><!-- /.content-grid -->
+    </div>
+  </main>
+
+  <!-- ══════════ ABOUT SECTION ══════════ -->
+  <section class="about-section" id="about-section">
+    <div class="container">
+      <h2 class="section-title">Về Hệ Thống</h2>
+      <div class="about-grid">
+
+        <div class="about-card">
+          <div class="about-icon">🧠</div>
+          <h3>Machine Learning</h3>
+          <p>Sử dụng 4 mô hình ML (Logistic Regression, KNN, Decision Tree, SVM) với KNN Imputation thông minh để xử lý dữ liệu thiếu.</p>
+        </div>
+
+        <div class="about-card">
+          <div class="about-icon">📊</div>
+          <h3>Dữ Liệu</h3>
+          <p>Huấn luyện trên bộ dữ liệu Pima Indians Diabetes (768 bệnh nhân) với đầy đủ 8 chỉ số y tế quan trọng.</p>
+        </div>
+
+        <div class="about-card">
+          <div class="about-icon">🕸️</div>
+          <h3>Knowledge Graph</h3>
+          <p>Neo4j Knowledge Graph liên kết triệu chứng, mức độ rủi ro và lời khuyên y tế để cá nhân hóa tư vấn.</p>
+        </div>
+
+        <div class="about-card">
+          <div class="about-icon">📱</div>
+          <h3>Responsive</h3>
+          <p>Giao diện tương thích hoàn toàn với điện thoại di động, máy tính bảng và máy tính để bàn.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ FOOTER ══════════ -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-brand">
+          <span>🩺 DiabetesAI</span>
+          <p>Hệ thống chẩn đoán tiểu đường thông minh</p>
+        </div>
+        <div class="footer-info">
+          <p>Assignment 01 — Intelligent System Development</p>
+          <p>Built with Flask, scikit-learn & Neo4j</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

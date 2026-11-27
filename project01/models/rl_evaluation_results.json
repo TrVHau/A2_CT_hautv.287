@@ -1,0 +1,196 @@
+{
+  "tabular_learning_curve": [
+    {
+      "episode": 1500,
+      "epsilon": 0.873,
+      "return": 21.1
+    },
+    {
+      "episode": 3000,
+      "epsilon": 0.747,
+      "return": 15.2
+    },
+    {
+      "episode": 4500,
+      "epsilon": 0.62,
+      "return": -34.4
+    },
+    {
+      "episode": 6000,
+      "epsilon": 0.493,
+      "return": 24.1
+    },
+    {
+      "episode": 7500,
+      "epsilon": 0.367,
+      "return": 23.7
+    },
+    {
+      "episode": 9000,
+      "epsilon": 0.24,
+      "return": 24.1
+    },
+    {
+      "episode": 10500,
+      "epsilon": 0.113,
+      "return": 24.7
+    },
+    {
+      "episode": 12000,
+      "epsilon": 0.05,
+      "return": 23.2
+    },
+    {
+      "episode": 13500,
+      "epsilon": 0.05,
+      "return": 23.2
+    },
+    {
+      "episode": 15000,
+      "epsilon": 0.05,
+      "return": 24.2
+    }
+  ],
+  "dqn_learning_curve": [
+    {
+      "episode": 100,
+      "epsilon": 0.804,
+      "return": -8.8,
+      "loss": 0.2578
+    },
+    {
+      "episode": 200,
+      "epsilon": 0.606,
+      "return": 13.0,
+      "loss": 0.1837
+    },
+    {
+      "episode": 300,
+      "epsilon": 0.408,
+      "return": 24.2,
+      "loss": 0.1385
+    },
+    {
+      "episode": 400,
+      "epsilon": 0.21,
+      "return": 24.7,
+      "loss": 0.1256
+    },
+    {
+      "episode": 500,
+      "epsilon": 0.05,
+      "return": 22.6,
+      "loss": 0.0732
+    },
+    {
+      "episode": 600,
+      "epsilon": 0.05,
+      "return": 24.2,
+      "loss": 0.0363
+    }
+  ],
+  "evaluation_matrix": {
+    "good": {
+      "DQN_Coach": {
+        "cohort": "good",
+        "tir_percent": 99.6,
+        "mean_glucose": 103.0,
+        "hypo_hours_per_day": 0.1,
+        "hyper_hours_per_day": 0.0,
+        "mean_daily_return": 24.46
+      },
+      "Tabular_Q_Coach": {
+        "cohort": "good",
+        "tir_percent": 99.92,
+        "mean_glucose": 104.3,
+        "hypo_hours_per_day": 0.0,
+        "hyper_hours_per_day": 0.02,
+        "mean_daily_return": 24.08
+      },
+      "Rule_Based_Coach": {
+        "cohort": "good",
+        "tir_percent": 100.0,
+        "mean_glucose": 109.7,
+        "hypo_hours_per_day": 0.0,
+        "hyper_hours_per_day": 0.0,
+        "mean_daily_return": 23.68
+      },
+      "Sedentary_No_Coach": {
+        "cohort": "good",
+        "tir_percent": 81.28,
+        "mean_glucose": 156.3,
+        "hypo_hours_per_day": 0.0,
+        "hyper_hours_per_day": 4.49,
+        "mean_daily_return": 7.87
+      }
+    },
+    "moderate": {
+      "DQN_Coach": {
+        "cohort": "moderate",
+        "tir_percent": 100.0,
+        "mean_glucose": 103.1,
+        "hypo_hours_per_day": 0.0,
+        "hyper_hours_per_day": 0.0,
+        "mean_daily_return": 24.69
+      },
+      "Tabular_Q_Coach": {
+        "cohort": "moderate",
+        "tir_percent": 99.75,
+        "mean_glucose": 113.7,
+        "hypo_hours_per_day": 0.05,
+        "hyper_hours_per_day": 0.01,
+        "mean_daily_return": 23.27
+      },
+      "Rule_Based_Coach": {
+        "cohort": "moderate",
+        "tir_percent": 98.87,
+        "mean_glucose": 124.2,
+        "hypo_hours_per_day": 0.0,
+        "hyper_hours_per_day": 0.27,
+        "mean_daily_return": 19.95
+      },
+      "Sedentary_No_Coach": {
+        "cohort": "moderate",
+        "tir_percent": 32.72,
+        "mean_glucose": 204.3,
+        "hypo_hours_per_day": 0.0,
+        "hyper_hours_per_day": 16.15,
+        "mean_daily_return": -20.81
+      }
+    },
+    "severe": {
+      "DQN_Coach": {
+        "cohort": "severe",
+        "tir_percent": 99.8,
+        "mean_glucose": 101.7,
+        "hypo_hours_per_day": 0.05,
+        "hyper_hours_per_day": 0.0,
+        "mean_daily_return": 24.2
+      },
+      "Tabular_Q_Coach": {
+        "cohort": "severe",
+        "tir_percent": 99.95,
+        "mean_glucose": 119.0,
+        "hypo_hours_per_day": 0.01,
+        "hyper_hours_per_day": 0.0,
+        "mean_daily_return": 22.18
+      },
+      "Rule_Based_Coach": {
+        "cohort": "severe",
+        "tir_percent": 97.63,
+        "mean_glucose": 115.0,
+        "hypo_hours_per_day": 0.03,
+        "hyper_hours_per_day": 0.54,
+        "mean_daily_return": 19.97
+      },
+      "Sedentary_No_Coach": {
+        "cohort": "severe",
+        "tir_percent": 22.42,
+        "mean_glucose": 222.5,
+        "hypo_hours_per_day": 0.0,
+        "hyper_hours_per_day": 18.62,
+        "mean_daily_return": -30.55
+      }
+    }
+  }
+}

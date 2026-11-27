@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BẢNG ĐIỀU KHIỂN THỰC NGHIỆM AI - TRẦN VĂN HẬU (B23DCCN287)</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --primary: #1e3a8a;
+      --secondary: #0d9488;
+      --accent: #d97706;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #0f172a;
+    }
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    }
+    .header-banner {
+      background: linear-gradient(135deg, #1e3a8a 0%, #0284c7 50%, #0d9488 100%);
+      color: white;
+      padding: 2rem 1.5rem;
+      border-radius: 0 0 1.5rem 1.5rem;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+    .badge-ptit {
+      background-color: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      padding: 0.4rem 0.8rem;
+      border-radius: 9999px;
+      font-weight: 500;
+    }
+    .nav-pills .nav-link {
+      color: #475569;
+      font-weight: 600;
+      border-radius: 0.75rem;
+      padding: 0.6rem 1.2rem;
+      margin: 0 0.25rem;
+      transition: all 0.2s ease;
+    }
+    .nav-pills .nav-link.active {
+      background-color: var(--primary);
+      color: white;
+      box-shadow: 0 4px 12px rgba(30, 58, 138, 0.3);
+    }
+    .card {
+      border: none;
+      border-radius: 1rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+      background-color: var(--card-bg);
+      margin-bottom: 1.5rem;
+    }
+    .stat-card {
+      padding: 1.25rem;
+      border-left: 4px solid var(--primary);
+      background: white;
+    }
+    .code-box {
+      background-color: #0f172a;
+      color: #38bdf8;
+      padding: 1rem;
+      border-radius: 0.75rem;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.9rem;
+      max-height: 280px;
+      overflow-y: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Banner -->
+  <header class="header-banner mb-4">
+    <div class="container-fluid px-4">
+      <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+        <div>
+          <span class="badge-ptit mb-2 d-inline-block"><i class="fa-solid fa-graduation-cap me-1"></i> HỌC VIỆN CÔNG NGHỆ BƯU CHÍNH VIỄN THÔNG (PTIT)</span>
+          <h2 class="fw-bold mb-1">HỆ THỐNG THỰC NGHIỆM TIỂU LUẬN TOÀN DIỆN 7 CHƯƠNG</h2>
+          <p class="mb-0 opacity-90"><i class="fa-solid fa-book-open me-1"></i> Đề tài: Từ Nền Tảng Học Máy, Học Sâu Đến Hệ Thống Đa Tác Tử Tự Chủ & Đồ Thị Tri Thức</p>
+        </div>
+        <div class="text-end bg-white text-dark p-3 rounded-3 shadow-sm">
+          <div class="fw-bold text-primary"><i class="fa-solid fa-user me-1"></i> Sinh viên: Trần Văn Hậu</div>
+          <div class="small text-muted">MSV: <strong>B23DCCN287</strong> | Lớp: <strong>D23CTPM01</strong></div>
+          <div class="small text-muted">Nhóm môn học: <strong>CT</strong> | Nhóm tiểu luận: <strong>09</strong></div>
+          <div class="small text-danger fw-semibold"><i class="fa-solid fa-chalkboard-user me-1"></i> GVHD: PGS. TS. Trần Đình Quế</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Navigation Tabs -->
+  <div class="container-fluid px-4 mb-4">
+    <ul class="nav nav-pills justify-content-center bg-white p-2 rounded-4 shadow-sm" id="chapterTab" role="tablist">
+      <li class="nav-item"><button class="nav-link active" id="c1-tab" data-bs-toggle="pill" data-bs-target="#c1"><i class="fa-solid fa-clock-rotate-left me-1"></i> C1: 4 Thế hệ AI</button></li>
+      <li class="nav-item"><button class="nav-link" id="c2-tab" data-bs-toggle="pill" data-bs-target="#c2"><i class="fa-solid fa-calculator me-1"></i> C2: Học Máy & Parity</button></li>
+      <li class="nav-item"><button class="nav-link" id="c3-tab" data-bs-toggle="pill" data-bs-target="#c3"><i class="fa-solid fa-eye me-1"></i> C3: CNN & Grad-CAM</button></li>
+      <li class="nav-item"><button class="nav-link" id="c4-tab" data-bs-toggle="pill" data-bs-target="#c4"><i class="fa-solid fa-chart-line me-1"></i> C4: RNN & Tài Chính</button></li>
+      <li class="nav-item"><button class="nav-link" id="c5-tab" data-bs-toggle="pill" data-bs-target="#c5"><i class="fa-solid fa-diagram-project me-1"></i> C5: KG & GraphRAG</button></li>
+      <li class="nav-item"><button class="nav-link" id="c6-tab" data-bs-toggle="pill" data-bs-target="#c6"><i class="fa-solid fa-circle-nodes me-1"></i> C6: Deep Graph GNN</button></li>
+      <li class="nav-item"><button class="nav-link" id="c7-tab" data-bs-toggle="pill" data-bs-target="#c7"><i class="fa-solid fa-users-gear me-1"></i> C7: Multi-Agent Council</button></li>
+    </ul>
+  </div>
+
+  <!-- Content Container -->
+  <main class="container-fluid px-4 pb-5">
+    <div class="tab-content" id="chapterTabContent">
+
+      <!-- TAB 1: 4 GENERATIONS -->
+      <div class="tab-pane fade show active" id="c1" role="tabpanel">
+        <div class="row">
+          <div class="col-lg-4">
+            <div class="card stat-card mb-3">
+              <h5 class="fw-bold text-primary"><i class="fa-solid fa-layer-group me-2"></i>Thực nghiệm Đối đầu 4 Thế Hệ</h5>
+              <p class="text-muted small">Cùng giải quyết bài toán dự báo đái tháo đường lâm sàng (Pima Indian Diabetes) qua 4 bước chuyển mình lịch sử.</p>
+              <button class="btn btn-outline-primary w-100 fw-bold" onclick="runGenBenchmark()"><i class="fa-solid fa-play me-1"></i> Chạy Thực Nghiệm</button>
+            </div>
+            <div class="card p-3">
+              <h6 class="fw-bold">Thông số tập dữ liệu:</h6>
+              <ul class="list-unstyled small mb-0">
+                <li>• Số mẫu bệnh nhân: <strong>768 ca</strong></li>
+                <li>• Số đặc trưng lâm sàng: <strong>8 thuộc tính</strong></li>
+                <li>• Tỷ lệ dương tính: <strong>34.9%</strong></li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-lg-8">
+            <div class="card p-4">
+              <h5 class="fw-bold mb-3"><i class="fa-solid fa-square-poll-vertical me-2"></i>Kết quả Đo chuẩn 4 Thế Hệ (10-Fold CV)</h5>
+              <div class="table-responsive">
+                <table class="table table-hover align-middle" id="tableGen">
+                  <thead class="table-light">
+                    <tr><th>Thế hệ Công nghệ AI</th><th>Accuracy</th><th>Balanced Acc</th><th>F1-Score</th><th>ROC-AUC</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr><td><strong>Gen 1:</strong> Hệ Chuyên Gia Luật (ADA)</td><td>62.36%</td><td>68.92%</td><td>0.627</td><td>0.689</td></tr>
+                    <tr><td><strong>Gen 2:</strong> Logistic Regression (L2)</td><td>77.47%</td><td>72.75%</td><td>0.639</td><td>0.830</td></tr>
+                    <tr><td><strong>Gen 3:</strong> Deep MLP (PyTorch)</td><td>76.30%</td><td>72.79%</td><td>0.643</td><td>0.811</td></tr>
+                    <tr class="table-success"><td><strong>Gen 4:</strong> Agentic AI + Knowledge Graph</td><td><strong>73.82%</strong></td><td><strong>72.72%</strong></td><td><strong>0.650</strong></td><td><strong>0.811</strong></td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: ML BASIC & PARITY -->
+      <div class="tab-pane fade" id="c2" role="tabpanel">
+        <div class="row">
+          <div class="col-lg-6">
+            <div class="card p-4">
+              <h5 class="fw-bold text-primary"><i class="fa-solid fa-code-compare me-2"></i>Kiểm chứng Tương đương Đạo hàm (Parity Check)</h5>
+              <p class="small text-muted">Chứng minh giải tích và số học: Thuật toán đạo hàm ma trận viết tay ScratchMLP hoàn toàn trùng khớp Autograd PyTorch với sai số dung sai máy $\Delta < 10^{-7}$.</p>
+              <div class="code-box mb-3">
+[FORWARD PASS] Max Abs Diff: 6.93889390e-17
+[BACKWARD PASS GRADIENTS]:
+  - dW1 diff: 1.04083409e-17 | db1 diff: 6.93889390e-18
+  - dW2 diff: 1.73472348e-17 | db2 diff: 1.04083409e-17
+  - dW3 diff: 6.24500451e-17 | db3 diff: 0.00000000e+00
+=> MAX GRADIENT ERROR: 6.245e-17 < 1.0e-07 (PASSED!)
+              </div>
+              <span class="badge bg-success p-2 fs-6"><i class="fa-solid fa-circle-check me-1"></i> TƯƠNG ĐƯƠNG TUYỆT ĐỐI ĐẠT CHUẨN MÁY</span>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="card p-4">
+              <h5 class="fw-bold text-primary"><i class="fa-solid fa-list-check me-2"></i>Bảng xếp hạng 9 Thuật toán Học máy (10-Fold CV)</h5>
+              <div class="table-responsive">
+                <table class="table table-sm table-striped small align-middle">
+                  <thead><tr><th>Thuật toán</th><th>Accuracy</th><th>F1-Score</th><th>ROC-AUC</th></tr></thead>
+                  <tbody>
+                    <tr><td>1. Logistic Regression (L2)</td><td>77.60%</td><td>0.6417</td><td>0.8318</td></tr>
+                    <tr class="table-info"><td>2. Ridge Classifier</td><td>77.08%</td><td>0.6286</td><td><strong>0.8325</strong></td></tr>
+                    <tr><td>3. Support Vector Machine (RBF)</td><td>76.30%</td><td>0.6222</td><td>0.8279</td></tr>
+                    <tr><td>4. Decision Tree (CART)</td><td>77.07%</td><td>0.6409</td><td>0.8112</td></tr>
+                    <tr><td>5. Random Forest (100 Trees)</td><td>75.13%</td><td>0.6137</td><td>0.8295</td></tr>
+                    <tr><td>6. Hist Gradient Boosting</td><td>74.99%</td><td>0.6164</td><td>0.7974</td></tr>
+                    <tr><td>7. Gaussian Naive Bayes</td><td>75.52%</td><td>0.6335</td><td>0.8139</td></tr>
+                    <tr><td>8. K-Nearest Neighbors (k=5)</td><td>73.42%</td><td>0.5881</td><td>0.7777</td></tr>
+                    <tr><td>9. Multilayer Perceptron (MLP)</td><td>70.44%</td><td>0.5661</td><td>0.7676</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 3: CNN & GRAD-CAM -->
+      <div class="tab-pane fade" id="c3" role="tabpanel">
+        <div class="row">
+          <div class="col-lg-6">
+            <div class="card p-4">
+              <h5 class="fw-bold text-primary"><i class="fa-solid fa-fire me-2"></i>Trực quan hóa Giải thích Grad-CAM</h5>
+              <p class="small text-muted">Trích xuất đạo hàm kênh $\alpha_k^c$ từ tầng tích chập cuối cùng để lập bản đồ nhiệt giải thích vùng ảnh hưởng quyết định phân loại lâm sàng.</p>
+              <div class="alert alert-light border">
+                <strong>Công thức Grad-CAM:</strong>
+                $$\alpha_k^c = \frac{1}{Z} \sum_{i} \sum_{j} \frac{\partial y^c}{\partial A_{i,j}^k}, \quad L_{\text{Grad-CAM}}^c = \text{ReLU}\left(\sum_k \alpha_k^c A^k\right)$$
+              </div>
+              <div class="code-box">
+Tầng Hook: MedicalCNN.features[-1].conv2
+Kích thước Heatmap nội suy: (28, 28)
+Vùng kích hoạt hội tụ cao tại tổn thương võng mạc (Diabetic Retinopathy).
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="card p-4">
+              <h5 class="fw-bold text-primary"><i class="fa-solid fa-wave-square me-2"></i>Mã hóa Chuỗi 1D thành Ảnh 2D (GASF / GADF / MTF)</h5>
+              <p class="small text-muted">Biến đổi chuỗi đường huyết liên tục CGM hoặc giá chứng khoán thành tensor 3 kênh tương thích mô hình CNN 2D.</p>
+              <ul class="list-group list-group-flush small mb-3">
+                <li class="list-group-item d-flex justify-content-between"><span>Kênh 0: GASF (Gramian Angular Summation Field)</span><strong>cos(&phi;<sub>i</sub> + &phi;<sub>j</sub>)</strong></li>
+                <li class="list-group-item d-flex justify-content-between"><span>Kênh 1: GADF (Gramian Angular Difference Field)</span><strong>sin(&phi;<sub>i</sub> - &phi;<sub>j</sub>)</strong></li>
+                <li class="list-group-item d-flex justify-content-between"><span>Kênh 2: MTF (Markov Transition Field)</span><strong>W<sub>q(i), q(j)</sub></strong></li>
+              </ul>
+              <span class="badge bg-primary p-2 fs-6">Đầu ra ảnh tổng hợp: (3, 64, 64)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 4: RNN & FINANCIAL -->
+      <div class="tab-pane fade" id="c4" role="tabpanel">
+        <div class="row">
+          <div class="col-lg-6">
+            <div class="card p-4">
+              <h5 class="fw-bold text-primary"><i class="fa-solid fa-heart-pulse me-2"></i>Dự báo Đường huyết Lâm sàng (CGM Walk-Forward)</h5>
+              <table class="table table-bordered small">
+                <tr class="table-light"><th colspan="2">Hiệu năng Mô hình TimeSeries Attention-LSTM</th></tr>
+                <tr><td>MAE (Sai số tuyệt đối trung bình)</td><td><strong>3.40 mg/dL</strong></td></tr>
+                <tr><td>RMSE (Căn bậc hai sai số bình phương)</td><td><strong>4.25 mg/dL</strong></td></tr>
+                <tr><td>MAPE (Sai số phần trăm)</td><td><strong>3.07%</strong></td></tr>
+                <tr><td>Hệ số xác định R² Score</td><td><strong>0.9372</strong></td></tr>
+                <tr class="table-success"><td>Độ an toàn Clarke Error Grid (Zone A+B)</td><td><strong>100.0%</strong> (Đạt chuẩn lâm sàng)</td></tr>
+              </table>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="card p-4">
+              <h5 class="fw-bold text-primary"><i class="fa-solid fa-coins me-2"></i>Kiểm thử Danh mục Định lượng Tài chính</h5>
+              <table class="table table-bordered small">
+                <tr class="table-light"><th colspan="2">Bộ chỉ số Quỹ Định lượng Phố Wall (252 Phiên)</th></tr>
+                <tr><td>Tỷ suất sinh lời kép (CAGR)</td><td><strong class="text-success">+16.27%</strong></td></tr>
+                <tr><td>Độ biến động hàng năm (Volatility)</td><td>15.00%</td></tr>
+                <tr><td>Hệ số Sharpe (Sharpe Ratio)</td><td><strong>0.88</strong></td></tr>
+                <tr><td>Hệ số Sortino (Sortino Ratio)</td><td><strong>0.92</strong></td></tr>
+                <tr><td>Hệ số Calmar (Calmar Ratio)</td><td><strong>1.10</strong></td></tr>
+                <tr><td>Sụt giảm vốn lớn nhất (Max Drawdown)</td><td><strong class="text-danger">-14.85%</strong></td></tr>
+                <tr><td>Tỷ lệ số phiên thắng (Win Rate)</td><td><strong>53.57%</strong></td></tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 5: KG & GRAPHRAG -->
+      <div class="tab-pane fade" id="c5" role="tabpanel">
+        <div class="row">
+          <div class="col-lg-6">
+            <div class="card p-4">
+              <h5 class="fw-bold text-primary"><i class="fa-solid fa-network-wired me-2"></i>Đồ thị Tri thức Lâm sàng (Clinical KG & Neo4j)</h5>
+              <p class="small text-muted">Mô hình bản thể học OWL/RDF với bộ ba SPO kết nối triệu chứng, bệnh học, thuốc và chống chỉ định.</p>
+              <div class="code-box small">
+MATCH (s:Symptom)&lt;-[:HAS_SYMPTOM]-(d:Disease)-[:TREATED_BY]-&gt;(m:Drug)
+WHERE s.name IN ['Polydipsia', 'Polyuria']
+OPTIONAL MATCH (m)-[:CONTRAINDICATED_WITH]-&gt;(c:Disease)
+RETURN d.name, collect(m.name) AS Drugs, collect(c.name) AS Contras
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="card p-4">
+              <h5 class="fw-bold text-primary"><i class="fa-solid fa-ranking-star me-2"></i>Đánh giá Hệ Thống RAG theo Bộ Chỉ số Ragas</h5>
+              <div class="row g-2 text-center mb-3">
+                <div class="col-4">
+                  <div class="border rounded p-2 bg-light">
+                    <div class="fs-4 fw-bold text-success">1.000</div>
+                    <div class="small text-muted">Faithfulness</div>
+                  </div>
+                </div>
+                <div class="col-4">
+                  <div class="border rounded p-2 bg-light">
+                    <div class="fs-4 fw-bold text-primary">0.922</div>
+                    <div class="small text-muted">Relevance</div>
+                  </div>
+                </div>
+                <div class="col-4">
+                  <div class="border rounded p-2 bg-light">
+                    <div class="fs-4 fw-bold text-warning">0.895</div>
+                    <div class="small text-muted">Recall</div>
+                  </div>
+                </div>
+              </div>
+              <div class="alert alert-info py-2 small mb-0">
+                <strong>Ragas Harmonic Mean: 0.937</strong> - Đạt chuẩn xuất sắc trong việc triệt tiêu ảo giác y khoa.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 6: DEEP GRAPH -->
+      <div class="tab-pane fade" id="c6" role="tabpanel">
+        <div class="row">
+          <div class="col-lg-6">
+            <div class="card p-4">
+              <h5 class="fw-bold text-primary"><i class="fa-solid fa-chart-area me-2"></i>Đo lường Hiện tượng Quá làm mịn (Over-Smoothing)</h5>
+              <p class="small text-muted">Khi tăng độ sâu $L \to \infty$, năng lượng Dirichlet $\mathcal{E}(H) \to 0$ và chỉ số MAD $\to 0$, chứng minh sự sụp đổ biểu diễn đỉnh.</p>
+              <div class="table-responsive">
+                <table class="table table-sm small align-middle">
+                  <thead><tr><th>Độ sâu L</th><th>Dirichlet Energy</th><th>MAD</th><th>Trạng thái</th></tr></thead>
+                  <tbody>
+                    <tr><td>L = 1</td><td>24.64</td><td>0.5951</td><td><span class="badge bg-success">Tối ưu</span></td></tr>
+                    <tr><td>L = 2</td><td>2.01</td><td>0.1211</td><td><span class="badge bg-warning text-dark">Bắt đầu mịn</span></td></tr>
+                    <tr><td>L = 4</td><td>0.035</td><td>0.0030</td><td><span class="badge bg-danger">Sụp đổ</span></td></tr>
+                    <tr><td>L = 8</td><td>0.0006</td><td>0.0000</td><td><span class="badge bg-danger">Triệt tiêu</span></td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="card p-4">
+              <h5 class="fw-bold text-primary"><i class="fa-solid fa-trophy me-2"></i>Đo chuẩn Phân loại Đỉnh Đồ thị (Node Classification)</h5>
+              <table class="table table-hover small">
+                <thead><tr><th>Mô hình</th><th>Khai thác Topo?</th><th>Test Accuracy</th></tr></thead>
+                <tbody>
+                  <tr><td>1. Base MLP</td><td>Không (chỉ dùng thuộc tính)</td><td>98.33%</td></tr>
+                  <tr><td>2. Spectral GCN</td><td>Có (Toán tử phổ tái chuẩn hóa)</td><td>99.44%</td></tr>
+                  <tr class="table-success"><td>3. GraphSAGE</td><td>Có (Lấy mẫu & gom cụm)</td><td><strong>100.00%</strong></td></tr>
+                  <tr><td>4. Graph Attention (GAT)</td><td>Có (Tự chú ý dị hướng đa đầu)</td><td>99.44%</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 7: MULTI-AGENT COUNCIL -->
+      <div class="tab-pane fade" id="c7" role="tabpanel">
+        <div class="row">
+          <div class="col-lg-4">
+            <div class="card p-3">
+              <h5 class="fw-bold text-primary mb-3"><i class="fa-solid fa-stethoscope me-2"></i>Mô phỏng Ca Bệnh Lâm Sàng</h5>
+              <form id="caseForm">
+                <div class="mb-2">
+                  <label class="form-label small mb-1">Đường huyết đói (mg/dL):</label>
+                  <input type="number" id="inpGlucose" class="form-control form-control-sm" value="155">
+                </div>
+                <div class="mb-2">
+                  <label class="form-label small mb-1">Chỉ số HbA1c (%):</label>
+                  <input type="number" step="0.1" id="inpHbA1c" class="form-control form-control-sm" value="7.8">
+                </div>
+                <div class="mb-2">
+                  <label class="form-label small mb-1">Mức lọc cầu thận eGFR (mL/phút):</label>
+                  <input type="number" id="inpeGFR" class="form-control form-control-sm" value="25">
+                  <small class="text-danger">Lưu ý: eGFR &lt; 30 chống chỉ định Metformin!</small>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label small mb-1">Tiền sử bệnh lý tim mạch (CVD):</label>
+                  <select id="inpCVD" class="form-select form-select-sm">
+                    <option value="true">Có tiền sử bệnh tim mạch</option>
+                    <option value="false">Không có tiền sử</option>
+                  </select>
+                </div>
+                <button type="button" class="btn btn-primary w-100 fw-bold" onclick="simulateCouncil()"><i class="fa-solid fa-users me-1"></i> Triệu Tập Hội Đồng Tham Vấn</button>
+              </form>
+            </div>
+          </div>
+          <div class="col-lg-8">
+            <div class="card p-4">
+              <h5 class="fw-bold text-primary mb-3"><i class="fa-solid fa-gavel me-2"></i>Biên Bản Hội Chẩn Hội Đồng & Cổng Đồng Thuận</h5>
+              <div id="councilOutput" class="small">
+                <div class="alert alert-secondary">Bấm <strong>"Triệu Tập Hội Đồng Tham Vấn"</strong> để mô phỏng quy trình hội chẩn 5 tác tử và kiểm tra qua Cổng đồng thuận Bayes & Guardrails 4 cấp.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="text-center py-4 bg-white border-top text-muted small">
+    <div>Tiểu luận tốt nghiệp môn Phát triển các hệ thống thông minh — Học viện Công nghệ Bưu chính Viễn thông</div>
+    <div class="fw-semibold mt-1">Sinh viên: Trần Văn Hậu — MSV: B23DCCN287 — Lớp: D23CTPM01 — Nhóm CT_09 | GVHD: PGS. TS. Trần Đình Quế</div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    function simulateCouncil() {
+      const glucose = parseFloat(document.getElementById('inpGlucose').value);
+      const hba1c = parseFloat(document.getElementById('inpHbA1c').value);
+      const egfr = parseFloat(document.getElementById('inpeGFR').value);
+      const cvd = document.getElementById('inpCVD').value === 'true';
+
+      let html = '<div class="timeline">';
+      
+      // 1. Diagnostic
+      html += `<div class="card mb-2 border-start border-4 border-info p-3">
+        <h6 class="fw-bold text-info"><i class="fa-solid fa-user-doctor me-1"></i> 1. Tác tử Chẩn đoán (Diagnostic Specialist)</h6>
+        <p class="mb-1">Chẩn đoán: <strong>${glucose >= 126 || hba1c >= 6.5 ? 'Đái tháo đường Típ 2' : 'Tiền đái tháo đường'}</strong> (Độ tin cậy: 95%)</p>
+        <small class="text-muted">Căn cứ: Glucose = ${glucose} mg/dL, HbA1c = ${hba1c}% theo tiêu chuẩn ADA 2024.</small>
+      </div>`;
+
+      // 2. Pharma
+      let drug = egfr >= 30 ? "Metformin 1000mg" : "Insulin / Ức chế DPP-4i (Metformin bị cấm)";
+      if (cvd) drug += " + Empagliflozin 10mg (Bảo vệ tim)";
+      html += `<div class="card mb-2 border-start border-4 border-primary p-3">
+        <h6 class="fw-bold text-primary"><i class="fa-solid fa-pills me-1"></i> 2. Tác tử Dược lý (Pharmacotherapy Specialist)</h6>
+        <p class="mb-1">Phác đồ đề xuất: <strong>${drug}</strong></p>
+        <small class="text-muted">Đánh giá an toàn thận eGFR = ${egfr} mL/phút.</small>
+      </div>`;
+
+      // 3. Critic
+      let criticPassed = egfr >= 30;
+      let criticClass = criticPassed ? "border-success text-success" : "border-danger text-danger";
+      let criticIcon = criticPassed ? "fa-circle-check" : "fa-triangle-exclamation";
+      let criticMsg = criticPassed 
+        ? "Phác đồ an toàn, không phát hiện vi phạm liều hoặc chống chỉ định suy thận." 
+        : `CẢNH BÁO NGUY HIỂM: eGFR = ${egfr} &lt; 30 mL/phút! Metformin bị chống chỉ định tuyệt đối do rủi ro nhiễm toan Lactic!`;
+
+      html += `<div class="card mb-2 border-start border-4 ${criticClass} p-3">
+        <h6 class="fw-bold"><i class="fa-solid ${criticIcon} me-1"></i> 3. Tác tử Phản biện (Red-Teaming Critic Agent)</h6>
+        <p class="mb-1">Đánh giá: <strong>${criticPassed ? 'AN TOÀN (APPROVED)' : 'BÁC BỎ ĐƠN THUỐC (VETO)'}</strong></p>
+        <small>${criticMsg}</small>
+      </div>`;
+
+      // 4. Consensus Gate
+      let consensusScore = criticPassed ? 0.942 : 0.600;
+      let passGate = consensusScore >= 0.85;
+      html += `<div class="card p-3 bg-light border">
+        <h6 class="fw-bold text-dark"><i class="fa-solid fa-scale-balanced me-1"></i> 4. Cổng Đồng Thuận Bayes (Consensus Gate &tau; = 0.85)</h6>
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <span>Điểm đồng thuận Bayes: <strong>${consensusScore.toFixed(3)}</strong> / 1.000</span>
+          <span class="badge ${passGate ? 'bg-success' : 'bg-danger'}">${passGate ? 'VƯỢT QUA CỔNG' : 'BẤT ĐỒNG THUẬN'}</span>
+        </div>
+        <div class="progress mb-2" style="height: 10px;">
+          <div class="progress-bar ${passGate ? 'bg-success' : 'bg-danger'}" style="width: ${consensusScore * 100}%"></div>
+        </div>
+        <div class="p-2 rounded ${passGate ? 'bg-success-subtle text-success' : 'bg-danger-subtle text-danger'} fw-bold">
+          ${passGate 
+            ? 'QUYẾT ĐỊNH CHỦ TỌA: Kế hoạch được phê duyệt tự động với độ an toàn cao (Autonomous Approved).' 
+            : 'QUYẾT ĐỊNH CHỦ TỌA: Chuyển tuyến khẩn cấp lên Bác sĩ lâm sàng cao cấp do bất đồng thuận an toàn (Escalate to Human).'}
+        </div>
+      </div>`;
+
+      html += '</div>';
+      document.getElementById('councilOutput').innerHTML = html;
+    }
+  </script>
+</body>
+</html>

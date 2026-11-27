@@ -1,0 +1,18 @@
+# QUYẾT ĐỊNH 5481/QĐ-BYT: HƯỚNG DẪN CHẨN ĐOÁN VÀ ĐIỀU TRỊ ĐÁI THÁO ĐƯỜNG TÍP 2
+Bộ Y Tế ban hành ngày 30/12/2020.
+
+## 1. Tiêu chuẩn chẩn đoán Đái tháo đường
+Đái tháo đường (ĐTĐ) được chẩn đoán dựa trên 1 trong 4 tiêu chuẩn lâm sàng và cận lâm sàng sau:
+1. Glucose huyết tương lúc đói (Fasting Plasma Glucose - FPG) >= 126 mg/dL (tương đương >= 7.0 mmol/L). Nhịn ăn ít nhất 8 giờ.
+2. Glucose huyết tương ở thời điểm 2 giờ sau khi làm nghiệm pháp dung nạp glucose đường uống (OGTT 75g) >= 200 mg/dL (>= 11.1 mmol/L).
+3. HbA1c >= 6.5% (48 mmol/mol), thực hiện tại phòng xét nghiệm được chuẩn hóa theo phương pháp NGSP.
+4. Bệnh nhân có triệu chứng kinh điển của tăng glucose máu (tiểu nhiều, uống nhiều, sụt cân không rõ nguyên nhân) kèm theo glucose huyết tương ngẫu nhiên >= 200 mg/dL (>= 11.1 mmol/L).
+
+Nếu không có triệu chứng kinh điển của tăng glucose máu cấp tính, xét nghiệm tiêu chuẩn 1, 2, 3 phải được lặp lại lần hai vào một ngày khác để khẳng định chẩn đoán.
+
+## 2. Tiêu chuẩn chẩn đoán Tiền đái tháo đường (Pre-diabetes)
+Tiền đái tháo đường bao gồm:
+- Rối loạn glucose máu lúc đói (IFG): Glucose huyết tương lúc đói từ 100 đến 125 mg/dL (5.6 đến 6.9 mmol/L).
+- Rối loạn dung nạp glucose (IGT): Glucose huyết tương ở thời điểm 2 giờ sau nghiệm pháp OGTT từ 140 đến 199 mg/dL (7.8 đến 11.0 mmol/L).
+- HbA1c nằm trong khoảng 5.7% đến 6.4% (39 đến 47 mmol/mol).
+Tiền đái tháo đường làm gia tăng mạnh mẽ nguy cơ tiến triển thành đái tháo đường típ 2 thực sự và các biến chứng tim mạch sớm. Khuyến cáo can thiệp lối sống tích cực: giảm ít nhất 7% cân nặng và hoạt động thể lực tối thiểu 150 phút/tuần.

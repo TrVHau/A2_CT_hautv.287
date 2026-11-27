@@ -1,0 +1,12 @@
+PHƯƠNG PHÁP LUẬN TÍCH HỢP TRÍ TUỆ NHÂN TẠO ĐA MIỀN: KNOWLEDGE GRAPH, RAG VÀ HỌC SÂU
+
+1. Tính bổ trợ tương hỗ giữa các thành phần tri thức:
+- Đồ thị tri thức (Knowledge Graph - KG): Cung cấp tri thức biểu tượng tường minh (symbolic knowledge), mô hình hóa bản thể học có kiểm tra ràng buộc chặt chẽ, hỗ trợ suy diễn bắc cầu, suy luận nhân quả đa bước và phát hiện chống chỉ định tuyệt đối không thể bỏ sót.
+- RAG đa chặng (Multi-hop RAG): Cung cấp tri thức văn bản phong phú (textual context), trích xuất các sắc thái ngôn ngữ, căn cứ pháp lý và phân tích ngữ cảnh mà KG khó biểu diễn đầy đủ.
+- Học sâu chuyên biệt (Specialized Deep Learning): Mô hình MLP chẩn đoán nguy cơ y tế và mạng BiLSTM dự báo chuỗi thời gian tài chính xử lý dữ liệu số định lượng phức tạp, đi kèm ước lượng độ bất định (Monte Carlo Dropout).
+
+2. Cơ chế ReAct tất định và kiểm chứng có căn cứ (Grounded Verification):
+Tác tử trung tâm điều phối chuỗi hành động theo mô hình ReAct (Thought -> Action -> Observation). Tuy nhiên, để ngăn chặn triệt để hiện tượng ảo giác (hallucination) thường gặp ở các mô hình ngôn ngữ lớn (LLM), toàn bộ phát biểu đầu ra phải đi qua bộ kiểm chứng nghiêm ngặt (Faithfulness & Citation Verifier):
+- Mọi con số định lượng (HbA1c, tỷ lệ % rủi ro, dự báo giá) phải tìm thấy chính xác trong bằng chứng thu thập được.
+- Các trích dẫn [n] phải ánh xạ đúng tới tài liệu căn cứ hợp lệ.
+Hệ thống tạo ra một giải pháp AI minh bạch, có thể giải thích được và an toàn tuyệt đối cho người dùng trong các lĩnh vực nhạy cảm như Y tế và Tài chính.

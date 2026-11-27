@@ -1,0 +1,18 @@
+# THỊ TRƯỜNG VÀNG VIỆT NAM: CƠ CHẾ ĐỊNH GIÁ, PHẦN BÙ SJC VÀ BỐI CẢNH NGHỊ ĐỊNH 232/2025/NĐ-CP
+Nghiên cứu thị trường vàng vật chất và chính sách quản lý ngoại hối của Ngân hàng Nhà nước Việt Nam.
+
+## 1. Công thức quy đổi giá vàng thế giới sang giá vàng trong nước
+Giá vàng quốc tế niêm yết theo chuẩn XAU/USD (USD trên mỗi ounce troy).
+Đơn vị tính trong nước là "lượng" (cây vàng), tương đương 37.5 gram (hoặc 10 chỉ).
+Hệ số quy đổi vật lý: 1 ounce troy = 31.1034768 gram => 1 lượng = 37.5 / 31.1034768 ≈ 1.205653 ounce.
+
+Công thức quy đổi chuẩn:
+Giá vàng thế giới quy đổi (Triệu VNĐ/lượng) = (Giá XAU/USD * Tỷ giá USD/VND * 1.205653) / 1,000,000
+
+Ví dụ thực nghiệm: Nếu XAU/USD = 2,650 USD/oz và USD/VND = 25,400:
+Giá quy đổi = (2,650 * 25,400 * 1.205653) / 1,000,000 ≈ 81.15 Triệu VNĐ/lượng.
+
+## 2. Phần bù chênh lệch vàng miếng SJC và Tác động thể chế
+- Giai đoạn 2012 - 2024 (Nghị định 24/2012/NĐ-CP): Nhà nước độc quyền sản xuất vàng miếng và chọn thương hiệu SJC làm vàng miếng quốc gia. Việc không cấp phép dập thêm vàng miếng trong suốt 12 năm khiến nguồn cung SJC bị cô lập cục bộ so với nhu cầu trú ẩn gia tăng, dẫn đến hiện tượng "phần bù SJC" tăng vọt lên mức kỷ lục 15 - 20 triệu đồng/lượng (cao hơn 18-24% so với giá thế giới quy đổi).
+- Giai đoạn 2025 trở đi (Nghị định 232/2025/NĐ-CP): Sửa đổi bổ sung Nghị định 24 nhằm xóa bỏ độc quyền vàng miếng SJC, cấp phép cho các doanh nghiệp đủ điều kiện nhập khẩu vàng nguyên liệu và sản xuất vàng thương hiệu khác. Chính sách này tăng nguồn cung hợp pháp, làm phần bù chênh lệch giữa giá vàng SJC và giá vàng thế giới quy đổi co hẹp mạnh mẽ về vùng an toàn (dưới 5-8%).
+- Khuyến nghị đầu tư: Vàng nhẫn 9999 bám sát giá thế giới quy đổi hơn, ít chịu rủi ro bốc hơi phần bù chính sách so với vàng miếng SJC khi nguồn cung được khơi thông.

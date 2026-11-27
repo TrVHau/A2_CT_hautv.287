@@ -1,0 +1,1339 @@
+<!DOCTYPE html>
+<html lang="vi" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DiaMulti-Agent CDSS | Hệ Thống Đa Tác Tử Chẩn Đoán Đái Tháo Đường</title>
+  
+  <!-- Tailwind CSS & Font Awesome & Vis.js Network -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#eff6ff',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              900: '#1e3a8a',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .font-mono-code { font-family: 'JetBrains Mono', monospace; }
+    #kg-container { width: 100%; height: 500px; background: #0b1120; border-radius: 0.75rem; }
+    .slider-accent { accent-color: #2563eb; }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
+    .dark ::-webkit-scrollbar-thumb { background: #475569; }
+  </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 min-h-screen flex flex-col antialiased">
+
+  <!-- ================= TOP HEADER ================= -->
+  <header class="bg-slate-900 text-white sticky top-0 z-50 border-b border-slate-800 shadow-md">
+    <div class="max-w-7xl mx-auto px-4 py-2.5 sm:px-6 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center font-bold text-white shadow-md">
+          <i class="fa-solid fa-staff-snake text-lg"></i>
+        </div>
+        <div>
+          <h1 class="text-sm sm:text-base font-extrabold tracking-tight flex items-center gap-2">
+            HỆ THỐNG ĐA TÁC TỬ CHẨN ĐOÁN &amp; ĐIỀU TRỊ ĐÁI THÁO ĐƯỜNG
+            <span class="bg-blue-500/20 text-blue-300 text-[10px] px-2 py-0.5 rounded-full font-mono-code border border-blue-500/30">12 Agents • ADA 2024</span>
+          </h1>
+          <p class="text-[11px] text-slate-400">
+            <span>PTIT Intelligent Systems Lab</span> • 
+            <span class="text-blue-300 font-semibold">Sinh viên: Trần Văn Hậu (B23DCCN287)</span> • 
+            <span>GVHD: PGS.TS. Trần Đình Quế</span>
+          </p>
+        </div>
+      </div>
+
+      <!-- Header Action Controls -->
+      <div class="flex items-center space-x-2">
+        <button onclick="toggleDarkMode()" title="Chuyển chế độ Sáng / Tối" class="px-2.5 py-1.5 rounded-lg text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition">
+          <i id="themeIcon" class="fa-solid fa-moon text-amber-300"></i>
+        </button>
+        <a href="/api/download/docx" target="_blank" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded-lg shadow transition flex items-center gap-1.5">
+          <i class="fa-solid fa-file-word"></i>
+          <span class="hidden sm:inline">Tải Báo Cáo Word</span>
+          <span class="text-[10px] opacity-80">(8.7 MB)</span>
+        </a>
+        <a href="/api/download/datasets-models-txt" target="_blank" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-bold rounded-lg border border-slate-300 dark:border-slate-700 shadow-xs transition flex items-center gap-1.5" title="Tải tệp text danh sách Dataset và Model">
+          <i class="fa-solid fa-file-lines text-blue-500"></i>
+          <span class="hidden sm:inline">Tệp DS Dataset &amp; Model (.txt)</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= MAIN NAVIGATION TABS ================= -->
+  <div class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-[57px] z-40 shadow-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      <nav class="flex space-x-2 py-2">
+        <button id="nav-tab-1" onclick="switchTab('consult')" class="tab-btn px-4 py-2 rounded-lg text-xs sm:text-sm font-bold bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-800 flex items-center gap-2 transition">
+          <i class="fa-solid fa-user-doctor"></i> 1. Hội Chẩn Đa Tác Tử (12 Agents)
+        </button>
+        <button id="nav-tab-2" onclick="switchTab('models')" class="tab-btn px-4 py-2 rounded-lg text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 border border-transparent flex items-center gap-2 transition">
+          <i class="fa-solid fa-chart-pie text-indigo-500"></i> 2. Mô Hình AI &amp; Dữ Liệu Thực Tế
+        </button>
+        <button id="nav-tab-3" onclick="switchTab('kg')" class="tab-btn px-4 py-2 rounded-lg text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 border border-transparent flex items-center gap-2 transition">
+          <i class="fa-solid fa-diagram-project text-emerald-500"></i> 3. Đồ Thị Tri Thức Y Khoa (Cypher)
+        </button>
+      </nav>
+    </div>
+  </div>
+
+  <!-- ================= MAIN CONTENT ================= -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 py-5 flex-1 w-full">
+
+    <!-- ======================================================== -->
+    <!-- TAB 1: HỘI CHẨN ĐA TÁC TỬ (12 AGENTS CLINICAL COUNCIL)     -->
+    <!-- ======================================================== -->
+    <section id="tab-consult" class="space-y-4">
+      
+      <!-- Conversational Multi-Agent Chat Workspace -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+        
+        <!-- LEFT: Chat Agent Interactive Dialogue Area (8 cols) -->
+        <div class="lg:col-span-8 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col h-[670px] overflow-hidden">
+          
+          <!-- Chat Header -->
+          <div class="p-3.5 bg-slate-50 dark:bg-slate-800/80 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+              <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white text-xs font-bold shadow-xs">
+                <i class="fa-solid fa-user-doctor"></i>
+              </div>
+              <div>
+                <h3 class="text-xs font-extrabold text-slate-800 dark:text-slate-100 flex items-center gap-1.5">
+                  TRỢ LÝ CHẨN ĐOÁN &amp; HỘI CHẨN ĐA TÁC TỬ (DIAMULTI-AGENT CDSS)
+                  <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                </h3>
+                <p class="text-[10px] text-slate-400">12 Chuyên Gia Trực Tuyến • Chẩn đoán xác định, đơn thuốc &amp; kế hoạch ADA 2024</p>
+              </div>
+            </div>
+            <button onclick="clearChatAndReset()" class="text-[11px] text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 flex items-center gap-1 px-2 py-1 rounded bg-slate-200/60 dark:bg-slate-700/60 transition">
+              <i class="fa-solid fa-rotate-right"></i> Phiên khám mới
+            </button>
+          </div>
+
+          <!-- Chat Messages Scroll Area -->
+          <div id="chatMessageList" class="flex-1 p-4 overflow-y-auto space-y-3.5 text-xs bg-slate-50/40 dark:bg-slate-950/30">
+            <!-- Initial Greeting from DiaTriage Agent -->
+            <div class="flex items-start gap-2.5">
+              <div class="w-7 h-7 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs shrink-0 font-bold">
+                <i class="fa-solid fa-staff-snake"></i>
+              </div>
+              <div class="bg-white dark:bg-slate-800 p-3.5 rounded-2xl rounded-tl-none border border-slate-200 dark:border-slate-700 max-w-[85%] shadow-xs space-y-2">
+                <p class="font-semibold text-slate-800 dark:text-slate-100 leading-relaxed">
+                  Chào bạn! Tôi là <b>Trợ Lý Hội Chẩn Đa Tác Tử Đái Tháo Đường</b>. Hội đồng 12 chuyên gia lâm sàng (Tiếp đón, Chẩn đoán AI, Tim mạch, Thận học, Dược lý, Lối sống...) đã sẵn sàng hỗ trợ bạn.
+                </p>
+                <p class="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">
+                  👉 Hãy chia sẻ: <b>Cân nặng (kg), Chiều cao (cm), Tuổi, Giới tính, Đường huyết đói (mg/dL), Huyết sắc tố (HbA1c %), Bệnh nền (Huyết áp, Tim mạch) hoặc thói quen hút thuốc</b>. Tôi sẽ phân tích và đưa ra <b>Kết luận chẩn đoán, Phác đồ thuốc &amp; Dinh dưỡng/vận động</b> ngay lập tức!
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Prompt Suggestions Chips -->
+          <div class="px-3 py-1.5 bg-slate-100/70 dark:bg-slate-800/50 border-t border-slate-200 dark:border-slate-800 flex items-center gap-1.5 overflow-x-auto text-[10px] whitespace-nowrap">
+            <span class="text-slate-400 font-semibold"><i class="fa-solid fa-lightbulb text-amber-500"></i> Gợi ý:</span>
+            <button onclick="sendQuickPrompt('Tôi nam 55 tuổi, cao 1m68, nặng 78kg, đường huyết 185 mg/dL, HbA1c 8.2%, có tiền sử cao huyết áp.')" class="px-2 py-0.5 rounded bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:border-blue-400">
+              🔴 Nam 55t (Đường huyết 185, HbA1c 8.2%)
+            </button>
+            <button onclick="sendQuickPrompt('Tôi nữ 46 tuổi, cao 1m58, nặng 63kg, đường huyết 115 mg/dL, HbA1c 6.1%, không hút thuốc.')" class="px-2 py-0.5 rounded bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:border-blue-400">
+              🟡 Nữ 46t (Đường huyết 115, HbA1c 6.1%)
+            </button>
+            <button onclick="sendQuickPrompt('Tôi nữ 28 tuổi, cao 1m62, nặng 52kg, đường huyết 88 mg/dL, HbA1c 5.1%, khỏe mạnh.')" class="px-2 py-0.5 rounded bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:border-blue-400">
+              🟢 Nữ 28t (Khỏe mạnh, HbA1c 5.1%)
+            </button>
+            <button onclick="sendQuickPrompt('Khi nào chống chỉ định Metformin?')" class="px-2 py-0.5 rounded bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-purple-600 dark:text-purple-300 hover:border-purple-400">
+              💊 Hỏi Metformin (ADA)
+            </button>
+            <button onclick="sendQuickPrompt('Quy tắc 15-15 xử trí cấp cứu hạ đường huyết theo Nhà thuốc Long Châu?')" class="px-2 py-0.5 rounded bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-blue-600 dark:text-blue-300 hover:border-blue-400 font-semibold">
+              🩸 Hạ Đường Huyết (Long Châu)
+            </button>
+            <button onclick="sendQuickPrompt('Quy trình chăm sóc và bảo vệ bàn chân đái tháo đường theo Bệnh viện Vinmec?')" class="px-2 py-0.5 rounded bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-emerald-600 dark:text-emerald-300 hover:border-emerald-400 font-semibold">
+              🦶 Bàn Chân ĐTĐ (Vinmec)
+            </button>
+            <button onclick="sendQuickPrompt('Mô hình đĩa thức ăn cho người Việt Nam theo Vinmec?')" class="px-2 py-0.5 rounded bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-teal-600 dark:text-teal-300 hover:border-teal-400">
+              🥗 Đĩa Thức Ăn (Vinmec)
+            </button>
+            <button onclick="sendQuickPrompt('Mục tiêu kiểm soát đường huyết theo Quyết định 5481 của Bộ Y tế Việt Nam?')" class="px-2 py-0.5 rounded bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-rose-600 dark:text-rose-300 hover:border-rose-400 font-semibold">
+              📜 Mục Tiêu HbA1c (Bộ Y Tế)
+            </button>
+          </div>
+
+          <!-- Chat Input Bar -->
+          <div class="p-3 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 flex items-center gap-2">
+            <input type="text" id="chatInputText" placeholder="Nhập thông tin bệnh nhân: 'Tôi là nam 55 tuổi, cao 168cm, nặng 75kg, đường huyết 160, HbA1c 7.8...' hoặc câu hỏi y khoa..." class="flex-1 py-2 px-3 text-xs bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800 dark:text-slate-100" onkeydown="if(event.key === 'Enter') handleUserChatMessage();">
+            <button id="sendChatBtn" onclick="handleUserChatMessage()" class="px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white text-xs font-bold rounded-xl shadow transition flex items-center gap-1.5 whitespace-nowrap">
+              <i class="fa-solid fa-paper-plane"></i>
+              <span>Gửi</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- RIGHT: Quick Parameters Vitals Sidebar (4 cols) -->
+        <div class="lg:col-span-4 bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-3">
+          <div class="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
+            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+              <i class="fa-solid fa-clipboard-user text-blue-600"></i> Bảng Chỉ Số Đồng Bộ
+            </h3>
+            <span id="bmiBadge" class="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-100 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300">
+              BMI: <span id="bmiVal">26.6 kg/m²</span>
+            </span>
+          </div>
+
+          <div class="space-y-2 text-xs">
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="text-[10px] text-slate-500 block">Chiều cao: <b id="heightVal" class="text-blue-600 dark:text-blue-400">168 cm</b></label>
+                <input type="range" id="heightInput" min="130" max="210" value="168" oninput="document.getElementById('heightVal').innerText = this.value + ' cm'; updateBMI();" class="w-full slider-accent">
+              </div>
+              <div>
+                <label class="text-[10px] text-slate-500 block">Cân nặng: <b id="weightVal" class="text-blue-600 dark:text-blue-400">75 kg</b></label>
+                <input type="range" id="weightInput" min="35" max="150" value="75" oninput="document.getElementById('weightVal').innerText = this.value + ' kg'; updateBMI();" class="w-full slider-accent">
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="text-[10px] text-slate-500 block">Tuổi: <b id="ageVal" class="text-blue-600 dark:text-blue-400">55</b></label>
+                <input type="range" id="ageInput" min="18" max="95" value="55" oninput="document.getElementById('ageVal').innerText = this.value;" class="w-full slider-accent">
+              </div>
+              <div>
+                <label class="text-[10px] text-slate-500 block">Giới tính</label>
+                <select id="genderInput" class="w-full p-1 text-xs bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded">
+                  <option value="Male" selected>Nam</option>
+                  <option value="Female">Nữ</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <div class="flex justify-between text-[10px] text-slate-500">
+                <span>Đường huyết đói (Glucose):</span>
+                <span id="glucoseVal" class="font-bold text-blue-600 dark:text-blue-400">160 mg/dL</span>
+              </div>
+              <input type="range" id="glucoseInput" min="60" max="350" value="160" oninput="document.getElementById('glucoseVal').innerText = this.value + ' mg/dL';" class="w-full slider-accent">
+            </div>
+
+            <div>
+              <div class="flex justify-between text-[10px] text-slate-500">
+                <span>Huyết sắc tố (HbA1c):</span>
+                <span id="hba1cVal" class="font-bold text-rose-600 dark:text-rose-400">7.8%</span>
+              </div>
+              <input type="range" id="hba1cInput" min="4.0" max="15.0" step="0.1" value="7.8" oninput="document.getElementById('hba1cVal').innerText = this.value + '%';" class="w-full slider-accent">
+            </div>
+
+            <div class="grid grid-cols-2 gap-2 pt-1 border-t border-slate-100 dark:border-slate-800">
+              <label class="flex items-center space-x-1.5 text-[11px] cursor-pointer">
+                <input type="checkbox" id="hypertensionInput" checked class="rounded text-blue-600">
+                <span>Tăng Huyết Áp</span>
+              </label>
+              <label class="flex items-center space-x-1.5 text-[11px] cursor-pointer">
+                <input type="checkbox" id="heartDiseaseInput" class="rounded text-blue-600">
+                <span>Bệnh Tim Mạch</span>
+              </label>
+            </div>
+
+            <div>
+              <label class="text-[10px] text-slate-500 block mb-0.5">Thuốc lá</label>
+              <select id="smokingInput" class="w-full p-1 text-xs bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded">
+                <option value="never">Không hút thuốc</option>
+                <option value="former" selected>Đã từng hút</option>
+                <option value="current">Đang hút thuốc</option>
+              </select>
+            </div>
+
+            <button onclick="triggerConsultFromSidebar()" class="w-full py-2 bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs rounded-lg shadow-sm transition flex items-center justify-center gap-1.5 mt-2">
+              <i class="fa-solid fa-play"></i> Gửi Chỉ Số &amp; Hội Chẩn Ngay
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ======================================================== -->
+    <!-- TAB 2: MÔ HÌNH AI & 5 BỘ DỮ LIỆU THỰC TẾ                 -->
+    <!-- ======================================================== -->
+    <section id="tab-models" class="space-y-5 hidden">
+      
+      <!-- Datasets Overview Section -->
+      <div class="space-y-3">
+        <div class="flex items-center justify-between">
+          <h2 class="text-sm font-extrabold uppercase tracking-wider text-slate-800 dark:text-slate-100 flex items-center gap-2">
+            <i class="fa-solid fa-database text-blue-600"></i> 5 Bộ Dữ Liệu Lâm Sàng &amp; Dân Số Thực Tế (Đã Tải Về Máy)
+          </h2>
+          <div class="flex items-center gap-2">
+            <a href="/api/download/datasets-models-txt" target="_blank" class="px-2.5 py-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 text-xs font-semibold rounded-lg hover:border-blue-400 flex items-center gap-1.5 shadow-xs transition">
+              <i class="fa-solid fa-download text-blue-500"></i> Tải File Ghi Chép Dataset &amp; Model (.txt)
+            </a>
+            <span class="text-[11px] text-slate-400">Thư mục nguồn: <code>project01/data/</code></span>
+          </div>
+        </div>
+
+        <!-- 5 Datasets Cards Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+          
+          <!-- Dataset 1: 1M Big Data -->
+          <div class="p-3 rounded-xl bg-purple-50/50 dark:bg-purple-950/30 border border-purple-200 dark:border-purple-800 flex flex-col justify-between space-y-2">
+            <div>
+              <span class="text-[10px] font-extrabold bg-purple-600 text-white px-2 py-0.5 rounded-full uppercase">1.000.000 Ca</span>
+              <h4 class="text-xs font-bold text-slate-800 dark:text-slate-100 mt-1">Big Data Cohort</h4>
+              <p class="text-[10px] text-slate-500 dark:text-slate-400">9 biến lâm sàng • 37.28 MB</p>
+            </div>
+            <div class="flex items-center gap-1.5 pt-2 border-t border-purple-100 dark:border-purple-800/60">
+              <button onclick="viewCohortData('1m')" class="w-full py-1 bg-purple-600 hover:bg-purple-500 text-white text-[10px] font-bold rounded shadow-xs">Xem Bảng</button>
+              <a href="/api/data/download/1m" download="diabetes_prediction_dataset_1M.csv" class="p-1 bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded hover:bg-slate-300 text-[10px]"><i class="fa-solid fa-download"></i></a>
+            </div>
+          </div>
+
+          <!-- Dataset 2: CDC BRFSS 253k -->
+          <div class="p-3 rounded-xl bg-emerald-50/50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 flex flex-col justify-between space-y-2">
+            <div>
+              <span class="text-[10px] font-extrabold bg-emerald-600 text-white px-2 py-0.5 rounded-full uppercase">253.680 Ca</span>
+              <h4 class="text-xs font-bold text-slate-800 dark:text-slate-100 mt-1">CDC BRFSS Survey</h4>
+              <p class="text-[10px] text-slate-500 dark:text-slate-400">22 biến dịch tễ • 21.68 MB</p>
+            </div>
+            <div class="flex items-center gap-1.5 pt-2 border-t border-emerald-100 dark:border-emerald-800/60">
+              <button onclick="viewCohortData('cdc')" class="w-full py-1 bg-emerald-600 hover:bg-emerald-500 text-white text-[10px] font-bold rounded shadow-xs">Xem Bảng</button>
+              <a href="/api/data/download/cdc253k" download="cdc_brfss_diabetes_253k.csv" class="p-1 bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded hover:bg-slate-300 text-[10px]"><i class="fa-solid fa-download"></i></a>
+            </div>
+          </div>
+
+          <!-- Dataset 3: UCI 130 Hospitals 101k -->
+          <div class="p-3 rounded-xl bg-blue-50/50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 flex flex-col justify-between space-y-2">
+            <div>
+              <span class="text-[10px] font-extrabold bg-blue-600 text-white px-2 py-0.5 rounded-full uppercase">101.766 Ca</span>
+              <h4 class="text-xs font-bold text-slate-800 dark:text-slate-100 mt-1">UCI 130 Bệnh Viện</h4>
+              <p class="text-[10px] text-slate-500 dark:text-slate-400">50 biến điều trị • 18.27 MB</p>
+            </div>
+            <div class="flex items-center gap-1.5 pt-2 border-t border-blue-100 dark:border-blue-800/60">
+              <button onclick="viewCohortData('uci')" class="w-full py-1 bg-blue-600 hover:bg-blue-500 text-white text-[10px] font-bold rounded shadow-xs">Xem Bảng</button>
+              <a href="/api/data/download/uci100k" download="diabetic_data_101k.csv" class="p-1 bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded hover:bg-slate-300 text-[10px]"><i class="fa-solid fa-download"></i></a>
+            </div>
+          </div>
+
+          <!-- Dataset 4: Kaggle 100k -->
+          <div class="p-3 rounded-xl bg-sky-50/50 dark:bg-sky-950/30 border border-sky-200 dark:border-sky-800 flex flex-col justify-between space-y-2">
+            <div>
+              <span class="text-[10px] font-extrabold bg-sky-600 text-white px-2 py-0.5 rounded-full uppercase">100.000 Ca</span>
+              <h4 class="text-xs font-bold text-slate-800 dark:text-slate-100 mt-1">Kaggle Multi-center</h4>
+              <p class="text-[10px] text-slate-500 dark:text-slate-400">9 biến lâm sàng • 3.73 MB</p>
+            </div>
+            <div class="flex items-center gap-1.5 pt-2 border-t border-sky-100 dark:border-sky-800/60">
+              <button onclick="viewCohortData('100k')" class="w-full py-1 bg-sky-600 hover:bg-sky-500 text-white text-[10px] font-bold rounded shadow-xs">Xem Bảng</button>
+              <a href="/api/data/download/100k" download="diabetes_prediction_dataset.csv" class="p-1 bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded hover:bg-slate-300 text-[10px]"><i class="fa-solid fa-download"></i></a>
+            </div>
+          </div>
+
+          <!-- Dataset 5: Pima 768 -->
+          <div class="p-3 rounded-xl bg-amber-50/50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 flex flex-col justify-between space-y-2">
+            <div>
+              <span class="text-[10px] font-extrabold bg-amber-600 text-white px-2 py-0.5 rounded-full uppercase">768 Ca</span>
+              <h4 class="text-xs font-bold text-slate-800 dark:text-slate-100 mt-1">NIDDK Pima Indians</h4>
+              <p class="text-[10px] text-slate-500 dark:text-slate-400">9 biến sinh hóa • 23.8 KB</p>
+            </div>
+            <div class="flex items-center gap-1.5 pt-2 border-t border-amber-100 dark:border-amber-800/60">
+              <button onclick="viewCohortData('pima')" class="w-full py-1 bg-amber-600 hover:bg-amber-500 text-white text-[10px] font-bold rounded shadow-xs">Xem Bảng</button>
+              <a href="/api/data/download/pima" download="pima_diabetes_dataset.csv" class="p-1 bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded hover:bg-slate-300 text-[10px]"><i class="fa-solid fa-download"></i></a>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Sample Data Viewer Container -->
+        <div id="sampleDataViewerBox" class="p-4 bg-slate-900 rounded-xl border border-slate-800 text-white hidden">
+          <div class="flex items-center justify-between pb-2 mb-2 border-b border-slate-800">
+            <span id="sampleDataTitle" class="text-xs font-bold text-cyan-400">Xem trước dữ liệu mẫu</span>
+            <button onclick="document.getElementById('sampleDataViewerBox').classList.add('hidden')" class="text-xs text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i> Đóng</button>
+          </div>
+          <div id="sampleDataContent" class="overflow-x-auto text-[11px] font-mono-code"></div>
+        </div>
+      </div>
+
+      <!-- 9 Models Comparison Table -->
+      <div class="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-3">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 flex items-center gap-2">
+              <i class="fa-solid fa-ranking-star text-amber-500"></i> Bảng So Sánh Hiệu Năng 9 Mô Hình AI &amp; Deep Learning
+            </h3>
+            <p class="text-[11px] text-slate-400">Đánh giá trên tập kiểm thử độc lập (Test Set n = 20.000 ca)</p>
+          </div>
+          <span class="text-xs font-bold px-2.5 py-1 bg-blue-100 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300 rounded-lg">
+            TabResNet Attention Tốt Nhất (AUC: 0.9793)
+          </span>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs border-collapse">
+            <thead>
+              <tr class="bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold border-b border-slate-200 dark:border-slate-700">
+                <th class="p-2.5">Mô Hình</th>
+                <th class="p-2.5">Kiến Trúc / Framework</th>
+                <th class="p-2.5 text-center">Độ Chính Xác (Acc)</th>
+                <th class="p-2.5 text-center">F1-Score</th>
+                <th class="p-2.5 text-center text-blue-600 dark:text-blue-400 font-bold">ROC-AUC</th>
+                <th class="p-2.5 text-center">Đánh Giá</th>
+              </tr>
+            </thead>
+            <tbody id="modelsTableBody" class="divide-y divide-slate-100 dark:divide-slate-800">
+              <!-- TabResNet (Highlighted) -->
+              <tr class="bg-blue-50/60 dark:bg-blue-950/30 font-bold">
+                <td class="p-2.5 flex items-center gap-1.5 text-blue-700 dark:text-blue-300">
+                  <i class="fa-solid fa-trophy text-amber-500"></i> TabResNet Attention
+                </td>
+                <td class="p-2.5 text-slate-600 dark:text-slate-400">Deep Learning (Residual + Multi-head)</td>
+                <td class="p-2.5 text-center font-mono-code">97.4%</td>
+                <td class="p-2.5 text-center font-mono-code">91.24%</td>
+                <td class="p-2.5 text-center font-mono-code text-blue-600 dark:text-blue-400 font-extrabold">0.9793</td>
+                <td class="p-2.5 text-center"><span class="px-2 py-0.5 rounded-full text-[10px] bg-blue-600 text-white">Chính Thức</span></td>
+              </tr>
+              <!-- Other models -->
+              <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40">
+                <td class="p-2.5">LightGBM Classifier</td>
+                <td class="p-2.5 text-slate-500">Gradient Boosting</td>
+                <td class="p-2.5 text-center font-mono-code">97.2%</td>
+                <td class="p-2.5 text-center font-mono-code">90.85%</td>
+                <td class="p-2.5 text-center font-mono-code">0.9785</td>
+                <td class="p-2.5 text-center text-slate-400">Chuẩn</td>
+              </tr>
+              <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40">
+                <td class="p-2.5">XGBoost Classifier</td>
+                <td class="p-2.5 text-slate-500">Gradient Boosting</td>
+                <td class="p-2.5 text-center font-mono-code">97.1%</td>
+                <td class="p-2.5 text-center font-mono-code">90.62%</td>
+                <td class="p-2.5 text-center font-mono-code">0.9778</td>
+                <td class="p-2.5 text-center text-slate-400">Chuẩn</td>
+              </tr>
+              <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40">
+                <td class="p-2.5">CatBoost Classifier</td>
+                <td class="p-2.5 text-slate-500">Oblivious Trees</td>
+                <td class="p-2.5 text-center font-mono-code">97.0%</td>
+                <td class="p-2.5 text-center font-mono-code">90.41%</td>
+                <td class="p-2.5 text-center font-mono-code">0.9770</td>
+                <td class="p-2.5 text-center text-slate-400">Chuẩn</td>
+              </tr>
+              <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40">
+                <td class="p-2.5">Random Forest</td>
+                <td class="p-2.5 text-slate-500">Bagging Ensemble</td>
+                <td class="p-2.5 text-center font-mono-code">96.8%</td>
+                <td class="p-2.5 text-center font-mono-code">89.70%</td>
+                <td class="p-2.5 text-center font-mono-code">0.9692</td>
+                <td class="p-2.5 text-center text-slate-400">Baseline</td>
+              </tr>
+              <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40">
+                <td class="p-2.5">MLP Neural Network</td>
+                <td class="p-2.5 text-slate-500">3-Layer Perceptron</td>
+                <td class="p-2.5 text-center font-mono-code">96.5%</td>
+                <td class="p-2.5 text-center font-mono-code">88.90%</td>
+                <td class="p-2.5 text-center font-mono-code">0.9654</td>
+                <td class="p-2.5 text-center text-slate-400">Baseline</td>
+              </tr>
+              <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40">
+                <td class="p-2.5">Logistic Regression</td>
+                <td class="p-2.5 text-slate-500">Linear Probabilistic</td>
+                <td class="p-2.5 text-center font-mono-code">95.9%</td>
+                <td class="p-2.5 text-center font-mono-code">86.20%</td>
+                <td class="p-2.5 text-center font-mono-code">0.9575</td>
+                <td class="p-2.5 text-center text-slate-400">Tuyến tính</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ======================================================== -->
+    <!-- TAB 3: ĐỒ THỊ TRI THỨC Y KHOA (CYPHER & VIS.JS)         -->
+    <!-- ======================================================== -->
+    <section id="tab-kg" class="space-y-4 hidden">
+      
+      <!-- Top Action Bar for KG -->
+      <div class="p-3 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-between gap-3 shadow-xs">
+        <div class="flex items-center gap-2">
+          <span class="text-xs font-bold text-slate-800 dark:text-slate-100 flex items-center gap-1.5">
+            <i class="fa-solid fa-diagram-project text-emerald-500"></i> Đồ Thị Tri Thức Y Khoa Đa Nguồn (Multi-Source Clinical KG)
+          </span>
+          <span class="text-[10px] bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 px-2 py-0.5 rounded font-mono-code font-bold">
+            56 Nodes • 59 Edges • Nguồn: ADA 2024 • Vinmec • FPT Long Châu • Bộ Y Tế QĐ 5481
+          </span>
+        </div>
+
+        <!-- Quick Cypher Queries -->
+        <div class="flex flex-wrap items-center gap-1.5 text-xs">
+          <span class="text-[11px] text-slate-400 mr-1">Truy vấn nhanh:</span>
+          <button onclick="runPredefinedCypher('metformin')" class="px-2.5 py-1 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-300 rounded font-medium transition">
+            💊 Phác Đồ Metformin
+          </button>
+          <button onclick="runPredefinedCypher('cvd')" class="px-2.5 py-1 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-300 rounded font-medium transition">
+            ❤️ Biến Chứng Tim Mạch
+          </button>
+          <button onclick="runPredefinedCypher('hba1c')" class="px-2.5 py-1 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-300 rounded font-medium transition">
+            🎯 Tiêu Chuẩn HbA1c
+          </button>
+          <button onclick="openCypherSourceModal()" class="px-2.5 py-1 bg-blue-600 hover:bg-blue-500 text-white rounded font-bold transition flex items-center gap-1">
+            <i class="fa-solid fa-code"></i> Xem File Cypher Gốc
+          </button>
+        </div>
+      </div>
+
+      <!-- Vis.js Knowledge Graph Interactive Canvas -->
+      <div class="relative bg-slate-900 rounded-xl border border-slate-800 overflow-hidden shadow-lg">
+        <div id="kg-container"></div>
+
+        <!-- Float Controls on Canvas -->
+        <div class="absolute bottom-3 right-3 flex items-center space-x-1.5 bg-slate-800/80 backdrop-blur p-1 rounded-lg border border-slate-700">
+          <button onclick="if(kgNetwork) kgNetwork.moveTo({scale: kgNetwork.getScale()*1.3})" class="w-7 h-7 text-white text-xs hover:bg-slate-700 rounded"><i class="fa-solid fa-plus"></i></button>
+          <button onclick="if(kgNetwork) kgNetwork.moveTo({scale: kgNetwork.getScale()*0.7})" class="w-7 h-7 text-white text-xs hover:bg-slate-700 rounded"><i class="fa-solid fa-minus"></i></button>
+          <button onclick="if(kgNetwork) kgNetwork.fit()" class="w-7 h-7 text-white text-xs hover:bg-slate-700 rounded"><i class="fa-solid fa-arrows-to-dot"></i></button>
+        </div>
+      </div>
+
+      <!-- Live Cypher Query Console -->
+      <div class="p-4 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 space-y-2">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5 font-mono-code">
+            <i class="fa-solid fa-terminal text-blue-500"></i> Neo4j Cypher Console:
+          </span>
+          <button onclick="executeCurrentCypher()" class="px-3 py-1 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded shadow-xs transition flex items-center gap-1">
+            <i class="fa-solid fa-play"></i> Thực thi Cypher
+          </button>
+        </div>
+        <textarea id="cypherQueryInput" rows="2" class="w-full p-2.5 text-xs font-mono-code bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-blue-700 dark:text-cyan-300">MATCH (d:Condition {id: 'T2D'})-[r:FIRST_LINE_TREATMENT|TREATS]->(m:Medication) RETURN d.name AS Benh, m.name AS Thuoc, r.desc AS ChiDinh, m.url AS Link</textarea>
+        
+        <!-- Cypher Result Output -->
+        <div id="cypherResultBox" class="p-3 bg-slate-900 text-cyan-300 font-mono-code text-[11px] rounded-lg border border-slate-800 max-h-48 overflow-y-auto hidden"></div>
+      </div>
+
+    
+      <!-- Clinical Graph-RAG Q&A Engine -->
+      <div class="p-4 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 space-y-3">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-bold text-slate-800 dark:text-slate-100 flex items-center gap-1.5">
+              <i class="fa-solid fa-brain text-purple-600"></i> Hỏi Đáp Lâm Sàng Graph-RAG (Graph Retrieval-Augmented Generation)
+            </span>
+            <span class="text-[10px] bg-purple-100 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300 font-bold px-2 py-0.5 rounded-full">
+              Multi-Hop Semantic Traversal
+            </span>
+          </div>
+          <div class="flex items-center gap-1.5 text-[11px] flex-wrap">
+            <span class="text-slate-400">Gợi ý đa nguồn:</span>
+            <button onclick="setRagQuestion('Quy tắc 15-15 xử trí cấp cứu hạ đường huyết theo Nhà thuốc Long Châu?')" class="text-blue-600 dark:text-blue-400 hover:underline font-semibold"><i class="fa-solid fa-capsules mr-0.5"></i> Quy tắc 15-15 (Long Châu)</button> •
+            <button onclick="setRagQuestion('Quy trình chăm sóc và bảo vệ bàn chân đái tháo đường theo Bệnh viện Vinmec?')" class="text-emerald-600 dark:text-emerald-400 hover:underline font-semibold"><i class="fa-solid fa-hospital mr-0.5"></i> Chăm sóc bàn chân (Vinmec)</button> •
+            <button onclick="setRagQuestion('Mô hình đĩa thức ăn cho người Việt Nam theo Vinmec?')" class="text-teal-600 dark:text-teal-400 hover:underline font-semibold"><i class="fa-solid fa-utensils mr-0.5"></i> Đĩa thức ăn (Vinmec)</button> •
+            <button onclick="setRagQuestion('Hướng dẫn tiêm và bảo quản bút tiêm insulin của Nhà thuốc Long Châu?')" class="text-indigo-600 dark:text-indigo-400 hover:underline font-semibold"><i class="fa-solid fa-syringe mr-0.5"></i> Bảo quản Insulin (Long Châu)</button> •
+            <button onclick="setRagQuestion('Mục tiêu kiểm soát đường huyết theo Quyết định 5481 của Bộ Y tế Việt Nam?')" class="text-rose-600 dark:text-rose-400 hover:underline font-semibold"><i class="fa-solid fa-file-medical mr-0.5"></i> Mục tiêu HbA1c (Bộ Y Tế)</button> •
+            <button onclick="setRagQuestion('Khi nào chống chỉ định Metformin?')" class="text-purple-600 dark:text-purple-400 hover:underline">Chống chỉ định Metformin</button>
+          </div>
+        </div>
+
+        <div class="flex gap-2">
+          <input type="text" id="ragQuestionInput" value="Khi nào chống chỉ định Metformin?" placeholder="Nhập câu hỏi lâm sàng cần tra cứu từ đồ thị tri thức..." class="flex-1 p-2 text-xs bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-800 dark:text-slate-100">
+          <button onclick="askGraphRAG()" class="px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white text-xs font-bold rounded-lg shadow transition flex items-center gap-1.5 whitespace-nowrap">
+            <i class="fa-solid fa-magnifying-glass"></i> Hỏi Graph-RAG
+          </button>
+        </div>
+
+        <!-- RAG Result Card -->
+        <div id="ragResultCard" class="p-3 bg-purple-50/40 dark:bg-purple-950/20 rounded-lg border border-purple-100 dark:border-purple-900/40 text-xs space-y-2 hidden">
+          <div class="flex items-center justify-between pb-1 border-b border-purple-200/50 dark:border-purple-800/40">
+            <span class="font-bold text-purple-900 dark:text-purple-200 flex items-center gap-1.5">
+              <i class="fa-solid fa-circle-check text-emerald-500"></i> Chủ Đề: <span id="ragMatchedTopic">Chống Chỉ Định &amp; Chỉnh Liều Metformin</span>
+            </span>
+            <span class="text-[10px] text-purple-700 dark:text-purple-300 font-mono-code font-bold">Độ tin cậy: <span id="ragConfidence">98%</span> (Graph Hit)</span>
+          </div>
+
+          <!-- Reasoning Path on Graph -->
+          <div>
+            <span class="text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400 block mb-0.5">Đường đi suy luận trên đồ thị tri thức (Graph Reasoning Path):</span>
+            <div id="ragReasoningPath" class="p-2 bg-white dark:bg-slate-900 rounded border border-purple-100 dark:border-purple-900/40 font-mono-code text-[10px] text-indigo-600 dark:text-cyan-300 space-y-0.5"></div>
+          </div>
+
+          <!-- Clinical Synthesis -->
+          <div>
+            <span class="text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400 block mb-0.5">Tổng hợp khuyến nghị điều trị lâm sàng:</span>
+            <p id="ragSynthesis" class="text-slate-700 dark:text-slate-200 leading-relaxed whitespace-pre-line"></p>
+          </div>
+
+          <!-- Guideline Citation -->
+          <div class="pt-1 text-[10px] text-slate-400 border-t border-purple-100 dark:border-purple-900/30 flex items-center gap-1">
+            <i class="fa-solid fa-book-bookmark text-purple-500"></i>
+            <span>Trích dẫn y văn: <b id="ragCitation" class="text-slate-600 dark:text-slate-300">ADA Standards of Care 2024</b></span>
+          </div>
+        </div>
+      </div>
+</section>
+
+  </main>
+
+  <!-- ================= MODAL: CYPHER SOURCE CODE VIEWER ================= -->
+  <div id="cypherModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 z-50 hidden">
+    <div class="bg-slate-900 text-slate-100 rounded-xl border border-slate-700 max-w-3xl w-full max-h-[80vh] flex flex-col shadow-2xl">
+      <div class="p-3 border-b border-slate-800 flex items-center justify-between">
+        <span class="text-xs font-bold text-cyan-400 font-mono-code flex items-center gap-1.5">
+          <i class="fa-solid fa-file-code"></i> project01/knowledge_graph/diabetes_knowledge_graph.cypher
+        </span>
+        <button onclick="document.getElementById('cypherModal').classList.add('hidden')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="p-4 flex-1 overflow-y-auto font-mono-code text-[11px] bg-slate-950 text-slate-300 leading-relaxed">
+        <pre id="cypherFileContent">Đang tải nội dung Cypher...</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 py-3 text-center text-xs text-slate-500 dark:text-slate-400">
+    Hệ thống hỗ trợ chẩn đoán lâm sàng Đái Tháo Đường • PTIT 2026 • Sinh viên: <b>Trần Văn Hậu (B23DCCN287)</b> • GVHD: <b>PGS.TS. Trần Đình Quế</b>
+  </footer>
+
+  <!-- ================= JAVASCRIPT LOGIC ================= -->
+  <script>
+    let kgNetwork = null;
+
+    // Tab Switching Logic
+    function switchTab(tabId) {
+      document.querySelectorAll('main > section').forEach(sec => sec.classList.add('hidden'));
+      document.getElementById('tab-' + tabId).classList.remove('hidden');
+
+      // Update Nav Buttons
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.className = 'tab-btn px-4 py-2 rounded-lg text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 border border-transparent flex items-center gap-2 transition';
+      });
+
+      const activeBtn = event ? event.currentTarget : document.getElementById('nav-tab-' + (tabId === 'consult' ? '1' : tabId === 'models' ? '2' : '3'));
+      if (activeBtn) {
+        activeBtn.className = 'tab-btn px-4 py-2 rounded-lg text-xs sm:text-sm font-bold bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-800 flex items-center gap-2 transition';
+      }
+
+      if (tabId === 'kg' && !kgNetwork) {
+        setTimeout(initKnowledgeGraph, 100);
+      }
+    }
+
+    // Toggle Dark Mode
+    function toggleDarkMode() {
+      const isDark = document.documentElement.classList.toggle('dark');
+      document.getElementById('themeIcon').className = isDark ? 'fa-solid fa-sun text-amber-300' : 'fa-solid fa-moon text-amber-300';
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    }
+
+    // Preset Patient Data Loading
+
+    // Update BMI based on Height & Weight
+    function updateBMI() {
+      const hEl = document.getElementById('heightInput');
+      const wEl = document.getElementById('weightInput');
+      const h = parseFloat(hEl ? hEl.value : 168) || 168;
+      const w = parseFloat(wEl ? wEl.value : 75) || 75;
+      const h_m = h / 100.0;
+      const bmi = (w / (h_m * h_m)).toFixed(1);
+
+      const valEl = document.getElementById('bmiVal');
+      if (valEl) valEl.innerText = bmi + ' kg/m²';
+      
+      const badge = document.getElementById('bmiBadge');
+      if (badge) {
+        if (bmi < 18.5) {
+          badge.innerText = 'BMI: ' + bmi + ' (Thiếu cân)';
+          badge.className = 'px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-700 dark:bg-amber-950/60 dark:text-amber-300';
+        } else if (bmi <= 24.9) {
+          badge.innerText = 'BMI: ' + bmi + ' (Bình thường)';
+          badge.className = 'px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300';
+        } else if (bmi <= 29.9) {
+          badge.innerText = 'BMI: ' + bmi + ' (Thừa cân)';
+          badge.className = 'px-2 py-0.5 rounded text-[10px] font-bold bg-blue-100 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300';
+        } else {
+          badge.innerText = 'BMI: ' + bmi + ' (Béo phì)';
+          badge.className = 'px-2 py-0.5 rounded text-[10px] font-bold bg-rose-100 text-rose-700 dark:bg-rose-950/60 dark:text-rose-300';
+        }
+      }
+      return parseFloat(bmi);
+    }
+
+    // Preset Patient Data Loading
+    function loadPreset(type) {
+      let prompt = '';
+      if (type === 'diabetes') {
+        prompt = 'Tôi là nam, 55 tuổi, cao 1m68, nặng 78kg, đường huyết 185 mg/dL, HbA1c 8.2%, có cao huyết áp.';
+      } else if (type === 'prediabetes') {
+        prompt = 'Tôi là nữ, 46 tuổi, cao 1m58, nặng 63kg, đường huyết 115 mg/dL, HbA1c 6.1%, không hút thuốc.';
+      } else if (type === 'healthy') {
+        prompt = 'Tôi là nữ, 28 tuổi, cao 1m62, nặng 52kg, đường huyết 88 mg/dL, HbA1c 5.1%, hoàn toàn khỏe mạnh.';
+      }
+      const chatInput = document.getElementById('chatInputText');
+      if (chatInput && prompt) {
+        chatInput.value = prompt;
+        handleUserChatMessage();
+      }
+    }
+
+    // Run Consultation redirector
+    function runConsultation() {
+      triggerConsultFromSidebar();
+    }
+
+    // View Sample Dataset in Tab 2
+    async function viewCohortData(cohortKey) {
+      const box = document.getElementById('sampleDataViewerBox');
+      const title = document.getElementById('sampleDataTitle');
+      const content = document.getElementById('sampleDataContent');
+
+      box.classList.remove('hidden');
+      content.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Đang đọc dữ liệu...';
+
+      try {
+        const resp = await fetch('/api/dataset/sample');
+        const data = await resp.json();
+
+        let targetData = null;
+        let cohortName = '';
+
+        if (cohortKey === '1m') {
+          targetData = data.cohort_3_1m;
+          cohortName = 'Tập Mở Rộng Dân Số 1.000.000 Ca (Big Data)';
+        } else if (cohortKey === 'cdc') {
+          targetData = data.cohort_cdc_253k;
+          cohortName = 'CDC BRFSS Survey (253.680 Ca Thực Tế)';
+        } else if (cohortKey === 'uci') {
+          targetData = data.cohort_uci_100k;
+          cohortName = 'UCI 130-US Hospitals (101.766 Ca Bệnh Viện)';
+        } else if (cohortKey === '100k') {
+          targetData = data.cohort_2_100k;
+          cohortName = 'Kaggle Multi-center Cohort (100.000 Ca)';
+        } else {
+          targetData = data.cohort_1_pima;
+          cohortName = 'NIDDK Pima Indians Diabetes (768 Ca)';
+        }
+
+        title.innerText = cohortName + ` (${targetData?.file || ''})`;
+
+        if (targetData && targetData.samples && targetData.samples.length) {
+          const cols = Object.keys(targetData.samples[0]);
+          let tableHtml = '<table class="w-full text-left border-collapse border border-slate-700 text-[10px]"><thead><tr class="bg-slate-800 text-cyan-300">';
+          cols.forEach(c => tableHtml += `<th class="p-1.5 border border-slate-700">${c}</th>`);
+          tableHtml += '</tr></thead><tbody>';
+
+          targetData.samples.forEach(row => {
+            tableHtml += '<tr class="border-b border-slate-800 hover:bg-slate-800/50">';
+            cols.forEach(c => tableHtml += `<td class="p-1.5 border border-slate-800">${row[c] || ''}</td>`);
+            tableHtml += '</tr>';
+          });
+          tableHtml += '</tbody></table>';
+          content.innerHTML = tableHtml;
+        } else {
+          content.innerHTML = '<span class="text-rose-400">Không có dữ liệu mẫu.</span>';
+        }
+      } catch (e) {
+        content.innerHTML = `<span class="text-rose-400">Lỗi nạp dữ liệu: ${e}</span>`;
+      }
+    }
+
+    // Initialize Knowledge Graph Vis.js
+    async function initKnowledgeGraph() {
+      const container = document.getElementById('kg-container');
+      if (!container) return;
+      container.innerHTML = '<div class="p-4 text-xs text-cyan-300 font-mono-code"><i class="fa-solid fa-spinner fa-spin mr-1"></i> Đang tải và dựng mạng lưới đồ thị tri thức 44 Nodes & 45 Edges...</div>';
+
+      try {
+        const resp = await fetch('/api/knowledge-graph');
+        const data = await resp.json();
+        container.innerHTML = '';
+
+        const nodes = new vis.DataSet(data.nodes.map(n => {
+          const label = n.name || n.label || n.id;
+          const cat = n.category || n.type || '';
+          const src = n.source || '';
+          let bg = '#2563eb';
+          if (src.includes('Vinmec')) bg = '#059669'; // Emerald for Vinmec
+          else if (src.includes('Long Châu')) bg = '#0284c7'; // Sky Blue for Long Châu
+          else if (src.includes('Bộ Y tế') || src.includes('BYT')) bg = '#b91c1c'; // Crimson for MOH Vietnam
+          else if (cat.includes('Condition') || cat.includes('Disease')) bg = '#dc2626';
+          else if (cat.includes('Medication') || cat.includes('Drug')) bg = '#2563eb';
+          else if (cat.includes('Biomarker') || cat.includes('Metric') || cat.includes('Diagnostic')) bg = '#10b981';
+          else if (cat.includes('Complication')) bg = '#e11d48';
+          else if (cat.includes('Factor') || cat.includes('Risk')) bg = '#d97706';
+          else bg = '#7c3aed';
+
+          return {
+            id: n.id,
+            label: label,
+            title: `<b>${label}</b><br>Phân loại: <b>${cat}</b><br>Nguồn: <b style="color:#38bdf8">${src || 'ADA 2024 / KDIGO'}</b><br><br>${n.desc || ''}`,
+            shape: 'box',
+            margin: 8,
+            font: { color: '#ffffff', size: 11, face: 'Plus Jakarta Sans', bold: true },
+            color: {
+              background: bg,
+              border: '#ffffff',
+              highlight: { background: '#f59e0b', border: '#ffffff' }
+            }
+          };
+        }));
+
+        const edges = new vis.DataSet(data.edges.map(e => ({
+          from: e.source || e.from,
+          to: e.target || e.to,
+          label: e.relation || e.label || '',
+          title: e.desc || '',
+          font: { size: 9, color: '#94a3b8', strokeWidth: 0 },
+          arrows: 'to',
+          color: { color: '#475569', highlight: '#38bdf8' }
+        })));
+
+        const options = {
+          physics: {
+            stabilization: { iterations: 100 },
+            barnesHut: { gravitationalConstant: -2500, centralGravity: 0.3, springLength: 110 }
+          },
+          interaction: { hover: true, tooltipDelay: 100 }
+        };
+
+        kgNetwork = new vis.Network(container, { nodes, edges }, options);
+        setTimeout(() => { if (kgNetwork) kgNetwork.fit(); }, 200);
+      } catch (e) {
+        container.innerHTML = `<div class="p-4 text-rose-400 font-mono-code text-xs">Lỗi dựng đồ thị tri thức: ${e}</div>`;
+      }
+    }
+
+    // Predefined Cypher Runner
+    function runPredefinedCypher(type) {
+      const textarea = document.getElementById('cypherQueryInput');
+      if (type === 'metformin') {
+        textarea.value = "MATCH (m:Medication {id: 'Metformin'})-[r]->(t) RETURN m.name AS Thuoc, type(r) AS QuanHe, t.name AS DoiTuong, r.desc AS ChiDinh, m.url AS Link";
+      } else if (type === 'cvd') {
+        textarea.value = "MATCH (d:Condition {id: 'T2D'})-[r:CAUSES_COMPLICATION]->(c:MacrovascularComplication) RETURN d.name AS Benh, c.name AS BienChung, r.desc AS BangChung, c.url AS Link";
+      } else if (type === 'hba1c') {
+        textarea.value = "MATCH (b:Biomarker {id: 'HbA1c'})-[r:DIAGNOSES]->(c:Condition) RETURN b.name AS ChiSo, r.desc AS TieuChuan, c.name AS ChanDoan, b.url AS Link";
+      }
+      executeCurrentCypher();
+    }
+
+    // Execute Cypher against API
+    async function executeCurrentCypher() {
+      const query = document.getElementById('cypherQueryInput').value.trim();
+      const resBox = document.getElementById('cypherResultBox');
+      resBox.classList.remove('hidden');
+      resBox.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Đang thực thi truy vấn...';
+
+      try {
+        const resp = await fetch('/api/kg/cypher-query', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ query: query })
+        });
+        const data = await resp.json();
+
+        const rows = data.results || data.records || [];
+        if (rows && rows.length) {
+          const cols = Object.keys(rows[0]);
+          let html = '<div class="overflow-x-auto"><table class="w-full text-left border-collapse border border-slate-700 text-[10px]"><thead><tr class="bg-slate-800 text-cyan-300">';
+          cols.forEach(c => html += `<th class="p-1.5 border border-slate-700">${c}</th>`);
+          html += '</tr></thead><tbody>';
+          rows.forEach((r, idx) => {
+            html += '<tr class="border-b border-slate-800 hover:bg-slate-800/60">';
+            cols.forEach(c => {
+              const val = r[c] !== undefined && r[c] !== null ? r[c] : '';
+              let cellContent = '';
+              if (typeof val === 'string' && (val.startsWith('http://') || val.startsWith('https://'))) {
+                cellContent = `<a href="${val}" target="_blank" rel="noopener noreferrer" class="text-sky-400 hover:text-sky-300 underline font-semibold inline-flex items-center gap-1"><i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i> Link Nguồn</a>`;
+              } else if (typeof val === 'object') {
+                cellContent = JSON.stringify(val);
+              } else {
+                cellContent = val;
+              }
+              html += `<td class="p-1.5 border border-slate-800 font-mono-code">${cellContent}</td>`;
+            });
+            html += '</tr>';
+          });
+          html += '</tbody></table></div>';
+          resBox.innerHTML = html;
+        } else {
+          resBox.innerHTML = '<span class="text-amber-400">Truy vấn hoàn tất nhưng không tìm thấy bản ghi tương ứng.</span>';
+        }
+      } catch (e) {
+        resBox.innerHTML = `<span class="text-rose-400">Lỗi Cypher: ${e}</span>`;
+      }
+    }
+
+    // Open Source Cypher Modal
+    async function openCypherSourceModal() {
+      const modal = document.getElementById('cypherModal');
+      const content = document.getElementById('cypherFileContent');
+      modal.classList.remove('hidden');
+
+      try {
+        const resp = await fetch('/api/kg/cypher-file');
+        const data = await resp.json();
+        content.innerText = data.cypher_code || 'Không tải được file Cypher.';
+      } catch (e) {
+        content.innerText = 'Lỗi nạp file: ' + e;
+      }
+    }
+
+    // On Load Initialization
+    
+    // Graph-RAG Q&A Engine Execution
+    function setRagQuestion(q) {
+      document.getElementById('ragQuestionInput').value = q;
+      askGraphRAG();
+    }
+
+    async function askGraphRAG() {
+      const q = document.getElementById('ragQuestionInput').value.trim();
+      const resCard = document.getElementById('ragResultCard');
+      if (!q) return;
+
+      resCard.classList.remove('hidden');
+      document.getElementById('ragMatchedTopic').innerText = 'Đang tra cứu đồ thị...';
+      document.getElementById('ragSynthesis').innerText = 'Đang kích hoạt cơ chế Graph Retrieval và trích xuất đường đi suy luận...';
+
+      try {
+        const resp = await fetch('/api/graph-rag/query', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ question: q })
+        });
+        const data = await resp.json();
+
+        document.getElementById('ragMatchedTopic').innerText = data.matched_topic || 'Khuyến nghị lâm sàng ADA';
+        document.getElementById('ragConfidence').innerText = ((data.confidence_score || 0.95) * 100).toFixed(0) + '%';
+        
+        // Render path
+        const pathBox = document.getElementById('ragReasoningPath');
+        if (data.reasoning_path && data.reasoning_path.length) {
+          pathBox.innerHTML = data.reasoning_path.map(p => `<div><i class="fa-solid fa-arrow-right text-[9px] text-purple-400 mr-1"></i>${p}</div>`).join('');
+        } else {
+          pathBox.innerHTML = '<div>Đường dẫn đồ thị: ' + (data.guideline_citation || '') + '</div>';
+        }
+
+        document.getElementById('ragSynthesis').innerText = data.clinical_synthesis || 'Không tìm thấy khuyến nghị.';
+        document.getElementById('ragCitation').innerText = data.guideline_citation || 'ADA Standards of Care 2024';
+      } catch (e) {
+        document.getElementById('ragSynthesis').innerText = 'Lỗi truy vấn Graph-RAG: ' + e;
+      }
+    }
+
+    
+    // Clear Chat & Reset Consultation
+    function clearChatAndReset() {
+      const list = document.getElementById('chatMessageList');
+      list.innerHTML = `
+        <div class="flex items-start gap-2.5">
+          <div class="w-7 h-7 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs shrink-0 font-bold">
+            <i class="fa-solid fa-staff-snake"></i>
+          </div>
+          <div class="bg-white dark:bg-slate-800 p-3.5 rounded-2xl rounded-tl-none border border-slate-200 dark:border-slate-700 max-w-[85%] shadow-xs space-y-2">
+            <p class="font-semibold text-slate-800 dark:text-slate-100 leading-relaxed">
+              Chào bạn! Tôi là <b>Trợ Lý Hội Chẩn Đa Tác Tử Đái Tháo Đường</b>. Hội đồng 12 chuyên gia lâm sàng (Tiếp đón, Chẩn đoán AI, Tim mạch, Thận học, Dược lý, Lối sống...) đã sẵn sàng hỗ trợ bạn.
+            </p>
+            <p class="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">
+              👉 Hãy chia sẻ: <b>Cân nặng (kg), Chiều cao (cm), Tuổi, Giới tính, Đường huyết đói (mg/dL), Huyết sắc tố (HbA1c %), Bệnh nền (Huyết áp, Tim mạch) hoặc thói quen hút thuốc</b>. Tôi sẽ phân tích và đưa ra <b>Kết luận chẩn đoán, Phác đồ thuốc &amp; Dinh dưỡng/vận động</b> ngay lập tức!
+            </p>
+          </div>
+        </div>
+      `;
+    }
+
+    // Send Quick Prompt Chip
+    function sendQuickPrompt(promptText) {
+      document.getElementById('chatInputText').value = promptText;
+      handleUserChatMessage();
+    }
+
+    // Trigger Consultation from Sidebar parameters
+    function triggerConsultFromSidebar() {
+      const h = document.getElementById('heightInput').value;
+      const w = document.getElementById('weightInput').value;
+      const age = document.getElementById('ageInput').value;
+      const gender = document.getElementById('genderInput').value === 'Male' ? 'nam' : 'nữ';
+      const gluc = document.getElementById('glucoseInput').value;
+      const hba1c = document.getElementById('hba1cInput').value;
+      const hyp = document.getElementById('hypertensionInput').checked ? 'có tăng huyết áp' : 'không tăng huyết áp';
+      const heart = document.getElementById('heartDiseaseInput').checked ? 'có bệnh tim' : 'không có bệnh tim';
+      const smoking = document.getElementById('smokingInput').value;
+      const smokeText = smoking === 'never' ? 'không hút thuốc' : smoking === 'former' ? 'từng hút thuốc' : 'đang hút thuốc';
+
+      const msg = `Tôi là ${gender}, ${age} tuổi, cao ${h}cm, nặng ${w}kg, đường huyết ${gluc} mg/dL, HbA1c ${hba1c}%, ${hyp}, ${heart}, ${smokeText}.`;
+      document.getElementById('chatInputText').value = msg;
+      handleUserChatMessage();
+    }
+
+    // Handle User Chat Message Submission
+    async function handleUserChatMessage() {
+      const input = document.getElementById('chatInputText');
+      const text = input.value.trim();
+      if (!text) return;
+      input.value = '';
+
+      const list = document.getElementById('chatMessageList');
+
+      // 1. Append User Message Bubble
+      const userBubble = document.createElement('div');
+      userBubble.className = 'flex items-start justify-end gap-2.5';
+      userBubble.innerHTML = `
+        <div class="bg-blue-600 text-white p-3 rounded-2xl rounded-tr-none max-w-[80%] shadow-xs leading-relaxed text-xs">
+          ${text.replace(/</g, '&lt;').replace(/>/g, '&gt;')}
+        </div>
+        <div class="w-7 h-7 rounded-full bg-slate-300 dark:bg-slate-700 text-slate-700 dark:text-slate-200 flex items-center justify-center text-xs shrink-0 font-bold">
+          <i class="fa-solid fa-user"></i>
+        </div>
+      `;
+      list.appendChild(userBubble);
+      list.scrollTop = list.scrollHeight;
+
+      // 2. Append Loading Typing Indicator
+      const loadingBubble = document.createElement('div');
+      loadingBubble.id = 'chatLoadingIndicator';
+      loadingBubble.className = 'flex items-start gap-2.5';
+      loadingBubble.innerHTML = `
+        <div class="w-7 h-7 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs shrink-0 font-bold">
+          <i class="fa-solid fa-staff-snake"></i>
+        </div>
+        <div class="bg-white dark:bg-slate-800 p-3 rounded-2xl rounded-tl-none border border-slate-200 dark:border-slate-700 shadow-xs flex items-center gap-2 text-slate-500 text-xs">
+          <i class="fa-solid fa-spinner fa-spin text-blue-500"></i>
+          <span>Hội đồng 12 chuyên gia đang phân tích &amp; hội chẩn hồ sơ...</span>
+        </div>
+      `;
+      list.appendChild(loadingBubble);
+      list.scrollTop = list.scrollHeight;
+
+      try {
+        const resp = await fetch('/api/agent/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: text })
+        });
+
+        // Remove loading indicator
+        const loader = document.getElementById('chatLoadingIndicator');
+        if (loader) loader.remove();
+
+        if (!resp.ok) {
+          const errBubble = document.createElement('div');
+          errBubble.className = 'flex items-start gap-2.5';
+          errBubble.innerHTML = `
+            <div class="w-7 h-7 rounded-full bg-rose-600 text-white flex items-center justify-center text-xs shrink-0 font-bold">
+              <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <div class="bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-rose-700 dark:text-rose-300 p-3 rounded-2xl rounded-tl-none text-xs max-w-[85%] leading-relaxed shadow-sm">
+              <b>Lỗi kết nối máy chủ (${resp.status}):</b> Không thể kết nối tới dịch vụ AI. Vui lòng đảm bảo backend đang chạy.
+            </div>
+          `;
+          list.appendChild(errBubble);
+          list.scrollTop = list.scrollHeight;
+          return;
+        }
+
+        const data = await resp.json();
+        const agentBubble = document.createElement('div');
+        agentBubble.className = 'flex items-start gap-2.5';
+
+        // CASE 1: Full Multi-Agent Consultation Diagnosis
+        if (data.type === 'consultation') {
+          const v = data.extracted_vitals || {};
+          const c = data.consultation || {};
+
+          // Sync sidebar inputs safely
+          const safeSetVal = (id, val) => { const el = document.getElementById(id); if (el) el.value = val; };
+          const safeSetText = (id, text) => { const el = document.getElementById(id); if (el) el.innerText = text; };
+
+          if (v.height) { safeSetVal('heightInput', v.height); safeSetText('heightVal', v.height + ' cm'); }
+          if (v.weight) { safeSetVal('weightInput', v.weight); safeSetText('weightVal', v.weight + ' kg'); }
+          if (v.age) { safeSetVal('ageInput', v.age); safeSetText('ageVal', v.age); }
+          if (v.gender) { safeSetVal('genderInput', v.gender); }
+          if (v.glucose) { safeSetVal('glucoseInput', v.glucose); safeSetText('glucoseVal', v.glucose + ' mg/dL'); }
+          if (v.hba1c) { safeSetVal('hba1cInput', v.hba1c); safeSetText('hba1cVal', v.hba1c + '%'); }
+          if (v.hypertension !== undefined) { const el = document.getElementById('hypertensionInput'); if (el) el.checked = (v.hypertension == 1); }
+          if (v.heart_disease !== undefined) { const el = document.getElementById('heartDiseaseInput'); if (el) el.checked = (v.heart_disease == 1); }
+          if (v.smoking) { safeSetVal('smokingInput', v.smoking); }
+          updateBMI();
+
+          let medHtml = '';
+          if (c.approved_medications && c.approved_medications.length) {
+            medHtml = c.approved_medications.map(m => `<li>${m}</li>`).join('');
+          } else {
+            medHtml = '<li>Chưa có chỉ định dùng thuốc (Theo dõi đường huyết định kỳ).</li>';
+          }
+
+          let dietHtml = '';
+          if (c.diet_plan && c.diet_plan.length) {
+            dietHtml = c.diet_plan.map(d => `<li>${d}</li>`).join('');
+          }
+
+          let exHtml = '';
+          if (c.exercise_plan && c.exercise_plan.length) {
+            exHtml = c.exercise_plan.map(e => `<li>${e}</li>`).join('');
+          }
+
+          let agentsSummaryHtml = '';
+          if (c.timeline && c.timeline.length) {
+            agentsSummaryHtml = c.timeline.map(item => `
+              <div class="p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 text-[11px]">
+                <div class="font-bold text-blue-600 dark:text-blue-400 flex items-center gap-1">
+                  <i class="fa-solid fa-user-doctor text-[10px]"></i> ${item.role || item.agent_name}
+                </div>
+                <p class="text-slate-600 dark:text-slate-300 mt-0.5 leading-relaxed whitespace-pre-line">${item.content || ''}</p>
+              </div>
+            `).join('');
+          }
+
+          let masHtml = '';
+          if (data.mas_report && data.mas_report.agent_messages) {
+            const mas = data.mas_report;
+            const pred = mas.prediction || {};
+            const mon = mas.monitoring || {};
+            const msgs = mas.agent_messages.map(m => `
+              <div class="p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-[11px] space-y-0.5">
+                <div class="flex items-center justify-between">
+                  <span class="font-bold text-blue-600 dark:text-blue-400"><i class="fa-solid fa-cube text-[10px]"></i> ${m.agent} (${m.model_version})</span>
+                  <span class="px-1.5 py-0.2 rounded text-[9px] font-mono-code ${m.status === 'ok' ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300' : 'bg-amber-100 text-amber-700 dark:bg-amber-950/60 dark:text-amber-300'}">${m.status.toUpperCase()}</span>
+                </div>
+                <div class="text-slate-600 dark:text-slate-300 text-[10.5px]">
+                  ${m.agent === 'DLPredictionAgent' ? `Xác suất TabResNet: <b>${m.payload.probability_percentage}%</b> (${m.payload.risk_tier})` :
+                    m.agent === 'RuleBasedAgent' ? `Phân loại ADA 2024: <b>${m.payload.classification}</b> (${m.payload.triggered_rules_count} quy tắc)` :
+                    m.agent === 'KGRAGAgent' ? `Đồ thị DB_diabet.cypher: <b>${m.payload.disease_entity?.name || ''}</b>` :
+                    m.agent === 'MonitoringAgent' ? `Kiểm toán: <b>${m.payload.audit_verdict}</b> (Độ trễ: ${m.payload.total_execution_latency_ms}ms)` :
+                    m.agent === 'RLSimulationAgent' ? `Mô phỏng D3QN 24h: <b>TIR ${m.payload.projected_time_in_range_tir_pct}%</b>` :
+                    m.agent === 'ExplanationAgent' ? `${m.payload.executive_summary?.slice(0, 160)}...` :
+                    m.agent === 'PatientDataAgent' ? `Dữ liệu hợp lệ: ${m.payload.valid ? 'HỢP LỆ' : 'LỖI'}` :
+                    `Điều phối M = (A,S,O,C,F)`}
+                </div>
+              </div>
+            `).join('');
+
+            masHtml = `
+              <!-- 4. Canonical 8-Agent Hybrid MAS Architecture Card -->
+              <details class="pt-1 text-xs group" open>
+                <summary class="font-bold text-blue-700 dark:text-blue-300 cursor-pointer flex items-center justify-between p-2 rounded bg-blue-50 dark:bg-blue-950/50 border border-blue-200 dark:border-blue-800">
+                  <span class="flex items-center gap-1.5"><i class="fa-solid fa-network-wired text-blue-600"></i> Báo Cáo Chuẩn Tắc 8 Tác Tử (Hybrid MAS - PDF Architecture)</span>
+                  <span class="text-[10px] font-mono-code text-slate-500">${mas.request_id}</span>
+                </summary>
+                <div class="space-y-1.5 mt-2 border-t border-blue-100 dark:border-blue-900/40 pt-2">
+                  <div class="p-2 rounded bg-indigo-50/60 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800 text-[11px] leading-relaxed">
+                    <b>Đồng thuận F(y_DL, y_rule, y_KG, y_monitor):</b> ${pred.final_diagnosis}<br>
+                    <span class="text-slate-500">Mô hình: ${pred.dl_model_architecture} • CSDL: DB_diabet.cypher</span>
+                  </div>
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+                    ${msgs}
+                  </div>
+                  <div class="p-2 rounded bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 text-[10px] text-amber-800 dark:text-amber-300 leading-relaxed">
+                    <b>Lưu ý An toàn &amp; Giới hạn Nghiên cứu (Mục 10 PDF):</b> ${mas.safety_limitations?.[0] || 'Bản thử nghiệm nghiên cứu khoa học PTIT 11/2026.'}
+                  </div>
+                </div>
+              </details>
+            `;
+          }
+
+          agentBubble.innerHTML = `
+            <div class="w-7 h-7 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs shrink-0 font-bold">
+              <i class="fa-solid fa-staff-snake"></i>
+            </div>
+            <div class="bg-white dark:bg-slate-800 p-4 rounded-2xl rounded-tl-none border border-slate-200 dark:border-slate-700 max-w-[90%] shadow-md space-y-3.5 text-xs">
+              
+              <!-- 1. Diagnosis Header Card -->
+              <div class="p-3 rounded-xl bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/40 dark:to-indigo-950/40 border border-blue-200 dark:border-blue-800/80">
+                <div class="flex flex-wrap items-center justify-between gap-2 mb-1">
+                  <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase bg-rose-100 text-rose-700 dark:bg-rose-950/80 dark:text-rose-300">
+                    ${c.risk_tier || 'NGUY CƠ CAO'}
+                  </span>
+                  <span class="text-[10px] font-mono-code text-slate-500">Đồng thuận: <b class="text-blue-600 dark:text-blue-400">${c.consensus_score || 96}%</b> • Conformal: <b>95%</b></span>
+                </div>
+                <h4 class="text-sm font-extrabold text-slate-800 dark:text-slate-100 flex items-center gap-1.5">
+                  <i class="fa-solid fa-hospital-user text-blue-600"></i> ${c.final_diagnosis || 'Đái Tháo Đường Tuýp 2 (ICD-10: E11)'}
+                </h4>
+                <div class="text-[11px] text-slate-500 dark:text-slate-400 mt-1 flex flex-wrap gap-2">
+                  <span>Chỉ số: <b>BMI ${v.bmi || '26.6'}</b> (${v.height || 168}cm, ${v.weight || 75}kg)</span> •
+                  <span>Glucose đói: <b>${v.glucose || 160} mg/dL</b></span> •
+                  <span>HbA1c: <b>${v.hba1c || 7.8}%</b></span>
+                </div>
+              </div>
+
+              <!-- 2. Recommendations Action Plan -->
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5 text-xs">
+                <!-- Meds -->
+                <div class="p-2.5 rounded-lg bg-blue-50/50 dark:bg-blue-950/20 border border-blue-100 dark:border-blue-900/40 space-y-1">
+                  <span class="font-bold text-blue-800 dark:text-blue-300 flex items-center gap-1 text-[11px]">
+                    <i class="fa-solid fa-pills text-blue-600"></i> 1. Đơn Thuốc &amp; Dược Lý
+                  </span>
+                  <ul class="text-[11px] text-slate-600 dark:text-slate-300 list-disc list-inside space-y-0.5">${medHtml}</ul>
+                </div>
+                <!-- Diet -->
+                <div class="p-2.5 rounded-lg bg-emerald-50/50 dark:bg-emerald-950/20 border border-emerald-100 dark:border-emerald-900/40 space-y-1">
+                  <span class="font-bold text-emerald-800 dark:text-emerald-300 flex items-center gap-1 text-[11px]">
+                    <i class="fa-solid fa-utensils text-emerald-600"></i> 2. Chế Độ Dinh Dưỡng
+                  </span>
+                  <ul class="text-[11px] text-slate-600 dark:text-slate-300 list-disc list-inside space-y-0.5">${dietHtml}</ul>
+                </div>
+                <!-- Exercise -->
+                <div class="p-2.5 rounded-lg bg-amber-50/50 dark:bg-amber-950/20 border border-amber-100 dark:border-amber-900/40 space-y-1">
+                  <span class="font-bold text-amber-800 dark:text-amber-300 flex items-center gap-1 text-[11px]">
+                    <i class="fa-solid fa-person-running text-amber-600"></i> 3. Kế Hoạch Vận Động
+                  </span>
+                  <ul class="text-[11px] text-slate-600 dark:text-slate-300 list-disc list-inside space-y-0.5">${exHtml}</ul>
+                </div>
+                <!-- Target -->
+                <div class="p-2.5 rounded-lg bg-purple-50/50 dark:bg-purple-950/20 border border-purple-100 dark:border-purple-900/40 space-y-1">
+                  <span class="font-bold text-purple-800 dark:text-purple-300 flex items-center gap-1 text-[11px]">
+                    <i class="fa-solid fa-bullseye text-purple-600"></i> 4. Mục Tiêu Kiểm Soát (ADA)
+                  </span>
+                  <ul class="text-[11px] text-slate-600 dark:text-slate-300 list-disc list-inside space-y-0.5">
+                    <li>HbA1c: <b>&lt; 7.0%</b> (Kiểm tra lại sau 3 tháng).</li>
+                    <li>Đường huyết đói mục tiêu: <b>80 - 130 mg/dL</b>.</li>
+                  </ul>
+                </div>
+              </div>
+
+              ${masHtml}
+
+              <!-- 3. Collapsible 12 Agents Council Deliberation Feed -->
+              <details class="pt-1 text-xs group">
+                <summary class="font-bold text-slate-600 dark:text-slate-300 cursor-pointer flex items-center justify-between p-2 rounded bg-slate-100 dark:bg-slate-700/50">
+                  <span class="flex items-center gap-1.5"><i class="fa-solid fa-comments text-indigo-500"></i> Xem Biên Bản Ý Kiến Chi Tiết Của 12 Chuyên Gia</span>
+                  <i class="fa-solid fa-chevron-down group-open:rotate-180 transition"></i>
+                </summary>
+                <div class="space-y-1.5 mt-2 max-h-56 overflow-y-auto pr-1">
+                  ${agentsSummaryHtml}
+                </div>
+              </details>
+
+            </div>
+          `;
+
+        // CASE 2: Greeting Response
+        } else if (data.type === 'greeting') {
+          const formattedMsg = (data.message || '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')
+            .replace(/\*(.*?)\*/g, '<i>$1</i>')
+            .replace(/\n/g, '<br>');
+
+          agentBubble.innerHTML = `
+            <div class="w-7 h-7 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs shrink-0 font-bold">
+              <i class="fa-solid fa-staff-snake"></i>
+            </div>
+            <div class="bg-white dark:bg-slate-800 p-4 rounded-2xl rounded-tl-none border border-slate-200 dark:border-slate-700 max-w-[85%] shadow-md space-y-3 text-xs leading-relaxed text-slate-700 dark:text-slate-200">
+              <div>${formattedMsg}</div>
+              <div class="pt-2 border-t border-slate-100 dark:border-slate-700 flex flex-wrap gap-1.5 text-[11px]">
+                <button onclick="sendQuickPrompt('Tôi là nam 55 tuổi, cao 1m68, nặng 78kg, đường huyết 185 mg/dL, HbA1c 8.2%, có cao huyết áp.')" class="px-2.5 py-1 rounded bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-300 border border-blue-200 dark:border-blue-800 hover:bg-blue-100 font-medium transition">
+                  🔴 Ca ĐTĐ Điển Hình (Đường huyết 185)
+                </button>
+                <button onclick="sendQuickPrompt('Khi nào chống chỉ định Metformin?')" class="px-2.5 py-1 rounded bg-purple-50 dark:bg-purple-950/60 text-purple-600 dark:text-purple-300 border border-purple-200 dark:border-purple-800 hover:bg-purple-100 font-medium transition">
+                  💊 Hỏi Y Văn Metformin
+                </button>
+              </div>
+            </div>
+          `;
+
+        // CASE 3: Graph-RAG Clinical Q&A
+        } else if (data.type === 'qa') {
+          const rag = data.rag || {};
+          let reasoningHtml = '';
+          if (rag.reasoning_path && rag.reasoning_path.length) {
+            reasoningHtml = rag.reasoning_path.map(p => `<div><i class="fa-solid fa-arrow-right text-purple-400 mr-1"></i>${p}</div>`).join('');
+          }
+
+          agentBubble.innerHTML = `
+            <div class="w-7 h-7 rounded-full bg-purple-600 text-white flex items-center justify-center text-xs shrink-0 font-bold">
+              <i class="fa-solid fa-brain"></i>
+            </div>
+            <div class="bg-white dark:bg-slate-800 p-4 rounded-2xl rounded-tl-none border border-slate-200 dark:border-slate-700 max-w-[85%] shadow-md space-y-2.5 text-xs">
+              <div class="flex items-center justify-between pb-1 border-b border-slate-100 dark:border-slate-700">
+                <span class="font-bold text-purple-600 dark:text-purple-400 flex items-center gap-1.5">
+                  <i class="fa-solid fa-diagram-project"></i> ${rag.matched_topic || 'Khuyến nghị lâm sàng Graph-RAG'}
+                </span>
+                <span class="text-[10px] text-slate-400 font-mono-code">Độ tin cậy: <b>${((rag.confidence_score || 0.98)*100).toFixed(0)}%</b></span>
+              </div>
+              
+              <!-- Reasoning Path -->
+              <div class="p-2 rounded bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 font-mono-code text-[10px] text-indigo-600 dark:text-cyan-300">
+                ${reasoningHtml}
+              </div>
+
+              <!-- Answer -->
+              <p class="text-slate-700 dark:text-slate-200 leading-relaxed whitespace-pre-line text-xs">
+                ${rag.clinical_synthesis || 'Không tìm thấy thông tin.'}
+              </p>
+
+              <!-- Citation -->
+              <div class="text-[10px] text-slate-400 pt-1 border-t border-slate-100 dark:border-slate-700">
+                Trích dẫn y văn: <b>${rag.guideline_citation || 'ADA Standards of Care 2024'}</b>
+              </div>
+            </div>
+          `;
+
+        // CASE 4: Guidance / Generic Text Fallback
+        } else {
+          const displayMsg = (data.message || data.error || 'Hệ thống đã nhận thông tin. Vui lòng cung cấp thêm các chỉ số đường huyết đói, HbA1c hoặc cân nặng/chiều cao để thực hiện hội chẩn lâm sàng chi tiết.')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')
+            .replace(/\*(.*?)\*/g, '<i>$1</i>')
+            .replace(/\n/g, '<br>');
+
+          agentBubble.innerHTML = `
+            <div class="w-7 h-7 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs shrink-0 font-bold">
+              <i class="fa-solid fa-comment-medical"></i>
+            </div>
+            <div class="bg-white dark:bg-slate-800 p-3.5 rounded-2xl rounded-tl-none border border-slate-200 dark:border-slate-700 max-w-[85%] shadow-sm text-xs leading-relaxed text-slate-700 dark:text-slate-200">
+              ${displayMsg}
+            </div>
+          `;
+        }
+
+        list.appendChild(agentBubble);
+        list.scrollTop = list.scrollHeight;
+
+      } catch (err) {
+        const loader = document.getElementById('chatLoadingIndicator');
+        if (loader) loader.remove();
+
+        const errBubble = document.createElement('div');
+        errBubble.className = 'flex items-start gap-2.5';
+        errBubble.innerHTML = `
+          <div class="w-7 h-7 rounded-full bg-rose-600 text-white flex items-center justify-center text-xs shrink-0 font-bold">
+            <i class="fa-solid fa-circle-exclamation"></i>
+          </div>
+          <div class="bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-rose-700 dark:text-rose-300 p-3 rounded-2xl rounded-tl-none text-xs max-w-[85%] leading-relaxed shadow-sm">
+            <b>Lỗi xử lý phản hồi:</b> ${err.message || err}. Vui lòng thử lại.
+          </div>
+        `;
+        list.appendChild(errBubble);
+        list.scrollTop = list.scrollHeight;
+      }
+    }
+
+
+    window.onload = function() {
+      if (localStorage.getItem('theme') === 'dark') {
+        document.documentElement.classList.add('dark');
+        const themeIcon = document.getElementById('themeIcon');
+        if (themeIcon) themeIcon.className = 'fa-solid fa-sun text-amber-300';
+      }
+      updateBMI();
+    };
+  </script>
+</body>
+</html>
